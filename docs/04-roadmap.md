@@ -10,6 +10,7 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [x] 0.3 `packages/core`: `getParam`, `getParamMeta`, utilidades Decimal, `mesesYDiasCompletos`, tipo `ResultadoCalculo`. **CA**: tests de vigencia por fecha (RMV 30/09/2026 = 1130; 01/10/2026 = 1230).
   - Nota: convención de `mesesYDiasCompletos` y del redondeo del total pendientes de confirmar (ver `docs/decisiones.md`).
 - [ ] 0.4 CI (`ci.yml`) con validación de config + tests. **CA**: verde en GitHub.
+  - Nota: secuencia completa verde en local (install frozen, validate-config, typecheck, tests, build `pe`, check de dominios, pytest). Falta crear el repo en GitHub y hacer push de una rama para confirmar el CA.
 
 ## Fase 1 — Motor de cálculo Perú (2–4 sesiones)
 - [ ] 1.1 Gratificación (incluye trunca). **CA**: fixtures G1–G6 pasan.

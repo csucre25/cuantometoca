@@ -13,8 +13,12 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pyyaml   # para scripts/list_sites.py y check_no_hardcoded_domains.py
       - run: pnpm install --frozen-lockfile
       - run: pnpm validate-config
+      - run: pnpm typecheck
       - run: pnpm test
       - name: Build de cada site (sin secretos; adsense deshabilitado en CI)
         run: |
