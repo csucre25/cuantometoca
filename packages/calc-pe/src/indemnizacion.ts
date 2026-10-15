@@ -29,7 +29,8 @@ import {
  * - DS 003-97-TR, art. 38: contrato indeterminado, 1.5 remuneraciones ordinarias mensuales por
  *   año completo; fracciones por dozavos y treintavos; tope 12 remuneraciones.
  * - DS 003-97-TR, art. 76: contrato a plazo fijo, 1.5 remuneraciones por cada mes dejado de
- *   laborar hasta el vencimiento; tope 12.
+ *   laborar hasta el vencimiento; tope 12. Aplica también en MYPE: la escala reducida de la
+ *   Ley MYPE es por años de servicio (contratos indeterminados).
  * - DS 003-97-TR, art. 10: protección contra el despido arbitrario superado el período de prueba.
  * - DS 013-2013-PRODUCE: pequeña empresa 20 remuneraciones diarias por año (tope 120); micro 10 (tope 90).
  * Base: sueldo + asignación familiar + regulares, sin sexto de gratificación (docs/decisiones.md, D3).
@@ -121,8 +122,9 @@ export function calcularIndemnizacion(entrada: EntradaIndemnizacion, ctx: Contex
   const metaPrueba = ctx.params.meta<string>("periodo_prueba_meses", fechaCorte);
   const mesesPrueba = Number(metaPrueba.value);
   const metaReg = ctx.params.meta<TablaRegimenes>("regimenes", fechaCorte);
-  const regla = metaReg.value[input.regimen].indemnizacion;
   const general = metaReg.value.general.indemnizacion;
+  // Plazo fijo: el art. 76 aplica en todos los regímenes, también en MYPE (docs/decisiones.md, D5).
+  const regla = input.tipoContrato === "plazo_fijo" ? general : metaReg.value[input.regimen].indemnizacion;
   const pequena = metaReg.value.pequena.indemnizacion;
   const micro = metaReg.value.micro.indemnizacion;
 
@@ -136,7 +138,7 @@ export function calcularIndemnizacion(entrada: EntradaIndemnizacion, ctx: Contex
       "Corresponde solo si el despido es arbitrario: sin causa justa o sin seguir el procedimiento legal. No aplica en renuncia, mutuo acuerdo ni fin de contrato.",
       `Debes haber superado el período de prueba (${mesesPrueba} meses en general).`,
       `Contrato indeterminado: ${general.por_anio} sueldos por año, con un máximo de ${general.tope}. En pequeña empresa, ${pequena.por_anio} remuneraciones diarias por año (máximo ${pequena.tope}); en microempresa, ${micro.por_anio} (máximo ${micro.tope}).`,
-      `Contrato a plazo fijo: ${general.por_anio} sueldos por cada mes que faltaba para el vencimiento, con un máximo de ${general.tope}.`,
+      `Contrato a plazo fijo: ${general.por_anio} sueldos por cada mes que faltaba para el vencimiento, con un máximo de ${general.tope}, en cualquier régimen (también en MYPE).`,
       "No tiene descuentos de AFP, ONP ni renta de quinta categoría.",
     ],
     supuestos,
@@ -159,8 +161,8 @@ export function calcularIndemnizacion(entrada: EntradaIndemnizacion, ctx: Contex
   }
 
   parametrosUsados.push({
-    clave: `regimenes.${input.regimen}.indemnizacion`,
-    valor: `${regla.por_anio} ${regla.tipo === "dias" ? "remuneraciones diarias" : "remuneraciones"} por año, tope ${regla.tope}`,
+    clave: `regimenes.${input.tipoContrato === "plazo_fijo" ? "general" : input.regimen}.indemnizacion`,
+    valor: `${regla.por_anio} ${regla.tipo === "dias" ? "remuneraciones diarias" : "remuneraciones"} por ${input.tipoContrato === "plazo_fijo" ? "mes pendiente" : "año"}, tope ${regla.tope}`,
     vigenteDesde: metaReg.from,
     fuente: metaReg.source,
   });
@@ -171,9 +173,6 @@ export function calcularIndemnizacion(entrada: EntradaIndemnizacion, ctx: Contex
   let bruto: Decimal;
 
   if (input.tipoContrato === "plazo_fijo") {
-    if (regla.tipo === "dias") {
-      return vacio("Para contratos a plazo fijo en la micro y pequeña empresa este cálculo aún no está disponible.");
-    }
     const pendiente = mesesYDiasCompletos(sumarDias(input.fechaCese!, 1), input.fechaFinContrato!);
     const porMes = unidad.times(regla.por_anio);
     bruto = porMes.times(pendiente.meses).plus(porMes.div(30).times(pendiente.dias));

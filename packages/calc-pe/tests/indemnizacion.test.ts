@@ -61,17 +61,17 @@ describe("indemnización por despido arbitrario", () => {
     expect(r.total).toBe("36000.00");
   });
 
-  it("plazo fijo en MYPE: aviso de no disponible", () => {
+  it("plazo fijo en MYPE: misma regla del art. 76 (1.5 por mes pendiente)", () => {
     const r = calc({
-      regimen: "pequena",
+      regimen: "micro",
       tipoContrato: "plazo_fijo",
       remuneracionComputable: "3000",
       anios: 1,
       fechaCese: "2026-08-15",
       fechaFinContrato: "2026-12-31",
     });
-    expect(r.total).toBe("0.00");
-    expect(r.advertencias[0]).toContain("aún no está disponible");
+    expect(r.total).toBe("20400.00");
+    expect(r.parametrosUsados.at(-1)?.clave).toBe("regimenes.general.indemnizacion");
   });
 
   it("condiciones con valores desde params", () => {

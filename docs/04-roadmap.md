@@ -20,7 +20,7 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [x] 1.3 Vacaciones truncas. **CA**: V1.
   - Nota: récord desde fechas (último aniversario → cese) o manual; MYPE 15/30 desde params; `Contexto.fechaReferencia` para cálculos sin fecha propia.
 - [x] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).
-  - Nota: caso integral L2 agregado con su cálculo manual en `_calculo`. Indemnización sin sexto de gratificación (D3), con período de prueba (D4) y plazo fijo (D5; MYPE pendiente). La liquidación suma valores exactos (`Concepto.valorExacto`).
+  - Nota: caso integral L2 agregado con su cálculo manual en `_calculo`. Indemnización sin sexto de gratificación (D3), con período de prueba (D4) y plazo fijo (D5, también en MYPE). La liquidación suma valores exactos (`Concepto.valorExacto`).
 - [x] 1.5 Utilidades (exacto y estimado). **CA**: U1.
   - Nota: tope de 18 sueldos como concepto de ajuste negativo; estimado según D7, con aviso visible de estimación.
 - [x] 1.6 Renta de 5ta anual. **CA**: R1.
