@@ -17,7 +17,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: meses desde fechas (calendario completos) o manuales; trunca si el cese es antes del 15/07 o 15/12; RMV a la fecha de pago o de cese (ver `docs/decisiones.md`). Cobertura mínima 95% activada en calc-pe.
 - [x] 1.2 CTS. **CA**: C1–C4.
   - Nota: tiempo desde fechas (aniversario + días) o manual; trunca si el cese cae en el periodo; gratificación del semestre estimada con el motor si no se indica. Todas las calculadoras devuelven `condiciones` (requisitos + supuestos) para el desplegable.
-- [ ] 1.3 Vacaciones truncas. **CA**: V1.
+- [x] 1.3 Vacaciones truncas. **CA**: V1.
+  - Nota: récord desde fechas (último aniversario → cese) o manual; MYPE 15/30 desde params; `Contexto.fechaReferencia` para cálculos sin fecha propia.
 - [ ] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).
 - [ ] 1.5 Utilidades (exacto y estimado). **CA**: U1.
 - [ ] 1.6 Renta de 5ta anual. **CA**: R1.

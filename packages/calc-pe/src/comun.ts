@@ -13,7 +13,11 @@ import {
 
 // Piezas compartidas por las calculadoras de Perú (docs/01 §2).
 
-export type Contexto = { params: LectorParametros };
+/**
+ * `fechaReferencia`: fecha del cálculo cuando la entrada no trae una propia (ej. vacaciones
+ * con meses indicados a mano). La web usa la fecha de hoy; los tests, la del caso dorado.
+ */
+export type Contexto = { params: LectorParametros; fechaReferencia?: FechaISO };
 
 export const montoSchema = z.string().trim().regex(/^\d+(\.\d+)?$/, "Monto inválido: usa números con punto decimal");
 export const fechaSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida: usa YYYY-MM-DD");
