@@ -15,7 +15,7 @@
       "description": "Unidad Impositiva Tributaria",
       "unit": "PEN",
       "history": [
-        { "value": "5350.00", "from": "2025-01-01", "to": "2025-12-31", "source": "DS 260-2024-EF", "verified": false },
+        { "value": "5350.00", "from": "2025-01-01", "to": "2025-12-31", "source": "DS 260-2024-EF", "verified": true },
         { "value": "5500.00", "from": "2026-01-01", "to": null, "source": "DS 301-2025-EF", "verified": true }
       ]
     },
@@ -37,7 +37,7 @@
     "essalud_tasa": {
       "description": "Aporte del empleador a EsSalud (no se descuenta al trabajador)",
       "unit": "ratio",
-      "history": [ { "value": "0.09", "from": "1997-05-17", "to": null, "source": "Ley 26790 art. 6", "verified": false } ]
+      "history": [ { "value": "0.09", "from": "1997-05-17", "to": null, "source": "Ley 26790 art. 6", "verified": true } ]
     },
     "onp_tasa": {
       "description": "Aporte al Sistema Nacional de Pensiones",
