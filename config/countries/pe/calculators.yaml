@@ -1,0 +1,72 @@
+# Calculadoras disponibles para Perú y matriz de casos SEO.
+# Los sueldos con valor "rmv" se resuelven con la RMV vigente en la fecha de build.
+
+gratificacion:
+  slug: gratificacion
+  title: "Calculadora de gratificación"
+  module: gratificacion            # packages/calc-pe/src/gratificacion.ts
+  seasons: [julio, diciembre]
+  casos:
+    sueldos: [rmv, 1300, 1500, 1800, 2000, 2500, 3000, 4000, 5000]
+    periodos: [julio, diciembre]
+    regimenes: [general]
+    meses_extra_con_sueldo: rmv
+    meses: [1, 2, 3, 4, 5]
+
+cts:
+  slug: cts
+  title: "Calculadora de CTS"
+  module: cts
+  seasons: [mayo, noviembre]
+  casos:
+    sueldos: [rmv, 1500, 2000, 2500, 3000, 4000, 5000]
+    periodos: [mayo, noviembre]
+    meses: [1, 2, 3, 4, 5]
+
+vacaciones_truncas:
+  slug: vacaciones-truncas
+  title: "Calculadora de vacaciones truncas"
+  module: vacaciones
+  casos:
+    sueldos: [rmv, 1500, 2000, 3000]
+    meses: [3, 6, 9]
+
+liquidacion:
+  slug: liquidacion
+  title: "Calculadora de liquidación de beneficios sociales"
+  module: liquidacion
+  casos:
+    motivos: [renuncia, despido_arbitrario, fin_contrato]
+    antiguedad_meses: [3, 6, 12, 24, 36, 60]
+    sueldo_referencia: 2000
+
+utilidades:
+  slug: utilidades
+  title: "Calculadora de utilidades"
+  module: utilidades
+  seasons: [marzo, abril]
+  casos:
+    sectores: [minera, industrial, pesquera, telecomunicaciones, comercio_restaurantes, otras]
+    sueldos: [2000, 3500, 6000]
+
+sueldo_neto:
+  slug: sueldo-neto
+  title: "Calculadora de sueldo neto (AFP/ONP y renta de 5ta)"
+  module: pensiones
+  casos:
+    sueldos: [rmv, 1500, 2000, 2500, 3000, 4000, 5000, 7000, 10000]
+    sistemas: [afp, onp]
+
+renta_quinta:
+  slug: renta-quinta-categoria
+  title: "Calculadora de renta de quinta categoría"
+  module: renta5ta
+  casos:
+    sueldos: [3500, 4000, 5000, 6000, 8000, 10000, 15000]
+
+horas_extras:
+  slug: horas-extras
+  title: "Calculadora de horas extras"
+  module: horasExtras
+  casos:
+    sueldos: [rmv, 1500, 2000, 3000]

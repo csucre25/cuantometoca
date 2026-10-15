@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm validate-config
+      - run: pnpm test
+      - name: Build de cada site (sin secretos; adsense deshabilitado en CI)
+        run: |
+          for s in $(python3 scripts/list_sites.py --plain); do
+            SITE=$s CI_BUILD=1 pnpm --filter @calc/web build
+          done
+      - name: Sin dominios hardcodeados
+        run: python3 scripts/check_no_hardcoded_domains.py
+
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: cd pipeline && uv sync --frozen && uv run pytest -q

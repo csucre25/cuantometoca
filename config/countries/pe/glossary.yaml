@@ -1,0 +1,14 @@
+# Vocabulario local para UI, títulos y textos generados.
+terms:
+  gratificacion: { formal: "gratificación", coloquial: "grati" }
+  cts: { formal: "Compensación por Tiempo de Servicios (CTS)", coloquial: "CTS" }
+  liquidacion: { formal: "liquidación de beneficios sociales", coloquial: "liquidación" }
+  rmv: { formal: "Remuneración Mínima Vital", coloquial: "sueldo mínimo" }
+  boleta: { formal: "boleta de pago", coloquial: "boleta" }
+entities:
+  fiscalizador: "SUNAFIL"
+  ministerio: "Ministerio de Trabajo y Promoción del Empleo (MTPE)"
+  tributaria: "SUNAT"
+moneda:
+  simbolo: "S/"
+  formato: "S/ 1,234.56"

@@ -1,0 +1,53 @@
+site_id: pe
+country: pe
+enabled: true
+locale: es-PE
+currency: PEN
+timezone: America/Lima
+
+# Configurable: cambiar por el dominio elegido (ver docs/06-dominios-y-marca.md)
+domain: cuantometoca.pe
+brand:
+  name: "¿Cuánto me toca?"
+  tagline: "Calcula en segundos cuánto te toca, con la ley en la mano."
+  primary_color: "#0F766E"
+  accent_color: "#F59E0B"
+
+cloudflare:
+  pages_project: calc-laborales-pe
+  account_id_env: CF_ACCOUNT_ID_PE
+  api_token_env: CF_API_TOKEN_PE
+
+telegram:
+  bot_token_env: TELEGRAM_BOT_TOKEN_PE
+  admin_chat_id_env: TELEGRAM_ADMIN_CHAT_ID_PE
+
+adsense:
+  enabled: false             # activar tras aprobación de AdSense
+  client_env: ADSENSE_CLIENT_PE
+  slots:
+    after_result_env: ADSENSE_SLOT_AFTER_RESULT_PE
+    in_breakdown_env: ADSENSE_SLOT_IN_BREAKDOWN_PE
+    in_article_env: ADSENSE_SLOT_IN_ARTICLE_PE
+
+analytics:
+  cf_beacon_token_env: CF_BEACON_TOKEN_PE
+  ga4_id_env: GA4_ID_PE
+  optional: [ga4_id_env]
+
+consent:
+  mode: simple_banner
+
+calculators:
+  - gratificacion
+  - cts
+  - vacaciones_truncas
+  - liquidacion
+  - utilidades
+  - sueldo_neto
+  - renta_quinta
+  - horas_extras
+
+legal:
+  owner_name: "Carlos Andres Sucre Gamboa"
+  contact_email_env: CONTACT_EMAIL_PE

@@ -1,0 +1,47 @@
+# Plantilla de site. Copiar a config/sites/<site_id>.yaml.
+# Regla: aquí van NOMBRES de variables de entorno (*_env), nunca secretos.
+
+site_id: xx                 # identificador corto, también sufijo de secretos (XX en mayúsculas)
+country: xx                 # carpeta en config/countries/<country>/
+enabled: false              # solo los sites habilitados se construyen y despliegan
+locale: es-XX
+currency: XXX
+timezone: America/Lima
+
+domain: ejemplo.com         # dominio canónico sin protocolo ni barra final
+brand:
+  name: "Nombre de marca"
+  tagline: "Frase corta"
+  primary_color: "#0F766E"
+  accent_color: "#F59E0B"
+
+cloudflare:
+  pages_project: nombre-proyecto-pages
+  account_id_env: CF_ACCOUNT_ID_XX
+  api_token_env: CF_API_TOKEN_XX
+
+telegram:
+  bot_token_env: TELEGRAM_BOT_TOKEN_XX
+  admin_chat_id_env: TELEGRAM_ADMIN_CHAT_ID_XX
+
+adsense:
+  enabled: false
+  client_env: ADSENSE_CLIENT_XX        # ca-pub-XXXXXXXXXXXXXXXX
+  slots:                               # IDs de bloques de anuncio (opcionales)
+    after_result_env: ADSENSE_SLOT_AFTER_RESULT_XX
+    in_breakdown_env: ADSENSE_SLOT_IN_BREAKDOWN_XX
+    in_article_env: ADSENSE_SLOT_IN_ARTICLE_XX
+
+analytics:
+  cf_beacon_token_env: CF_BEACON_TOKEN_XX
+  ga4_id_env: GA4_ID_XX
+  optional: [ga4_id_env]
+
+consent:
+  mode: simple_banner        # simple_banner | google_cmp (obligatorio si hay tráfico UE/UK)
+
+calculators: []              # IDs de config/countries/<country>/calculators.yaml
+
+legal:
+  owner_name: "Nombre del responsable"
+  contact_email_env: CONTACT_EMAIL_XX

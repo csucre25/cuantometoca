@@ -1,0 +1,34 @@
+# Servicios locales en la PC del usuario (Docker Desktop + WSL2).
+# Limitar recursos globales en %UserProfile%\.wslconfig: memory=8GB, processors=4
+services:
+  bot-pe:
+    build: ./pipeline
+    command: ["python", "-m", "pipeline.cli", "bot", "--site", "pe"]
+    env_file: .env
+    environment:
+      CONFIG_DIR: /app/config
+      REPO_DIR: /repo
+    volumes:
+      - ./config:/app/config:ro
+      - ./pipeline/data:/app/pipeline/data
+      - ./:/repo            # para commits de contenido aprobado
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits: { cpus: "0.5", memory: 512M }
+
+  worker:
+    build: ./pipeline
+    command: ["python", "-m", "pipeline.cli", "worker"]
+    env_file: .env
+    environment:
+      CONFIG_DIR: /app/config
+      REPO_DIR: /repo
+    volumes:
+      - ./config:/app/config:ro
+      - ./pipeline/data:/app/pipeline/data
+      - ./:/repo
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits: { cpus: "2", memory: 2G }

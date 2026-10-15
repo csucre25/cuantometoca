@@ -1,0 +1,12 @@
+{
+  "name": "calculadoras-laborales",
+  "private": true,
+  "packageManager": "pnpm@9.12.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "pnpm -r --if-present test",
+    "validate-config": "pnpm --filter @calc/core validate-config",
+    "build": "pnpm --filter @calc/web build",
+    "dev": "pnpm --filter @calc/web dev"
+  }
+}

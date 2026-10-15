@@ -1,0 +1,52 @@
+{
+  "_nota": "Casos dorados verificados manualmente. NO modificar para hacer pasar un test: si un caso parece incorrecto, reportarlo con la norma que lo contradice.",
+  "casos": [
+    { "id": "G1", "calculadora": "gratificacion", "fechaReferencia": "2026-07-15",
+      "input": { "periodo": "julio", "anio": 2026, "regimen": "general", "sueldoBasico": "2000", "asignacionFamiliar": false, "otrosRegulares": "0", "mesesCompletos": 6, "seguroSalud": "essalud" },
+      "esperado": { "total": "2180.00", "conceptos": { "gratificacion": "2000.00", "bonificacion_extraordinaria": "180.00" } } },
+    { "id": "G2", "calculadora": "gratificacion", "fechaReferencia": "2026-07-15",
+      "input": { "periodo": "julio", "anio": 2026, "regimen": "general", "sueldoBasico": "2000", "asignacionFamiliar": true, "otrosRegulares": "0", "mesesCompletos": 6, "seguroSalud": "essalud" },
+      "esperado": { "total": "2303.17", "conceptos": { "gratificacion": "2113.00", "bonificacion_extraordinaria": "190.17" } } },
+    { "id": "G3", "calculadora": "gratificacion", "fechaReferencia": "2026-12-15",
+      "input": { "periodo": "diciembre", "anio": 2026, "regimen": "general", "sueldoBasico": "2000", "asignacionFamiliar": true, "otrosRegulares": "0", "mesesCompletos": 4, "seguroSalud": "essalud" },
+      "esperado": { "total": "1542.71", "conceptos": { "gratificacion": "1415.33", "bonificacion_extraordinaria": "127.38" } } },
+    { "id": "G4", "calculadora": "gratificacion", "fechaReferencia": "2026-07-15",
+      "input": { "periodo": "julio", "anio": 2026, "regimen": "pequena", "sueldoBasico": "1500", "asignacionFamiliar": false, "otrosRegulares": "0", "mesesCompletos": 6, "seguroSalud": "essalud" },
+      "esperado": { "total": "817.50", "conceptos": { "gratificacion": "750.00", "bonificacion_extraordinaria": "67.50" } } },
+    { "id": "G5", "calculadora": "gratificacion", "fechaReferencia": "2026-07-15",
+      "input": { "periodo": "julio", "anio": 2026, "regimen": "micro", "sueldoBasico": "1500", "asignacionFamiliar": false, "otrosRegulares": "0", "mesesCompletos": 6, "seguroSalud": "essalud" },
+      "esperado": { "total": "0.00", "advertenciaContiene": "microempresa" } },
+    { "id": "G6", "calculadora": "gratificacion", "fechaReferencia": "2026-07-15",
+      "input": { "periodo": "julio", "anio": 2026, "regimen": "general", "sueldoBasico": "2000", "asignacionFamiliar": false, "otrosRegulares": "0", "mesesCompletos": 6, "seguroSalud": "eps" },
+      "esperado": { "total": "2135.00", "conceptos": { "gratificacion": "2000.00", "bonificacion_extraordinaria": "135.00" } } },
+
+    { "id": "C1", "calculadora": "cts", "fechaReferencia": "2026-05-15",
+      "input": { "periodo": "mayo", "anio": 2026, "regimen": "general", "sueldoBasico": "3000", "asignacionFamiliar": false, "otrosRegulares": "0", "gratiSemestre": "3000", "mesesCompletos": 6, "diasAdicionales": 0, "jornadaHorasDiarias": 8 },
+      "esperado": { "total": "1750.00" } },
+    { "id": "C2", "calculadora": "cts", "fechaReferencia": "2026-05-15",
+      "input": { "periodo": "mayo", "anio": 2026, "regimen": "general", "sueldoBasico": "3000", "asignacionFamiliar": false, "otrosRegulares": "0", "gratiSemestre": "3000", "mesesCompletos": 4, "diasAdicionales": 10, "jornadaHorasDiarias": 8 },
+      "esperado": { "total": "1263.89" } },
+    { "id": "C3", "calculadora": "cts", "fechaReferencia": "2026-05-15",
+      "input": { "periodo": "mayo", "anio": 2026, "regimen": "pequena", "sueldoBasico": "3000", "asignacionFamiliar": false, "otrosRegulares": "0", "gratiSemestre": "1500", "mesesCompletos": 6, "diasAdicionales": 0, "jornadaHorasDiarias": 8 },
+      "esperado": { "total": "812.50" } },
+    { "id": "C4", "calculadora": "cts", "fechaReferencia": "2026-05-15",
+      "input": { "periodo": "mayo", "anio": 2026, "regimen": "micro", "sueldoBasico": "3000", "asignacionFamiliar": false, "otrosRegulares": "0", "gratiSemestre": "0", "mesesCompletos": 6, "diasAdicionales": 0, "jornadaHorasDiarias": 8 },
+      "esperado": { "total": "0.00", "advertenciaContiene": "microempresa" } },
+
+    { "id": "V1", "calculadora": "vacaciones_truncas", "fechaReferencia": "2026-08-15",
+      "input": { "regimen": "general", "remuneracionComputable": "3000", "meses": 7, "dias": 15 },
+      "esperado": { "total": "1875.00" } },
+
+    { "id": "L1", "calculadora": "indemnizacion", "fechaReferencia": "2026-08-15",
+      "input": { "regimen": "general", "tipoContrato": "indeterminado", "remuneracionComputable": "3000", "anios": 2, "meses": 3, "dias": 0 },
+      "esperado": { "total": "10125.00" } },
+
+    { "id": "U1", "calculadora": "utilidades", "fechaReferencia": "2026-04-15",
+      "input": { "modo": "exacto", "sector": "industrial", "rentaNeta": "1000000", "diasTotales": 7300, "diasTrabajador": 365, "remuneracionesTotales": "720000", "remuneracionesTrabajador": "36000", "remuneracionMensual": "3000" },
+      "esperado": { "total": "5000.00", "conceptos": { "por_dias": "2500.00", "por_remuneraciones": "2500.00" } } },
+
+    { "id": "R1", "calculadora": "renta_quinta", "fechaReferencia": "2026-12-31",
+      "input": { "anio": 2026, "remuneracionesAnuales": "60000", "gratificaciones": "10000", "bonificacionesExtraordinarias": "900", "otrosIngresos": "0", "deduccionAdicional": "0" },
+      "esperado": { "total": "2886.00" } }
+  ]
+}

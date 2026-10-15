@@ -1,0 +1,37 @@
+name: watchers
+
+on:
+  schedule:
+    - cron: "15 12 * * *"   # 07:15 hora de Lima (UTC-5)
+  workflow_dispatch:
+
+jobs:
+  params-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - site: pe
+            site_upper: PE
+            country: pe
+    env:
+      SITE: ${{ matrix.site }}
+      LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      # GitHub Actions no admite expresiones en nombres de variables: en CI se usan nombres genéricos
+      # que el pipeline prioriza sobre los *_env del site (ver docs/02 §7, resolución de secretos).
+      TELEGRAM_BOT_TOKEN: ${{ secrets[format('TELEGRAM_BOT_TOKEN_{0}', matrix.site_upper)] }}
+      TELEGRAM_ADMIN_CHAT_ID: ${{ secrets[format('TELEGRAM_ADMIN_CHAT_ID_{0}', matrix.site_upper)] }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Restaurar estado (hashes de items ya vistos)
+        uses: actions/cache@v4
+        with:
+          path: pipeline/data
+          key: watcher-state-${{ matrix.site }}-${{ github.run_id }}
+          restore-keys: watcher-state-${{ matrix.site }}-
+      - run: cd pipeline && uv sync --frozen
+      - run: cd pipeline && uv run python -m pipeline.cli params-check --country ${{ matrix.country }} --notify

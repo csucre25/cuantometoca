@@ -1,0 +1,134 @@
+{
+  "country": "pe",
+  "currency": "PEN",
+  "_nota": "Valores como string decimal. Nunca sobrescribir: agregar entradas al history con from/to. 'verified': false = debe confirmarse contra la fuente oficial antes de publicar.",
+  "params": {
+    "rmv": {
+      "description": "Remuneración Mínima Vital (régimen privado, jornada completa)",
+      "unit": "PEN",
+      "history": [
+        { "value": "1130.00", "from": "2025-01-01", "to": "2026-09-30", "source": "DS 006-2024-TR", "verified": true },
+        { "value": "1230.00", "from": "2026-10-01", "to": null, "source": "DS 015-2026-TR (primer tramo; segundo tramo a S/ 1,300 previsto para el primer semestre de 2027 mediante nuevo DS)", "verified": true }
+      ]
+    },
+    "uit": {
+      "description": "Unidad Impositiva Tributaria",
+      "unit": "PEN",
+      "history": [
+        { "value": "5350.00", "from": "2025-01-01", "to": "2025-12-31", "source": "DS 260-2024-EF", "verified": false },
+        { "value": "5500.00", "from": "2026-01-01", "to": null, "source": "DS 301-2025-EF", "verified": true }
+      ]
+    },
+    "asignacion_familiar_pct": {
+      "description": "Asignación familiar como % de la RMV (Ley 25129)",
+      "unit": "ratio",
+      "history": [ { "value": "0.10", "from": "1990-01-01", "to": null, "source": "Ley 25129", "verified": true } ]
+    },
+    "bonificacion_extraordinaria_essalud": {
+      "description": "Bonificación extraordinaria sobre gratificación, afiliado a EsSalud (Ley 30334)",
+      "unit": "ratio",
+      "history": [ { "value": "0.09", "from": "2015-06-25", "to": null, "source": "Ley 30334", "verified": true } ]
+    },
+    "bonificacion_extraordinaria_eps": {
+      "description": "Bonificación extraordinaria sobre gratificación, afiliado a EPS (Ley 30334)",
+      "unit": "ratio",
+      "history": [ { "value": "0.0675", "from": "2015-06-25", "to": null, "source": "Ley 30334", "verified": true } ]
+    },
+    "onp_tasa": {
+      "description": "Aporte al Sistema Nacional de Pensiones",
+      "unit": "ratio",
+      "history": [ { "value": "0.13", "from": "2003-01-01", "to": null, "source": "DL 19990 y normas modificatorias", "verified": true } ]
+    },
+    "afp_aporte_obligatorio": {
+      "description": "Aporte obligatorio al fondo de pensiones (SPP)",
+      "unit": "ratio",
+      "history": [ { "value": "0.10", "from": "2003-01-01", "to": null, "source": "TUO Ley del SPP, DS 054-97-EF", "verified": true } ]
+    },
+    "afp_prima_seguro": {
+      "description": "Prima de seguro de invalidez, sobrevivencia y gastos de sepelio. Actualizar desde la SBS (watcher sbs_afp).",
+      "unit": "ratio",
+      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE DE VERIFICAR", "verified": false } ]
+    },
+    "afp_remuneracion_maxima_asegurable": {
+      "description": "Tope de remuneración para el cálculo de la prima de seguro. Actualizar trimestralmente desde la SBS.",
+      "unit": "PEN",
+      "history": [ { "value": "0.00", "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE: el watcher debe poblar este valor", "verified": false } ]
+    },
+    "afp_comisiones": {
+      "description": "Comisión por AFP (flujo y mixta). Estructura: { afp: { flujo: ratio, mixta_flujo: ratio, mixta_saldo_anual: ratio } }. Poblar desde la SBS.",
+      "unit": "object",
+      "history": [ { "value": { "habitat": null, "integra": null, "prima": null, "profuturo": null }, "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE", "verified": false } ]
+    },
+    "renta5ta_deduccion_uit": {
+      "description": "Deducción fija de rentas de trabajo, en UIT",
+      "unit": "uit",
+      "history": [ { "value": "7", "from": "2015-01-01", "to": null, "source": "TUO LIR art. 46", "verified": true } ]
+    },
+    "renta5ta_deduccion_adicional_max_uit": {
+      "description": "Tope de deducción adicional por gastos sustentados, en UIT",
+      "unit": "uit",
+      "history": [ { "value": "3", "from": "2017-01-01", "to": null, "source": "TUO LIR art. 46", "verified": true } ]
+    },
+    "renta5ta_tramos": {
+      "description": "Escala progresiva acumulativa. 'hasta_uit' null = sin límite.",
+      "unit": "table",
+      "history": [
+        {
+          "value": [
+            { "hasta_uit": "5",  "tasa": "0.08" },
+            { "hasta_uit": "20", "tasa": "0.14" },
+            { "hasta_uit": "35", "tasa": "0.17" },
+            { "hasta_uit": "45", "tasa": "0.20" },
+            { "hasta_uit": null, "tasa": "0.30" }
+          ],
+          "from": "2015-01-01", "to": null, "source": "TUO LIR art. 53", "verified": true
+        }
+      ]
+    },
+    "regimenes": {
+      "description": "Factores por régimen laboral. Verificar contra TUO Ley MYPE (DS 013-2013-PRODUCE) y Ley 31047.",
+      "unit": "table",
+      "history": [
+        {
+          "value": {
+            "general": { "gratificacion": "1", "cts": "1", "vacaciones_dias": "30", "indemnizacion": { "tipo": "remuneraciones", "por_anio": "1.5", "tope": "12" } },
+            "pequena": { "gratificacion": "0.5", "cts": "0.5", "vacaciones_dias": "15", "indemnizacion": { "tipo": "dias", "por_anio": "20", "tope": "120" } },
+            "micro":   { "gratificacion": "0", "cts": "0", "vacaciones_dias": "15", "indemnizacion": { "tipo": "dias", "por_anio": "10", "tope": "90" } },
+            "hogar":   { "gratificacion": "1", "cts": "1", "vacaciones_dias": "30", "indemnizacion": { "tipo": "remuneraciones", "por_anio": "1.5", "tope": "12" } }
+          },
+          "from": "2020-10-01", "to": null, "source": "DS 013-2013-PRODUCE; Ley 31047; DS 003-97-TR", "verified": false
+        }
+      ]
+    },
+    "utilidades_porcentajes": {
+      "description": "% de la renta neta a distribuir por actividad (DL 892)",
+      "unit": "table",
+      "history": [
+        {
+          "value": { "pesquera": "0.10", "telecomunicaciones": "0.10", "industrial": "0.10", "minera": "0.08", "comercio_restaurantes": "0.08", "otras": "0.05" },
+          "from": "1996-11-12", "to": null, "source": "DL 892 art. 2", "verified": true
+        }
+      ]
+    },
+    "utilidades_tope_remuneraciones": {
+      "description": "Tope individual en remuneraciones mensuales",
+      "unit": "count",
+      "history": [ { "value": "18", "from": "1996-11-12", "to": null, "source": "DL 892 art. 5", "verified": true } ]
+    },
+    "utilidades_min_trabajadores": {
+      "description": "La empresa debe tener más de este número de trabajadores",
+      "unit": "count",
+      "history": [ { "value": "20", "from": "1996-11-12", "to": null, "source": "DL 892 art. 2", "verified": true } ]
+    },
+    "horas_extras_recargos": {
+      "description": "Sobretasas de horas extras",
+      "unit": "table",
+      "history": [ { "value": { "primeras_2h": "0.25", "desde_3ra_h": "0.35" }, "from": "2002-07-04", "to": null, "source": "DS 007-2002-TR art. 10", "verified": true } ]
+    },
+    "cts_jornada_minima_horas": {
+      "description": "Jornada diaria mínima promedio para tener derecho a CTS",
+      "unit": "hours",
+      "history": [ { "value": "4", "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 4", "verified": true } ]
+    }
+  }
+}
