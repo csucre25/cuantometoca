@@ -1,0 +1,16 @@
+{
+  "name": "@calc/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@calc/core": "workspace:*",
+    "@calc/calc-pe": "workspace:*",
+    "astro": "7.3.5"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@calc/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Motor de parámetros con vigencia, utilidades Decimal y fechas, tipos comunes de resultado",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "decimal.js": "10.6.0"
+  },
+  "devDependencies": {
+    "vitest": "5.0.3"
+  }
+}

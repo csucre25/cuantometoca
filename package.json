@@ -1,12 +1,23 @@
 {
   "name": "calculadoras-laborales",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@9.12.0",
-  "engines": { "node": ">=22" },
+  "engines": { "node": ">=22.12" },
   "scripts": {
     "test": "pnpm -r --if-present test",
-    "validate-config": "pnpm --filter @calc/core validate-config",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate-config": "tsx scripts/validate-config.ts",
     "build": "pnpm --filter @calc/web build",
     "dev": "pnpm --filter @calc/web dev"
+  },
+  "devDependencies": {
+    "@calc/core": "workspace:*",
+    "@types/node": "24.19.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "yaml": "2.9.1"
   }
 }

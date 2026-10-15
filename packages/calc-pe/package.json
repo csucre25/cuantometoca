@@ -1,0 +1,19 @@
+{
+  "name": "@calc/calc-pe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Fórmulas de beneficios laborales de Perú (TypeScript puro, sin UI)",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@calc/core": "workspace:*",
+    "decimal.js": "10.6.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "vitest": "5.0.3"
+  }
+}

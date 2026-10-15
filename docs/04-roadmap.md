@@ -3,7 +3,8 @@
 Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No avances de fase sin cumplir los CA de la anterior.
 
 ## Fase 0 — Cimientos (1–2 sesiones)
-- [ ] 0.1 Monorepo pnpm (`apps/web`, `packages/core`, `packages/calc-pe`) + `pipeline/` con uv. **CA**: `pnpm install`, `pnpm test` y `uv run pytest` corren (aunque sin tests reales); `pnpm-lock.yaml` y `pipeline/uv.lock` versionados (los workflows usan `--frozen`). El pipeline lee `CONFIG_DIR` y `REPO_DIR` (por defecto, rutas relativas a la raíz del repo).
+- [x] 0.1 Monorepo pnpm (`apps/web`, `packages/core`, `packages/calc-pe`) + `pipeline/` con uv. **CA**: `pnpm install`, `pnpm test` y `uv run pytest` corren (aunque sin tests reales); `pnpm-lock.yaml` y `pipeline/uv.lock` versionados (los workflows usan `--frozen`). El pipeline lee `CONFIG_DIR` y `REPO_DIR` (por defecto, rutas relativas a la raíz del repo).
+  - Nota: los paquetes TS se consumen desde `src/` (sin paso de build). Node ≥ 22.12 (lo exige Astro 7). Pipeline fijado a Python 3.12 (`pipeline/.python-version`). `@calc/web` es una página provisional que compila.
 - [ ] 0.2 JSON Schemas para `config/sites/*.yaml` y `config/countries/*/params.json` + script `scripts/validate-config.ts`. **CA**: los archivos de ejemplo validan; un params con solapamiento de fechas falla.
 - [ ] 0.3 `packages/core`: `getParam`, `getParamMeta`, utilidades Decimal, `mesesYDiasCompletos`, tipo `ResultadoCalculo`. **CA**: tests de vigencia por fecha (RMV 30/09/2026 = 1130; 01/10/2026 = 1230).
 - [ ] 0.4 CI (`ci.yml`) con validación de config + tests. **CA**: verde en GitHub.
