@@ -8,3 +8,4 @@ export * from "./indemnizacion";
 export * from "./liquidacion";
 export * from "./utilidades";
 export * from "./renta5ta";
+export * from "./pensiones";

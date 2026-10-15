@@ -34,6 +34,11 @@
       "unit": "ratio",
       "history": [ { "value": "0.0675", "from": "2015-06-25", "to": null, "source": "Ley 30334", "verified": true } ]
     },
+    "essalud_tasa": {
+      "description": "Aporte del empleador a EsSalud (no se descuenta al trabajador)",
+      "unit": "ratio",
+      "history": [ { "value": "0.09", "from": "1997-05-17", "to": null, "source": "Ley 26790 art. 6", "verified": false } ]
+    },
     "onp_tasa": {
       "description": "Aporte al Sistema Nacional de Pensiones",
       "unit": "ratio",
@@ -47,17 +52,27 @@
     "afp_prima_seguro": {
       "description": "Prima de seguro de invalidez, sobrevivencia y gastos de sepelio. Actualizar desde la SBS (watcher sbs_afp).",
       "unit": "ratio",
-      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE DE VERIFICAR", "verified": false } ]
+      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS — igual para las 4 AFP; tomado de la tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15)", "verified": false } ]
     },
     "afp_remuneracion_maxima_asegurable": {
       "description": "Tope de remuneración para el cálculo de la prima de seguro. Actualizar trimestralmente desde la SBS.",
       "unit": "PEN",
-      "history": [ { "value": "0.00", "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE: el watcher debe poblar este valor", "verified": false } ]
+      "history": [ { "value": "12732.70", "from": "2026-10-01", "to": null, "source": "SBS — vigente oct–dic 2026 según afpintegra.pe/cliente/comisiones (consultada 2026-10-15); actualizar cada trimestre", "verified": false } ]
     },
     "afp_comisiones": {
       "description": "Comisión por AFP (flujo y mixta). Estructura: { afp: { flujo: ratio, mixta_flujo: ratio, mixta_saldo_anual: ratio } }. Poblar desde la SBS.",
       "unit": "object",
-      "history": [ { "value": { "habitat": null, "integra": null, "prima": null, "profuturo": null }, "from": "2026-01-01", "to": null, "source": "SBS — PENDIENTE", "verified": false } ]
+      "history": [ {
+          "value": {
+            "habitat":   { "flujo": "0.0147", "mixta_flujo": "0", "mixta_saldo_anual": "0.0125" },
+            "integra":   { "flujo": "0.0155", "mixta_flujo": "0", "mixta_saldo_anual": "0.0078" },
+            "prima":     { "flujo": "0.0160", "mixta_flujo": "0", "mixta_saldo_anual": "0.0125" },
+            "profuturo": { "flujo": "0.0169", "mixta_flujo": "0", "mixta_saldo_anual": "0.0068" }
+          },
+          "from": "2026-10-01", "to": null,
+          "source": "SBS — tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15); confirmar contra sbs.gob.pe",
+          "verified": false
+        } ]
     },
     "renta5ta_deduccion_uit": {
       "description": "Deducción fija de rentas de trabajo, en UIT",

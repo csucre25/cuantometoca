@@ -25,7 +25,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: tope de 18 sueldos como concepto de ajuste negativo; estimado según D7, con aviso visible de estimación.
 - [x] 1.6 Renta de 5ta anual. **CA**: R1.
   - Nota: entrada anual o proyección desde el sueldo mensual; retención mensual aproximada = anual ÷ 12 (D9).
-- [ ] 1.7 Pensiones ONP/AFP (con params SBS de ejemplo marcados `"verified": false`). **CA**: tests con valores ficticios documentados.
+- [x] 1.7 Pensiones ONP/AFP (con params SBS de ejemplo marcados `"verified": false`). **CA**: tests con valores ficticios documentados.
+  - Nota: params cargados con valores SBS de oct-2026 (tabla de afpintegra.pe), `verified: false` hasta confirmar en sbs.gob.pe (D8). Sueldo neto incluye retención de 5ta anual ÷ 12 (D9).
 - [ ] 1.8 Horas extras. **CA**: un caso con 2 h al 25% + 1 h al 35%.
 - [ ] 1.9 Revisión: cada función cita su base legal en comentarios y devuelve `steps` legibles.
 
