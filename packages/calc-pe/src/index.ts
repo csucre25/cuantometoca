@@ -6,3 +6,4 @@ export * from "./cts";
 export * from "./vacaciones";
 export * from "./indemnizacion";
 export * from "./liquidacion";
+export * from "./utilidades";

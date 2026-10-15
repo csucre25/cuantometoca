@@ -21,7 +21,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: récord desde fechas (último aniversario → cese) o manual; MYPE 15/30 desde params; `Contexto.fechaReferencia` para cálculos sin fecha propia.
 - [x] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).
   - Nota: caso integral L2 agregado con su cálculo manual en `_calculo`. Indemnización sin sexto de gratificación (D3), con período de prueba (D4) y plazo fijo (D5; MYPE pendiente). La liquidación suma valores exactos (`Concepto.valorExacto`).
-- [ ] 1.5 Utilidades (exacto y estimado). **CA**: U1.
+- [x] 1.5 Utilidades (exacto y estimado). **CA**: U1.
+  - Nota: tope de 18 sueldos como concepto de ajuste negativo; estimado según D7, con aviso visible de estimación.
 - [ ] 1.6 Renta de 5ta anual. **CA**: R1.
 - [ ] 1.7 Pensiones ONP/AFP (con params SBS de ejemplo marcados `"verified": false`). **CA**: tests con valores ficticios documentados.
 - [ ] 1.8 Horas extras. **CA**: un caso con 2 h al 25% + 1 h al 35%.
