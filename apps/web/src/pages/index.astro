@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { definicion } from "../calc";
 import { site } from "../site.config";
 
 const descripcion = `${site.brand.tagline} Gratificación, CTS, liquidación, utilidades y más, con el desglose paso a paso.`;
@@ -17,15 +18,25 @@ const descripcion = `${site.brand.tagline} Gratificación, CTS, liquidación, ut
     <h2 id="titulo-calculadoras" class="visually-hidden">Calculadoras</h2>
     <ul class="rejilla" role="list">
       {
-        site.calculators.map((c) => (
-          <li>
-            <a class="tarjeta" href={`/${c.slug}/`}>
-              <span class="nombre">{c.nombre}</span>
-              <span class="resumen">{c.resumen}</span>
-              <span class="flecha" aria-hidden="true">→</span>
-            </a>
-          </li>
-        ))
+        site.calculators.map((c) =>
+          definicion(site.country, c.id) ? (
+            <li>
+              <a class="tarjeta" href={`/${c.slug}/`}>
+                <span class="nombre">{c.nombre}</span>
+                <span class="resumen">{c.resumen}</span>
+                <span class="flecha" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ) : (
+            <li>
+              <div class="tarjeta tarjeta--pronto" aria-disabled="true">
+                <span class="nombre">{c.nombre}</span>
+                <span class="resumen">{c.resumen}</span>
+                <span class="pronto">Próximamente</span>
+              </div>
+            </li>
+          ),
+        )
       }
     </ul>
   </section>
@@ -79,6 +90,19 @@ const descripcion = `${site.brand.tagline} Gratificación, CTS, liquidación, ut
     color: var(--text-muted);
     font-size: 0.93rem;
     line-height: 1.45;
+  }
+  .tarjeta--pronto {
+    box-shadow: none;
+    background: transparent;
+  }
+  .tarjeta--pronto:hover {
+    transform: none;
+    border-color: var(--border);
+  }
+  .pronto {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
   }
   .flecha {
     position: absolute;

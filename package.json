@@ -3,10 +3,12 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.12.0",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "test": "pnpm -r --if-present test",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm --filter @calc/web typecheck",
     "validate-config": "tsx scripts/validate-config.ts",
     "build": "pnpm --filter @calc/web build",
     "dev": "pnpm --filter @calc/web dev"

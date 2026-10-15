@@ -25,6 +25,10 @@ jobs:
           for s in $(python3 scripts/list_sites.py --plain); do
             SITE=$s CI_BUILD=1 pnpm --filter @calc/web build
           done
+      - name: e2e en móvil y escritorio (sobre el último build)
+        run: |
+          pnpm --filter @calc/web exec playwright install --with-deps chromium
+          pnpm --filter @calc/web test:e2e
       - name: Sin dominios hardcodeados
         run: python3 scripts/check_no_hardcoded_domains.py
 

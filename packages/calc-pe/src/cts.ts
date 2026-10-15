@@ -183,7 +183,7 @@ export function calcularCts(entrada: EntradaCts, ctx: Contexto): ResultadoCalcul
     conceptos,
     steps: [
       pasoRc,
-      { descripcion: "Sexto de gratificación", formula: `${soles(grati.monto)} ÷ 6`, valor: monto(sexto) },
+      { descripcion: "Sexto de gratificación", formula: `${monto(grati.monto)} ÷ 6`, valor: monto(sexto) },
       { descripcion: "Base de cálculo", formula: `${monto(rc)} + ${monto(sexto)}`, valor: monto(base) },
       pasoTiempo,
       { descripcion: conceptos[0]!.etiqueta, formula: formulaCts, valor: monto(cts) },

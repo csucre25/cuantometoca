@@ -119,7 +119,7 @@ export function remuneracionComputable(
     parametros,
     paso: {
       descripcion: "Remuneración computable",
-      formula: partes.length === 1 ? "Sueldo básico" : partes.map(([, v]) => soles(v)).join(" + "),
+      formula: partes.length === 1 ? "Sueldo básico" : partes.map(([, v]) => monto(v)).join(" + "),
       valor: monto(rc),
     },
   };

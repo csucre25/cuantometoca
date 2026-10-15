@@ -80,7 +80,7 @@ describe("gratificación: reglas y avisos", () => {
   it("otros conceptos regulares integran la base", () => {
     const r = calc({ otrosRegulares: "300", mesesCompletos: 6 });
     expect(r.conceptos[0]?.monto).toBe("2300.00");
-    expect(r.steps[0]?.formula).toBe("S/ 2,000.00 + S/ 300.00");
+    expect(r.steps[0]?.formula).toBe("2000.00 + 300.00");
   });
 
   it("desglose, parámetros y base legal", () => {
