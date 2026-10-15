@@ -1,0 +1,41 @@
+---
+import Legal from "../components/Legal.astro";
+import { site } from "../site.config";
+
+const { entities } = site.glossary;
+---
+
+<Legal
+  title="Términos de uso"
+  description={`Condiciones de uso de ${site.brand.name}: cálculos referenciales basados en la normativa vigente.`}
+  actualizado="15 de octubre de 2026"
+>
+  <h2>Qué ofrecemos</h2>
+  <p>
+    {site.brand.name} ofrece calculadoras gratuitas de beneficios laborales. Cada resultado muestra cómo se obtuvo, qué
+    parámetros legales se usaron y desde cuándo están vigentes.
+  </p>
+
+  <h2>Cálculos referenciales</h2>
+  <p>
+    Los resultados son referenciales y dependen de los datos que ingresas. No constituyen asesoría legal, contable ni
+    tributaria. Tu caso puede tener particularidades que la calculadora no considera, como regímenes especiales,
+    convenios colectivos o acuerdos con tu empleador. {`Ante dudas, consulta a ${entities.fiscalizador} o al ${entities.ministerio}.`}
+  </p>
+
+  <h2>Sitio independiente</h2>
+  <p>
+    No pertenecemos ni representamos a ninguna entidad del Estado. Las normas que citamos son públicas y enlazamos a sus
+    fuentes oficiales cuando es posible.
+  </p>
+
+  <h2>Responsabilidad</h2>
+  <p>
+    Revisamos las fórmulas con casos verificados y actualizamos los parámetros cuando cambia la norma, pero no podemos
+    garantizar que el sitio esté libre de errores. No somos responsables por decisiones tomadas solo con base en estos
+    cálculos.
+  </p>
+
+  <h2>Uso del contenido</h2>
+  <p>Puedes compartir los enlaces de los cálculos libremente. No está permitido copiar el sitio o sus textos para publicarlos como propios.</p>
+</Legal>

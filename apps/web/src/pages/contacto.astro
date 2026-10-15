@@ -1,0 +1,18 @@
+---
+import Legal from "../components/Legal.astro";
+import Correo from "../components/Correo.astro";
+import { site } from "../site.config";
+---
+
+<Legal
+  title="Contacto"
+  description={`Escríbenos si encontraste un error en un cálculo o tienes una sugerencia para ${site.brand.name}.`}
+  actualizado="15 de octubre de 2026"
+>
+  <p>Escríbenos a <Correo />.</p>
+  <p>
+    Si crees que un cálculo está mal, cuéntanos qué datos ingresaste y qué resultado esperabas. Revisamos cada reporte y,
+    si confirmamos el error, lo corregimos y lo agregamos a nuestras pruebas para que no se repita.
+  </p>
+  <p class="muted">No damos asesoría legal personalizada. Para reclamos laborales, acude a {site.glossary.entities.fiscalizador}.</p>
+</Legal>

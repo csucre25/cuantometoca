@@ -50,6 +50,8 @@ jobs:
       - run: pnpm validate-config
       - run: pnpm test
       - run: pnpm --filter @calc/web build
+        env:
+          STRICT_ENV: "1"   # falla si falta una variable requerida del site
       - name: Deploy a Cloudflare Pages (cuenta del site)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets[format('CF_API_TOKEN_{0}', matrix.site_upper)] }}

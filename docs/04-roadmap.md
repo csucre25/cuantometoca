@@ -33,7 +33,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: auditoría sin valores legales literales en `calc-pe/src` (solo límites de semestre y divisores de fórmula de docs/01). 121 tests, cobertura > 95%. Todas devuelven `condiciones` para el desplegable.
 
 ## Fase 2 — Sitio web Perú MVP (2–3 sesiones)
-- [ ] 2.1 Astro: carga de `config/sites/${SITE}.yaml`, layout, header, footer, páginas legales generadas. **CA**: `SITE=pe pnpm build` sin dominios hardcodeados (`grep` limpio).
+- [x] 2.1 Astro: carga de `config/sites/${SITE}.yaml`, layout, header, footer, páginas legales generadas. **CA**: `SITE=pe pnpm build` sin dominios hardcodeados (`grep` limpio).
+  - Nota: `apps/web/site-loader.mjs` resuelve el site y sus variables (genérica → `*_<SITE>`); `STRICT_ENV=1` en deploy hace fallar el build si falta una requerida. Favicon generado con el color de marca. Preact y Playwright instalados (aprobados por el usuario).
 - [ ] 2.2 Componente calculadora + desglose + query string compartible. **CA**: gratificación y CTS funcionales en móvil.
 - [ ] 2.3 Resto de calculadoras en la UI.
 - [ ] 2.4 `AdSlot` con espacio reservado + `ads.txt` desde config. **CA**: CLS = 0 en Lighthouse con slots vacíos.

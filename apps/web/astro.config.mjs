@@ -1,7 +1,13 @@
 import { defineConfig } from "astro/config";
+import { loadSite, repoRoot } from "./site-loader.mjs";
 
-// Salida 100% estática. El dominio (site) y el resto de la configuración por país
-// se cargan desde config/sites/${SITE}.yaml en la tarea 2.1.
+// Salida 100% estática. `site` (dominio canónico) sale de config/sites/${SITE}.yaml.
+process.env.CALC_REPO_ROOT ||= repoRoot();
+const site = loadSite();
+
 export default defineConfig({
+  site: site.url,
   output: "static",
+  trailingSlash: "always",
+  build: { format: "directory", inlineStylesheets: "always" },
 });

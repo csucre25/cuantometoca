@@ -1,0 +1,26 @@
+---
+import Legal from "../components/Legal.astro";
+import { site } from "../site.config";
+---
+
+<Legal
+  title="Sobre nosotros"
+  description={`Qué es ${site.brand.name}, cómo calculamos y cómo mantenemos los parámetros legales al día.`}
+  actualizado="15 de octubre de 2026"
+>
+  <p>
+    {site.brand.name} nació para responder rápido una pregunta frecuente: cuánto te corresponde de gratificación, CTS,
+    liquidación y otros beneficios. Pones tus datos y ves el monto, con cada paso del cálculo a la vista.
+  </p>
+
+  <h2>Cómo calculamos</h2>
+  <ul>
+    <li>Cada fórmula sigue la norma que la regula, citada en el desglose.</li>
+    <li>Los valores legales, como la remuneración mínima, la UIT o las tasas, se guardan con su fecha de vigencia y su fuente.</li>
+    <li>Probamos cada fórmula con casos verificados a mano antes de publicar cualquier cambio.</li>
+    <li>Los montos se calculan con precisión completa y se redondean solo al final.</li>
+  </ul>
+
+  <h2>Quién está detrás</h2>
+  <p>El sitio es un proyecto independiente a cargo de {site.legal.ownerName}.</p>
+</Legal>

@@ -1,0 +1,48 @@
+---
+import Legal from "../components/Legal.astro";
+import Correo from "../components/Correo.astro";
+import { site } from "../site.config";
+---
+
+<Legal
+  title="Política de privacidad"
+  description={`Cómo ${site.brand.name} trata la información: los cálculos se hacen en tu navegador y no pedimos datos personales.`}
+  actualizado="15 de octubre de 2026"
+>
+  <p>
+    En {site.brand.name} no te pedimos registrarte ni datos personales. Los montos que ingresas en las calculadoras se
+    procesan en tu propio navegador y no se envían a nuestros servidores.
+  </p>
+
+  <h2>Qué información se recoge</h2>
+  <ul>
+    <li>
+      <strong>Estadísticas de uso anónimas.</strong> Usamos Cloudflare Web Analytics para saber cuántas personas visitan
+      cada página. No usa cookies ni identifica a las personas.
+    </li>
+    <li>
+      <strong>Publicidad.</strong> Este sitio se financia con anuncios de Google AdSense. Google y sus socios pueden usar
+      cookies para mostrar anuncios según tus visitas a este y otros sitios. Puedes desactivar la publicidad personalizada
+      en la <a href="https://adssettings.google.com" rel="noopener">configuración de anuncios de Google</a> y conocer más
+      en <a href="https://policies.google.com/technologies/ads" rel="noopener">cómo usa Google las cookies en publicidad</a>.
+    </li>
+    <li>
+      <strong>Enlaces compartidos.</strong> Si compartes un cálculo, los valores viajan en la dirección del enlace. No los
+      guardamos.
+    </li>
+  </ul>
+
+  <h2>Cookies</h2>
+  <p>
+    Nuestro sitio no crea cookies propias. Las cookies de publicidad son de terceros y puedes bloquearlas o borrarlas
+    desde la configuración de tu navegador.
+  </p>
+
+  <h2>Responsable y contacto</h2>
+  <p>
+    El responsable del sitio es {site.legal.ownerName}. Para cualquier consulta sobre privacidad, escríbenos a <Correo />.
+  </p>
+
+  <h2>Cambios</h2>
+  <p>Si cambiamos esta política, actualizaremos la fecha de esta página.</p>
+</Legal>

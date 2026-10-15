@@ -1,0 +1,58 @@
+---
+import { site } from "../site.config";
+---
+
+<header class="cabecera">
+  <div class="contenedor fila">
+    <a class="marca" href="/" aria-label={`${site.brand.name}, inicio`}>
+      <span class="sello" aria-hidden="true">S/</span>
+      <span>{site.brand.name}</span>
+    </a>
+    <a class="todas" href="/#calculadoras">Calculadoras</a>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.75rem;
+    gap: 1rem;
+  }
+  .marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .sello {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .todas {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 550;
+  }
+  .todas:hover {
+    color: var(--text);
+  }
+</style>

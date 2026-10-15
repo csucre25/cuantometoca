@@ -1,0 +1,51 @@
+---
+import { site } from "../site.config";
+
+const { entities } = site.glossary;
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="contenedor">
+    <nav aria-label="Información del sitio" class="enlaces">
+      <a href="/sobre-nosotros/">Sobre nosotros</a>
+      <a href="/contacto/">Contacto</a>
+      <a href="/privacidad/">Privacidad</a>
+      <a href="/terminos/">Términos</a>
+    </nav>
+    <p class="nota">
+      {`Sitio independiente. No pertenecemos ni representamos a ${entities.fiscalizador}, al ${entities.ministerio} ni a ${entities.tributaria}.`}
+      Los cálculos son referenciales y no constituyen asesoría legal.
+    </p>
+    <p class="nota">© {anio} {site.brand.name}</p>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding-block: 1.75rem 2rem;
+    font-size: 0.9rem;
+  }
+  .enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .enlaces a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 550;
+  }
+  .enlaces a:hover {
+    text-decoration: underline;
+  }
+  .nota {
+    color: var(--text-muted);
+    margin: 0 0 0.5rem;
+    max-width: 38rem;
+  }
+</style>

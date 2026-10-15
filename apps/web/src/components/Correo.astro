@@ -1,0 +1,8 @@
+---
+import { site } from "../site.config";
+
+// El correo sale de CONTACT_EMAIL / CONTACT_EMAIL_<SITE>. En deploy (STRICT_ENV=1) es obligatorio.
+const correo = site.legal.contactEmail;
+---
+
+{correo ? <a href={`mailto:${correo}`}>{correo}</a> : <span>el correo de contacto del sitio</span>}

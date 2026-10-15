@@ -1,0 +1,158 @@
+/* Sistema visual: sobrio, legible, móvil primero. Sin fuentes externas (rendimiento).
+   --brand y --accent llegan desde config/sites/<site>.yaml (Base.astro). */
+
+:root {
+  --brand: #0f766e;
+  --accent: #f59e0b;
+
+  --bg: #f7f8f7;
+  --surface: #ffffff;
+  --text: #17201f;
+  --text-muted: #57625f;
+  --border: #e2e6e4;
+  --brand-ink: var(--brand);
+  --brand-soft: color-mix(in oklab, var(--brand) 9%, var(--surface));
+  --accent-soft: color-mix(in oklab, var(--accent) 16%, var(--surface));
+  --danger: #b42318;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgb(16 24 22 / 0.05), 0 4px 16px rgb(16 24 22 / 0.04);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --content: 44rem;
+  --gutter: 1rem;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1312;
+    --surface: #161c1b;
+    --text: #e8eeec;
+    --text-muted: #a3afab;
+    --border: #2a3331;
+    --brand-ink: color-mix(in oklab, var(--brand) 55%, white);
+    --brand-soft: color-mix(in oklab, var(--brand) 22%, var(--surface));
+    --accent-soft: color-mix(in oklab, var(--accent) 18%, var(--surface));
+    --danger: #f97066;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1rem/1.6 var(--font);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.5rem);
+  font-weight: 750;
+}
+
+h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--brand-ink);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--brand) 55%, transparent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: calc(var(--content) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Prosa (páginas legales y guías) */
+.prosa {
+  padding-block: 2rem 3rem;
+}
+
+.prosa h1 {
+  margin-bottom: 0.25em;
+}
+
+.prosa h2 {
+  margin-top: 2rem;
+}
+
+.prosa ul {
+  padding-left: 1.2rem;
+}
+
+.prosa li + li {
+  margin-top: 0.35em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

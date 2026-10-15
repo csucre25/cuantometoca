@@ -1,18 +1,91 @@
 ---
-// Página provisional (Fase 0). El layout, la marca y las calculadoras llegan en la Fase 2.
+import Base from "../layouts/Base.astro";
+import { site } from "../site.config";
+
+const descripcion = `${site.brand.tagline} Gratificación, CTS, liquidación, utilidades y más, con el desglose paso a paso.`;
 ---
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Calculadoras laborales</title>
-  </head>
-  <body>
-    <main>
-      <h1>Calculadoras laborales</h1>
-      <p>Sitio en construcción.</p>
-    </main>
-  </body>
-</html>
+
+<Base title={site.brand.name} description={descripcion}>
+  <section class="hero">
+    <div class="contenedor">
+      <h1>{site.brand.tagline}</h1>
+      <p class="bajada">Pon tu sueldo y tus fechas. Te mostramos el monto y cómo se calculó, según la norma vigente.</p>
+    </div>
+  </section>
+
+  <section id="calculadoras" class="contenedor" aria-labelledby="titulo-calculadoras">
+    <h2 id="titulo-calculadoras" class="visually-hidden">Calculadoras</h2>
+    <ul class="rejilla" role="list">
+      {
+        site.calculators.map((c) => (
+          <li>
+            <a class="tarjeta" href={`/${c.slug}/`}>
+              <span class="nombre">{c.nombre}</span>
+              <span class="resumen">{c.resumen}</span>
+              <span class="flecha" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: 2.5rem 1.75rem;
+  }
+  .hero h1 {
+    max-width: 22ch;
+  }
+  .bajada {
+    color: var(--text-muted);
+    font-size: 1.075rem;
+    max-width: 36rem;
+    margin: 0;
+  }
+  .rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  }
+  .tarjeta {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    height: 100%;
+    padding: 1.05rem 2.75rem 1.05rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .tarjeta:hover {
+    border-color: color-mix(in oklab, var(--brand) 45%, var(--border));
+    transform: translateY(-1px);
+  }
+  .nombre {
+    font-weight: 650;
+    font-size: 1.05rem;
+  }
+  .resumen {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    line-height: 1.45;
+  }
+  .flecha {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    translate: 0 -50%;
+    color: var(--brand-ink);
+    font-size: 1.15rem;
+  }
+</style>
