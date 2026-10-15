@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "site.schema.json",
+  "title": "Configuración de un site (config/sites/<site>.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["site_id", "country", "enabled", "locale", "currency", "timezone", "domain", "brand", "cloudflare", "telegram", "adsense", "analytics", "consent", "calculators", "legal"],
+  "definitions": {
+    "envName": {
+      "description": "Nombre de una variable de entorno (nunca el valor)",
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+  },
+  "properties": {
+    "site_id": { "type": "string", "pattern": "^[a-z]{2}[a-z0-9-]*$" },
+    "country": { "type": "string", "pattern": "^[a-z]{2}$" },
+    "enabled": { "type": "boolean" },
+    "locale": { "type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "timezone": { "type": "string", "pattern": "^[A-Za-z_]+/[A-Za-z_]+$" },
+    "domain": {
+      "description": "Dominio canónico sin protocolo ni barra final",
+      "type": "string",
+      "pattern": "^(?!https?://)[a-z0-9-]+(\\.[a-z0-9-]+)+$"
+    },
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "tagline", "primary_color", "accent_color"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "tagline": { "type": "string", "minLength": 1 },
+        "primary_color": { "$ref": "#/definitions/color" },
+        "accent_color": { "$ref": "#/definitions/color" }
+      }
+    },
+    "cloudflare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pages_project", "account_id_env", "api_token_env"],
+      "properties": {
+        "pages_project": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,57}$" },
+        "account_id_env": { "$ref": "#/definitions/envName" },
+        "api_token_env": { "$ref": "#/definitions/envName" }
+      }
+    },
+    "telegram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bot_token_env", "admin_chat_id_env"],
+      "properties": {
+        "bot_token_env": { "$ref": "#/definitions/envName" },
+        "admin_chat_id_env": { "$ref": "#/definitions/envName" }
+      }
+    },
+    "adsense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "client_env", "slots"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "client_env": { "$ref": "#/definitions/envName" },
+        "slots": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": { "^[a-z_]+_env$": { "$ref": "#/definitions/envName" } }
+        }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cf_beacon_token_env": { "$ref": "#/definitions/envName" },
+        "ga4_id_env": { "$ref": "#/definitions/envName" },
+        "optional": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9_]+_env$" }, "uniqueItems": true }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": { "mode": { "enum": ["simple_banner", "google_cmp"] } }
+    },
+    "calculators": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+      "uniqueItems": true
+    },
+    "legal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner_name", "contact_email_env"],
+      "properties": {
+        "owner_name": { "type": "string", "minLength": 1 },
+        "contact_email_env": { "$ref": "#/definitions/envName" }
+      }
+    }
+  }
+}

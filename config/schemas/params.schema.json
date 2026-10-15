@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "params.schema.json",
+  "title": "Parámetros legales con vigencia (config/countries/<pais>/params.json)",
+  "description": "Los solapamientos y huecos entre vigencias no se pueden expresar en JSON Schema: los verifica scripts/validate-config.ts con erroresParametros() de @calc/core.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["country", "params"],
+  "properties": {
+    "country": { "type": "string", "pattern": "^[a-z]{2}$" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "_nota": { "type": "string" },
+    "params": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+      "additionalProperties": { "$ref": "#/definitions/parametro" }
+    }
+  },
+  "definitions": {
+    "fecha": { "type": "string", "format": "date" },
+    "decimal": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+    "parametro": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "history"],
+      "properties": {
+        "description": { "type": "string" },
+        "unit": { "type": "string", "minLength": 1 },
+        "history": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/entrada" } }
+      }
+    },
+    "entrada": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "from", "to", "source"],
+      "properties": {
+        "value": {
+          "description": "String decimal para valores escalares; objeto o arreglo para tablas",
+          "anyOf": [{ "$ref": "#/definitions/decimal" }, { "type": "object" }, { "type": "array" }]
+        },
+        "from": { "$ref": "#/definitions/fecha" },
+        "to": { "anyOf": [{ "$ref": "#/definitions/fecha" }, { "type": "null" }] },
+        "source": { "type": "string", "minLength": 1 },
+        "verified": { "type": "boolean" }
+      }
+    }
+  }
+}
