@@ -3,6 +3,7 @@ import type { ResultadoCalculo } from "@calc/core";
 import {
   calcularCts,
   calcularGratificacion,
+  calcularHorasExtras,
   calcularIndemnizacion,
   calcularLiquidacion,
   calcularRenta5ta,
@@ -22,6 +23,7 @@ const calculadoras: Record<string, (input: never, c: Contexto) => ResultadoCalcu
   liquidacion: calcularLiquidacion,
   utilidades: calcularUtilidades,
   renta_quinta: calcularRenta5ta,
+  horas_extras: calcularHorasExtras,
 };
 
 type Esperado = { total: string; conceptos?: Record<string, string>; advertenciaContiene?: string };

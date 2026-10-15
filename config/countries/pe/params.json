@@ -138,7 +138,7 @@
     "horas_extras_recargos": {
       "description": "Sobretasas de horas extras",
       "unit": "table",
-      "history": [ { "value": { "primeras_2h": "0.25", "desde_3ra_h": "0.35" }, "from": "2002-07-04", "to": null, "source": "DS 007-2002-TR art. 10", "verified": true } ]
+      "history": [ { "value": { "horas_primer_tramo": "2", "primeras_2h": "0.25", "desde_3ra_h": "0.35" }, "from": "2002-07-04", "to": null, "source": "DS 007-2002-TR art. 10", "verified": true } ]
     },
     "gratificacion_fechas_pago": {
       "description": "Fecha límite de pago de cada gratificación (MM-DD): primera quincena del mes",

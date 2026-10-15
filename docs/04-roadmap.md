@@ -27,8 +27,10 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: entrada anual o proyección desde el sueldo mensual; retención mensual aproximada = anual ÷ 12 (D9).
 - [x] 1.7 Pensiones ONP/AFP (con params SBS de ejemplo marcados `"verified": false`). **CA**: tests con valores ficticios documentados.
   - Nota: params cargados con valores SBS de oct-2026 (tabla de afpintegra.pe), `verified: false` hasta confirmar en sbs.gob.pe (D8). Sueldo neto incluye retención de 5ta anual ÷ 12 (D9).
-- [ ] 1.8 Horas extras. **CA**: un caso con 2 h al 25% + 1 h al 35%.
-- [ ] 1.9 Revisión: cada función cita su base legal en comentarios y devuelve `steps` legibles.
+- [x] 1.8 Horas extras. **CA**: un caso con 2 h al 25% + 1 h al 35%.
+  - Nota: caso dorado H1 agregado; umbral de 2 h movido a params (`horas_primer_tramo`).
+- [x] 1.9 Revisión: cada función cita su base legal en comentarios y devuelve `steps` legibles.
+  - Nota: auditoría sin valores legales literales en `calc-pe/src` (solo límites de semestre y divisores de fórmula de docs/01). 121 tests, cobertura > 95%. Todas devuelven `condiciones` para el desplegable.
 
 ## Fase 2 — Sitio web Perú MVP (2–3 sesiones)
 - [ ] 2.1 Astro: carga de `config/sites/${SITE}.yaml`, layout, header, footer, páginas legales generadas. **CA**: `SITE=pe pnpm build` sin dominios hardcodeados (`grep` limpio).

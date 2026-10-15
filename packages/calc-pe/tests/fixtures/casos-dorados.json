@@ -51,6 +51,11 @@
 
     { "id": "R1", "calculadora": "renta_quinta", "fechaReferencia": "2026-12-31",
       "input": { "anio": 2026, "remuneracionesAnuales": "60000", "gratificaciones": "10000", "bonificacionesExtraordinarias": "900", "otrosIngresos": "0", "deduccionAdicional": "0" },
-      "esperado": { "total": "2886.00" } }
+      "esperado": { "total": "2886.00" } },
+
+    { "id": "H1", "calculadora": "horas_extras", "fechaReferencia": "2026-11-15",
+      "_calculo": "Sueldo 2400, jornada 8 h: valor hora 2400/30/8 = 10.00. 2 h × 12.50 + 1 h × 13.50 = 38.50.",
+      "input": { "sueldoBasico": "2400", "asignacionFamiliar": false, "otrosRegulares": "0", "horasExtraPorDia": 3, "dias": 1, "jornadaHorasDiarias": 8 },
+      "esperado": { "total": "38.50", "conceptos": { "primer_tramo": "25.00", "segundo_tramo": "13.50" } } }
   ]
 }
