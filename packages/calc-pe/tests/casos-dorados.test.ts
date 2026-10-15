@@ -5,6 +5,7 @@ import {
   calcularGratificacion,
   calcularIndemnizacion,
   calcularLiquidacion,
+  calcularRenta5ta,
   calcularUtilidades,
   calcularVacacionesTruncas,
   type Contexto,
@@ -20,6 +21,7 @@ const calculadoras: Record<string, (input: never, c: Contexto) => ResultadoCalcu
   indemnizacion: calcularIndemnizacion,
   liquidacion: calcularLiquidacion,
   utilidades: calcularUtilidades,
+  renta_quinta: calcularRenta5ta,
 };
 
 type Esperado = { total: string; conceptos?: Record<string, string>; advertenciaContiene?: string };
