@@ -53,9 +53,14 @@ type ResultadoCalculo = {
   parametrosUsados: { clave: string; valor: string; vigenteDesde: string; fuente: string }[];
   advertencias: string[];   // ej. "Sueldo menor a la RMV vigente"
   baseLegal: string[];      // ej. ["Ley 27735", "DS 005-2002-TR", "Ley 30334"]
+  ajusteRedondeo: boolean;  // true si los conceptos redondeados no suman exactamente el total
+  condiciones: {            // desplegable "Condiciones", plegado por defecto
+    requisitos: string[];   // qué se necesita para recibir el beneficio
+    supuestos: string[];    // condiciones consideradas en este cálculo (régimen, periodo, trunca…)
+  };
 };
 ```
-La UI muestra el total grande, los conceptos, un acordeón "¿Cómo se calculó?" con `steps` y la norma.
+La UI muestra el total grande y los conceptos. Plegados por defecto: "¿Cómo se calculó?" (`steps`, parámetros, norma y, si `ajusteRedondeo`, una nota breve) y "Condiciones" (requisitos y supuestos). Los números de esos textos salen de `params.json`.
 
 ## 3. Gratificación (julio y diciembre)
 **Base legal**: Ley 27735; DS 005-2002-TR; Ley 30334 (bonificación extraordinaria).

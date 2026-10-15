@@ -19,6 +19,13 @@ export type ResultadoCalculo = {
   baseLegal: string[];
   /** true si los conceptos mostrados (redondeados) no suman exactamente el total. */
   ajusteRedondeo: boolean;
+  /**
+   * Texto para el desplegable "Condiciones" (plegado por defecto en la UI):
+   * - requisitos: qué se necesita para recibir el beneficio.
+   * - supuestos: condiciones concretas consideradas en este cálculo (régimen, periodo, etc.).
+   * Los números que aparecen aquí salen de params.json, nunca literales.
+   */
+  condiciones: { requisitos: string[]; supuestos: string[] };
 };
 
 /**

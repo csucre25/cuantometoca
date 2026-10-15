@@ -125,6 +125,16 @@
       "unit": "table",
       "history": [ { "value": { "primeras_2h": "0.25", "desde_3ra_h": "0.35" }, "from": "2002-07-04", "to": null, "source": "DS 007-2002-TR art. 10", "verified": true } ]
     },
+    "gratificacion_fechas_pago": {
+      "description": "Fecha límite de pago de cada gratificación (MM-DD): primera quincena del mes",
+      "unit": "object",
+      "history": [ { "value": { "julio": "07-15", "diciembre": "12-15" }, "from": "2002-05-24", "to": null, "source": "Ley 27735 art. 5", "verified": false } ]
+    },
+    "cts_fechas_deposito": {
+      "description": "Fecha límite de depósito de la CTS (MM-DD): primeros 15 días naturales del mes",
+      "unit": "object",
+      "history": [ { "value": { "mayo": "05-15", "noviembre": "11-15" }, "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 22", "verified": false } ]
+    },
     "cts_jornada_minima_horas": {
       "description": "Jornada diaria mínima promedio para tener derecho a CTS",
       "unit": "hours",

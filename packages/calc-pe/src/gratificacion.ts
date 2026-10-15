@@ -14,11 +14,13 @@ import {
   NOMBRE_REGIMEN,
   factorRegimen,
   fechaSchema,
+  fmtDiaMes,
+  fmtFecha,
   montoSchema,
   porcentaje,
-  soles,
   regimenSchema,
   remuneracionComputable,
+  soles,
   type Contexto,
 } from "./comun";
 
@@ -26,10 +28,12 @@ import {
  * Gratificación por Fiestas Patrias y Navidad (docs/01 §3).
  * - Ley 27735, arts. 1–3: una remuneración en julio y otra en diciembre, por los semestres
  *   enero–junio y julio–diciembre; proporcional si no se laboró el semestre completo.
+ *   Art. 5: se paga en la primera quincena del mes (fecha en params: gratificacion_fechas_pago).
  * - DS 005-2002-TR (reglamento): solo cuentan meses calendario completos; la trunca se
  *   calcula con los meses completos hasta el cese y se paga con la liquidación.
- * - Ley 30334, art. 3: bonificación extraordinaria igual al aporte a EsSalud (9%) o EPS (6.75%).
- * - DS 013-2013-PRODUCE (TUO Ley MYPE): pequeña empresa 50%, microempresa sin gratificación.
+ * - Ley 30334, arts. 1 y 3: la gratificación no está afecta a aportes; bonificación
+ *   extraordinaria igual al aporte a EsSalud o EPS (tasas en params).
+ * - DS 013-2013-PRODUCE (TUO Ley MYPE): factor por régimen (tabla regimenes en params).
  */
 
 export const gratificacionSchema = z
@@ -56,18 +60,23 @@ export const gratificacionSchema = z
   });
 
 export type EntradaGratificacion = z.input<typeof gratificacionSchema>;
+export type PeriodoGratificacion = "julio" | "diciembre";
 
 const MESES_SEMESTRE = 6;
 
-function semestre(periodo: "julio" | "diciembre", anio: number) {
+function semestre(ctx: Contexto, periodo: PeriodoGratificacion, anio: number) {
+  // La vigencia de la fecha de pago se consulta al inicio del semestre.
+  const inicio = periodo === "julio" ? `${anio}-01-01` : `${anio}-07-01`;
+  const fechasPago = ctx.params.value<Record<PeriodoGratificacion, string>>("gratificacion_fechas_pago", inicio);
+  const pagoMMDD = fechasPago[periodo];
   return periodo === "julio"
-    ? { inicio: `${anio}-01-01`, fin: `${anio}-06-30`, pago: `${anio}-07-15`, nombre: `enero–junio ${anio}` }
-    : { inicio: `${anio}-07-01`, fin: `${anio}-12-31`, pago: `${anio}-12-15`, nombre: `julio–diciembre ${anio}` };
+    ? { inicio, fin: `${anio}-06-30`, pago: `${anio}-${pagoMMDD}`, pagoMMDD, nombre: `enero–junio ${anio}` }
+    : { inicio, fin: `${anio}-12-31`, pago: `${anio}-${pagoMMDD}`, pagoMMDD, nombre: `julio–diciembre ${anio}` };
 }
 
 export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contexto): ResultadoCalculo {
   const input = gratificacionSchema.parse(entrada);
-  const sem = semestre(input.periodo, input.anio);
+  const sem = semestre(ctx, input.periodo, input.anio);
   const advertencias: string[] = [];
   const baseLegal = ["Ley 27735", "DS 005-2002-TR", "Ley 30334"];
   if (input.regimen === "pequena" || input.regimen === "micro") baseLegal.push("DS 013-2013-PRODUCE");
@@ -87,7 +96,7 @@ export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contex
     meses = compararFechas(hasta, desde) < 0 ? 0 : mesesCalendarioCompletos(desde, hasta);
     pasoMeses = {
       descripcion: `Meses calendario completos (${sem.nombre})`,
-      formula: `Del ${desde} al ${hasta}`,
+      formula: `Del ${fmtFecha(desde)} al ${fmtFecha(hasta)}`,
       valor: String(meses),
     };
   }
@@ -101,6 +110,18 @@ export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contex
   const { factor, parametro: paramFactor } = factorRegimen(ctx, input.regimen, "gratificacion", fechaCorte);
   if (!factor.equals(1)) parametrosUsados.push(paramFactor);
 
+  const tasaEssalud = ctx.params.get("bonificacion_extraordinaria_essalud", fechaCorte);
+  const tasaEps = ctx.params.get("bonificacion_extraordinaria_eps", fechaCorte);
+  const condiciones = condicionesGratificacion({
+    sem,
+    regimen: input.regimen,
+    factor: factor.equals(1) ? "100%" : factor.isZero() ? null : porcentaje(factor),
+    seguro: input.seguroSalud === "eps" ? `EPS (bonificación de ${porcentaje(tasaEps)})` : `EsSalud (bonificación de ${porcentaje(tasaEssalud)})`,
+    tasas: { essalud: porcentaje(tasaEssalud), eps: porcentaje(tasaEps) },
+    asignacion: input.asignacionFamiliar ? `remuneración mínima al ${fmtFecha(fechaCorte)} (${soles(rmv)})` : null,
+    trunca: trunca ? fmtFecha(input.fechaCese!) : null,
+  });
+
   const vacio = (motivo: string): ResultadoCalculo => ({
     total: "0.00",
     moneda: "PEN",
@@ -110,6 +131,7 @@ export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contex
     advertencias: [...advertencias, motivo],
     baseLegal,
     ajusteRedondeo: false,
+    condiciones,
   });
 
   if (factor.isZero()) {
@@ -155,5 +177,33 @@ export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contex
     advertencias,
     baseLegal,
     ajusteRedondeo,
+    condiciones,
   };
+}
+
+function condicionesGratificacion(d: {
+  sem: { nombre: string; pagoMMDD: string };
+  regimen: keyof typeof NOMBRE_REGIMEN;
+  factor: string | null;
+  seguro: string;
+  tasas: { essalud: string; eps: string };
+  asignacion: string | null;
+  trunca: string | null;
+}): ResultadoCalculo["condiciones"] {
+  const requisitos = [
+    "Trabajar en planilla, a tiempo completo o parcial.",
+    "Haber laborado al menos un mes calendario completo en el semestre; los días sueltos no se pagan.",
+    `Estar trabajando al ${fmtDiaMes(d.sem.pagoMMDD)}, fecha límite de pago. Si cesaste antes, te corresponde la gratificación trunca, que se paga con tu liquidación.`,
+    `Se suma una bonificación extraordinaria igual al aporte de salud que el empleador no paga sobre la gratificación: ${d.tasas.essalud} con EsSalud o ${d.tasas.eps} con EPS.`,
+    "La gratificación y la bonificación no tienen descuentos de AFP, ONP ni EsSalud.",
+    "En la microempresa no corresponde gratificación; en la pequeña empresa corresponde la mitad.",
+  ];
+  const supuestos = [
+    `Semestre: ${d.sem.nombre}.`,
+    `Régimen: ${NOMBRE_REGIMEN[d.regimen]}${d.factor ? ` (${d.factor} de la gratificación)` : ""}.`,
+    `Seguro de salud: ${d.seguro}.`,
+  ];
+  if (d.asignacion) supuestos.push(`Asignación familiar calculada con la ${d.asignacion}.`);
+  if (d.trunca) supuestos.push(`Gratificación trunca por cese el ${d.trunca}.`);
+  return { requisitos, supuestos };
 }

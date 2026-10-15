@@ -109,3 +109,37 @@ describe("gratificación: reglas y avisos", () => {
     expect(() => calc({ fechaIngreso: "2026-05-01", fechaCese: "2026-04-01" })).toThrow(/cese/);
   });
 });
+
+describe("gratificación: condiciones (desplegable)", () => {
+  it("requisitos con tasas y fecha de pago desde params", () => {
+    const { requisitos } = calc({ mesesCompletos: 6 }).condiciones;
+    expect(requisitos.join(" ")).toContain("15 de julio");
+    expect(requisitos.join(" ")).toContain("9% con EsSalud o 6.75% con EPS");
+  });
+
+  it("supuestos reflejan lo considerado en este cálculo", () => {
+    const { supuestos } = calc({
+      regimen: "pequena",
+      seguroSalud: "eps",
+      asignacionFamiliar: true,
+      fechaIngreso: "2025-01-01",
+      fechaCese: "2026-05-31",
+    }).condiciones;
+    expect(supuestos).toEqual([
+      "Semestre: enero–junio 2026.",
+      "Régimen: pequeña empresa (REMYPE) (50% de la gratificación).",
+      "Seguro de salud: EPS (bonificación de 6.75%).",
+      "Asignación familiar calculada con la remuneración mínima al 31/05/2026 (S/ 1,130.00).",
+      "Gratificación trunca por cese el 31/05/2026.",
+    ]);
+  });
+
+  it("también se devuelven cuando no corresponde", () => {
+    const r = calc({ regimen: "micro", mesesCompletos: 6 });
+    expect(r.condiciones.supuestos[1]).toBe("Régimen: microempresa (REMYPE).");
+  });
+
+  it("diciembre usa el 15 de diciembre", () => {
+    expect(calc({ periodo: "diciembre", mesesCompletos: 6 }).condiciones.requisitos[2]).toContain("15 de diciembre");
+  });
+});

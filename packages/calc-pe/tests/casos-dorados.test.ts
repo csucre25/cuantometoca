@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { ResultadoCalculo } from "@calc/core";
-import { calcularGratificacion } from "../src";
+import { calcularCts, calcularGratificacion } from "../src";
 import fixtures from "./fixtures/casos-dorados.json";
 import { ctx } from "./helpers";
 
 // Recorre todos los casos dorados. Las calculadoras aún no implementadas quedan como "todo".
 const calculadoras: Record<string, (input: never) => ResultadoCalculo> = {
   gratificacion: (input) => calcularGratificacion(input, ctx),
+  cts: (input) => calcularCts(input, ctx),
 };
 
 type Esperado = { total: string; conceptos?: Record<string, string>; advertenciaContiene?: string };

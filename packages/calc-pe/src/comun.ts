@@ -5,6 +5,7 @@ import {
   parametroUsado,
   type Decimal,
   type FechaInput,
+  type FechaISO,
   type LectorParametros,
   type Paso,
   type ParametroUsado,
@@ -30,6 +31,28 @@ export const NOMBRE_REGIMEN: Record<Regimen, string> = {
 export function soles(x: Decimal | string): string {
   const [entero, decimales] = monto(x).split(".");
   return `S/ ${entero!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${decimales}`;
+}
+
+/** Fecha para mostrar al usuario: "2026-07-15" → "15/07/2026". */
+export function fmtFecha(iso: FechaISO): string {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+/** "07-15" → "15 de julio". */
+export function fmtDiaMes(mmdd: string): string {
+  const [m, d] = mmdd.split("-");
+  return `${Number(d)} de ${MESES[Number(m) - 1]}`;
+}
+
+/** "4 meses y 10 días", "1 mes", "15 días". */
+export function fmtTiempo(meses: number, dias: number): string {
+  const partes = [];
+  if (meses > 0) partes.push(`${meses} ${meses === 1 ? "mes" : "meses"}`);
+  if (dias > 0 || meses === 0) partes.push(`${dias} ${dias === 1 ? "día" : "días"}`);
+  return partes.join(" y ");
 }
 
 /** Ratio a porcentaje legible: 0.09 → "9%", 0.0675 → "6.75%". */
