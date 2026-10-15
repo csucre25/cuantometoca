@@ -6,7 +6,7 @@
   "description": "Fórmulas de beneficios laborales de Perú (TypeScript puro, sin UI)",
   "exports": { ".": "./src/index.ts" },
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@calc/core": "workspace:*",
@@ -14,6 +14,7 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "5.0.3",
     "vitest": "5.0.3"
   }
 }

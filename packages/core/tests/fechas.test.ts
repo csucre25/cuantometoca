@@ -1,5 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { compararFechas, mesesYDiasCompletos, sumarDias, toFechaISO } from "../src";
+import { compararFechas, mesesCalendarioCompletos, mesesYDiasCompletos, sumarDias, toFechaISO } from "../src";
+
+describe("mesesCalendarioCompletos", () => {
+  it.each([
+    ["2026-01-01", "2026-06-30", 6],
+    ["2026-03-15", "2026-06-30", 3],
+    ["2026-01-01", "2026-04-30", 4],
+    ["2026-01-01", "2026-06-15", 5],
+    ["2026-01-02", "2026-01-31", 0],
+    ["2026-02-01", "2026-02-28", 1],
+    ["2026-01-20", "2026-04-10", 2],
+    ["2026-06-30", "2026-06-30", 0],
+    ["2025-11-01", "2026-02-28", 4],
+  ])("%s → %s = %i", (desde, hasta, meses) => {
+    expect(mesesCalendarioCompletos(desde, hasta)).toBe(meses);
+  });
+});
 
 describe("toFechaISO", () => {
   it("valida formato y fechas inexistentes", () => {

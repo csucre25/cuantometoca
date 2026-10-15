@@ -13,7 +13,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: verde en GitHub (run 38781579852, rama `develop`). `ci.yml` no corre en push a `main`: trabajar en `develop` y pasar a `main` por PR.
 
 ## Fase 1 — Motor de cálculo Perú (2–4 sesiones)
-- [ ] 1.1 Gratificación (incluye trunca). **CA**: fixtures G1–G6 pasan.
+- [x] 1.1 Gratificación (incluye trunca). **CA**: fixtures G1–G6 pasan.
+  - Nota: meses desde fechas (calendario completos) o manuales; trunca si el cese es antes del 15/07 o 15/12; RMV a la fecha de pago o de cese (ver `docs/decisiones.md`). Cobertura mínima 95% activada en calc-pe.
 - [ ] 1.2 CTS. **CA**: C1–C4.
 - [ ] 1.3 Vacaciones truncas. **CA**: V1.
 - [ ] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).

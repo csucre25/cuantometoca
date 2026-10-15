@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dec, monto, redondear2, sumar } from "../src";
+import { cerrarConceptos, dec, monto, redondear2, sumar } from "../src";
 
 describe("utilidades Decimal", () => {
   it("redondea half-up a 2 decimales", () => {
@@ -25,5 +25,22 @@ describe("utilidades Decimal", () => {
   it("rechaza números no enteros", () => {
     expect(() => dec(0.1)).toThrow(TypeError);
     expect(dec(6).toString()).toBe("6");
+  });
+});
+
+describe("cerrarConceptos", () => {
+  it("total = redondeo de la suma sin redondear, con aviso si no cuadra", () => {
+    const r = cerrarConceptos([
+      { id: "a", etiqueta: "A", valor: dec("1.004") },
+      { id: "b", etiqueta: "B", valor: dec("1.004") },
+    ]);
+    expect(r.conceptos.map((c) => c.monto)).toEqual(["1.00", "1.00"]);
+    expect(r.total).toBe("2.01");
+    expect(r.ajusteRedondeo).toBe(true);
+  });
+
+  it("sin aviso cuando la suma cuadra", () => {
+    const r = cerrarConceptos([{ id: "a", etiqueta: "A", valor: dec("2000") }, { id: "b", etiqueta: "B", valor: dec("180") }]);
+    expect(r).toMatchObject({ total: "2180.00", ajusteRedondeo: false });
   });
 });

@@ -61,6 +61,21 @@ function inicioDeMes({ y, m, d }: YMD, meses: number): YMD {
 }
 
 /**
+ * Meses calendario completos (del día 1 al último día del mes) comprendidos entre dos
+ * fechas, ambas inclusive. Ej.: 15/03 al 30/06 = 3 (abril, mayo, junio).
+ * Regla de la gratificación (DS 005-2002-TR).
+ */
+export function mesesCalendarioCompletos(desde: FechaInput, hasta: FechaInput): number {
+  const ini = parse(toFechaISO(desde));
+  const fin = parse(sumarDias(hasta, 1)); // fin exclusivo
+  // Primer mes completo: el de `desde` si empieza el día 1; si no, el siguiente.
+  const primero = ini.y * 12 + (ini.m - 1) + (ini.d === 1 ? 0 : 1);
+  // Último mes completo: el anterior al mes que contiene el fin exclusivo.
+  const ultimo = fin.y * 12 + (fin.m - 1) - 1;
+  return Math.max(0, ultimo - primero + 1);
+}
+
+/**
  * Tiempo de servicios entre dos fechas, ambas inclusive, en meses completos y días restantes.
  *
  * Convención: se cuentan meses completos por aniversario desde `desde` y el resto en días
