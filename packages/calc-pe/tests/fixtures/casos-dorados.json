@@ -40,6 +40,10 @@
     { "id": "L1", "calculadora": "indemnizacion", "fechaReferencia": "2026-08-15",
       "input": { "regimen": "general", "tipoContrato": "indeterminado", "remuneracionComputable": "3000", "anios": 2, "meses": 3, "dias": 0 },
       "esperado": { "total": "10125.00" } },
+    { "id": "L2", "calculadora": "liquidacion", "fechaReferencia": "2026-08-20",
+      "_calculo": "Despido arbitrario, ingreso 01/03/2023, cese 20/08/2026, sueldo 2500 + asig. 113 (RMV 1130 al cese) = RC 2613. CTS trunca may–oct: grati jul-2026 2613, sexto 435.50, base 3048.50 × (3/12 + 20/360) = 931.486… Grati trunca dic: 1 mes (julio) = 435.50; bonif. 9% = 39.195. Vacaciones truncas 5 m 20 d = 1088.75 + 145.166… = 1233.916… Indemnización 3 a 5 m 20 d: 3919.50 × (3 + 5/12 + 20/360) = 13609.375 (tope 31356 no aplica). 20 días de agosto = 1742.00. Total exacto 17991.4727… → 17991.47 (conceptos redondeados suman 17991.49: ajuste por redondeo).",
+      "input": { "regimen": "general", "sueldoBasico": "2500", "asignacionFamiliar": true, "otrosRegulares": "0", "seguroSalud": "essalud", "fechaIngreso": "2023-03-01", "fechaCese": "2026-08-20", "motivoCese": "despido_arbitrario", "tipoContrato": "indeterminado", "diasLaboradosUltimoMes": 20 },
+      "esperado": { "total": "17991.47", "conceptos": { "cts": "931.49", "gratificacion": "435.50", "bonificacion_extraordinaria": "39.20", "vacaciones_truncas": "1233.92", "indemnizacion": "13609.38", "remuneracion_pendiente": "1742.00" } } },
 
     { "id": "U1", "calculadora": "utilidades", "fechaReferencia": "2026-04-15",
       "input": { "modo": "exacto", "sector": "industrial", "rentaNeta": "1000000", "diasTotales": 7300, "diasTrabajador": 365, "remuneracionesTotales": "720000", "remuneracionesTrabajador": "36000", "remuneracionMensual": "3000" },

@@ -19,7 +19,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: tiempo desde fechas (aniversario + días) o manual; trunca si el cese cae en el periodo; gratificación del semestre estimada con el motor si no se indica. Todas las calculadoras devuelven `condiciones` (requisitos + supuestos) para el desplegable.
 - [x] 1.3 Vacaciones truncas. **CA**: V1.
   - Nota: récord desde fechas (último aniversario → cese) o manual; MYPE 15/30 desde params; `Contexto.fechaReferencia` para cálculos sin fecha propia.
-- [ ] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).
+- [x] 1.4 Indemnización + liquidación completa. **CA**: L1 + un caso integral de liquidación (agregar fixture verificado manualmente).
+  - Nota: caso integral L2 agregado con su cálculo manual en `_calculo`. Indemnización sin sexto de gratificación (D3), con período de prueba (D4) y plazo fijo (D5; MYPE pendiente). La liquidación suma valores exactos (`Concepto.valorExacto`).
 - [ ] 1.5 Utilidades (exacto y estimado). **CA**: U1.
 - [ ] 1.6 Renta de 5ta anual. **CA**: R1.
 - [ ] 1.7 Pensiones ONP/AFP (con params SBS de ejemplo marcados `"verified": false`). **CA**: tests con valores ficticios documentados.

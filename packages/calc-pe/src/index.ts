@@ -4,3 +4,5 @@ export * from "./comun";
 export * from "./gratificacion";
 export * from "./cts";
 export * from "./vacaciones";
+export * from "./indemnizacion";
+export * from "./liquidacion";

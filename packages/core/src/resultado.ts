@@ -3,7 +3,8 @@ import type { MetaParametro } from "./params";
 
 // Salida estándar de toda calculadora (docs/01 §2.4). Montos como string con 2 decimales.
 
-export type Concepto = { id: string; etiqueta: string; monto: string };
+/** `valorExacto`: monto sin redondear, para que un cálculo compuesto (liquidación) sume sin acumular redondeos. */
+export type Concepto = { id: string; etiqueta: string; monto: string; valorExacto: string };
 
 export type Paso = { descripcion: string; formula: string; valor: string };
 
@@ -37,7 +38,7 @@ export function cerrarConceptos(items: { id: string; etiqueta: string; valor: De
   total: string;
   ajusteRedondeo: boolean;
 } {
-  const conceptos = items.map(({ id, etiqueta, valor }) => ({ id, etiqueta, monto: monto(valor) }));
+  const conceptos = items.map(({ id, etiqueta, valor }) => ({ id, etiqueta, monto: monto(valor), valorExacto: valor.toFixed() }));
   const total = monto(sumar(...items.map((i) => i.valor)));
   const sumaMostrada = monto(sumar(...conceptos.map((c) => c.monto)));
   return { conceptos, total, ajusteRedondeo: sumaMostrada !== total };

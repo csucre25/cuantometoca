@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { ResultadoCalculo } from "@calc/core";
-import { calcularCts, calcularGratificacion, calcularVacacionesTruncas, type Contexto } from "../src";
+import {
+  calcularCts,
+  calcularGratificacion,
+  calcularIndemnizacion,
+  calcularLiquidacion,
+  calcularVacacionesTruncas,
+  type Contexto,
+} from "../src";
 import fixtures from "./fixtures/casos-dorados.json";
 import { ctx } from "./helpers";
 
@@ -9,6 +16,8 @@ const calculadoras: Record<string, (input: never, c: Contexto) => ResultadoCalcu
   gratificacion: calcularGratificacion,
   cts: calcularCts,
   vacaciones_truncas: calcularVacacionesTruncas,
+  indemnizacion: calcularIndemnizacion,
+  liquidacion: calcularLiquidacion,
 };
 
 type Esperado = { total: string; conceptos?: Record<string, string>; advertenciaContiene?: string };

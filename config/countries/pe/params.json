@@ -135,6 +135,11 @@
       "unit": "object",
       "history": [ { "value": { "mayo": "05-15", "noviembre": "11-15" }, "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 22", "verified": false } ]
     },
+    "periodo_prueba_meses": {
+      "description": "Período de prueba general; superado, el despido arbitrario genera indemnización",
+      "unit": "count",
+      "history": [ { "value": "3", "from": "1997-03-27", "to": null, "source": "DS 003-97-TR art. 10", "verified": false } ]
+    },
     "cts_jornada_minima_horas": {
       "description": "Jornada diaria mínima promedio para tener derecho a CTS",
       "unit": "hours",
