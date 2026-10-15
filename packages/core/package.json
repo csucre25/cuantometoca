@@ -6,7 +6,7 @@
   "description": "Motor de parámetros con vigencia, utilidades Decimal y fechas, tipos comunes de resultado",
   "exports": { ".": "./src/index.ts" },
   "scripts": {
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run"
   },
   "dependencies": {
     "decimal.js": "10.6.0"
