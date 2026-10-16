@@ -24,7 +24,7 @@ module.exports = {
             "largest-contentful-paint": ["error", { maxNumericValue: 2500 }],
             "categories:performance": ["error", { minScore: 0.9 }],
             "categories:accessibility": ["error", { minScore: 0.9 }],
-            "categories:seo": ["warn", { minScore: 0.95 }],
+            "categories:seo": ["error", { minScore: 0.95 }],
           },
         },
         {

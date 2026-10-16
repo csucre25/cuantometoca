@@ -1,4 +1,5 @@
 import { calcularHorasExtras } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { asignacion, faltaSueldo, otros, sueldo } from "./campos";
 import { contexto, si } from "./contexto";
@@ -15,6 +16,7 @@ export const horasExtras: Definicion = {
   errores: { horasExtraPorDia: "horas", jornadaHorasDiarias: "jornada" },
   iniciales: () => ({ sueldo: "", horas: "2", dias: "1", asig: "0", jornada: "8", otros: "" }),
   faltante: (v) => (!v.sueldo ? faltaSueldo : !v.horas || Number(v.horas) <= 0 ? "Indica cuántas horas extra hiciste por día." : null),
+  ejemplo: () => ({ valores: { sueldo: "2000", horas: "2", dias: "20" }, leyenda: `Sueldo de ${solesCorto("2000")}, 2 horas diarias por 20 días` }),
   calcular: (v, hoy) =>
     calcularHorasExtras(
       {

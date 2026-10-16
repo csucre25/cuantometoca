@@ -14,6 +14,12 @@ export function soles(valor: string): string {
   return moneda.format(Number(valor));
 }
 
+/** Monto sin céntimos cuando es entero, para textos: "S/ 2,000". */
+export function solesCorto(valor: string): string {
+  const s = soles(valor);
+  return Number(valor) % 1 === 0 ? s.replace(/[.,]00(?=\D*$)/, "") : s;
+}
+
 export const esMonto = (s: string) => /^-?\d+\.\d{2}$/.test(s);
 
 export function fecha(iso: string): string {

@@ -6,7 +6,11 @@ import { site } from "../site.config";
 const descripcion = `${site.brand.tagline} Gratificación, CTS, liquidación, utilidades y más, con el desglose paso a paso.`;
 ---
 
-<Base title={site.brand.name} description={descripcion}>
+<Base
+  title={site.brand.name}
+  description={descripcion}
+  jsonLd={[{ "@type": "WebSite", name: site.brand.name, url: site.url + "/", inLanguage: site.locale, description: descripcion }]}
+>
   <section class="hero">
     <div class="contenedor">
       <h1>{site.brand.tagline}</h1>

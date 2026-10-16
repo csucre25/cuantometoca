@@ -1,4 +1,5 @@
 import { calcularGratificacion } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { REGIMENES, anioDe, contexto, si } from "./contexto";
 
@@ -66,6 +67,7 @@ export const gratificacion: Definicion = {
     if (campo === "ingreso" || campo === "cese") return v.tiempo === "fechas";
     return true;
   },
+  ejemplo: () => ({ valores: { sueldo: "2000", meses: "6" }, leyenda: `Sueldo de ${solesCorto("2000")} y semestre completo` }),
   calcular: (v, hoy) =>
     calcularGratificacion(
       {

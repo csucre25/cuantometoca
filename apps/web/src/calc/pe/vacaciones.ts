@@ -1,4 +1,5 @@
 import { calcularVacacionesTruncas } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { asignacion, cese, faltaSueldo, ingreso, modoTiempo, otros, regimen, sueldo } from "./campos";
 import { contexto, si } from "./contexto";
@@ -27,6 +28,7 @@ export const vacaciones: Definicion = {
     if (v.tiempo !== "meses" && !v.cese) return "Ingresa tu último día de trabajo.";
     return null;
   },
+  ejemplo: () => ({ valores: { sueldo: "2000", tiempo: "meses", meses: "6" }, leyenda: `Sueldo de ${solesCorto("2000")} y 6 meses de récord` }),
   calcular: (v, hoy) =>
     calcularVacacionesTruncas(
       {

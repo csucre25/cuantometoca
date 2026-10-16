@@ -1,4 +1,5 @@
 import { calcularLiquidacion } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { asignacion, cese, faltaSueldo, ingreso, otros, regimen, seguro, sueldo } from "./campos";
 import { contexto, si } from "./contexto";
@@ -70,6 +71,11 @@ export const liquidacion: Definicion = {
     if (v.motivo === "despido_arbitrario" && v.contrato === "plazo_fijo" && !v.fin) return "Ingresa la fecha en que vencía tu contrato.";
     return null;
   },
+  ejemplo: (hoy) => ({
+    // Un año antes de hoy (el 29/02 pasa a 28/02 en un año no bisiesto).
+    valores: { sueldo: "2000", ingreso: `${Number(hoy.slice(0, 4)) - 1}${hoy.slice(4).replace("02-29", "02-28")}`, cese: hoy, motivo: "renuncia" },
+    leyenda: `Renuncia tras 1 año con sueldo de ${solesCorto("2000")}`,
+  }),
   calcular: (v, hoy) =>
     calcularLiquidacion(
       {

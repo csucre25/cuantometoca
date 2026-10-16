@@ -14,9 +14,32 @@ export function getStaticPaths() {
 const { calc } = Astro.props as { calc: TCalc };
 const { entities } = site.glossary;
 const hoyBuild = new Date().toISOString().slice(0, 10);
+const url = new URL(`/${calc.slug}/`, site.url).href;
+const descripcion = `${calc.resumen} Calcula el monto con tu sueldo y mira el desglose paso a paso.`;
+
+const jsonLd = [
+  {
+    "@type": "WebApplication",
+    name: calc.title,
+    url,
+    description: descripcion,
+    inLanguage: site.locale,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Cualquiera (navegador web)",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: site.currency },
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: site.url + "/" },
+      { "@type": "ListItem", position: 2, name: calc.nombre, item: url },
+    ],
+  },
+];
 ---
 
-<Base title={calc.title} description={`${calc.resumen} Calcula el monto con tu sueldo y mira el desglose paso a paso.`}>
+<Base title={calc.title} description={descripcion} ogImage={`/og/${calc.slug}.png`} jsonLd={jsonLd}>
   <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> / {calc.nombre}</nav>

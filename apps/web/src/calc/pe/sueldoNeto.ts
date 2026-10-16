@@ -1,4 +1,5 @@
 import { calcularSueldoNeto } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { asignacion, faltaSueldo, otros, seguro, sueldo } from "./campos";
 import { contexto, si } from "./contexto";
@@ -51,6 +52,7 @@ export const sueldoNeto: Definicion = {
   iniciales: () => ({ sueldo: "", sistema: "afp", afp: "", comision: "flujo", asig: "0", renta: "1", otros: "", seguro: "essalud" }),
   visible: (campo, v) => (campo === "afp" || campo === "comision" ? v.sistema === "afp" : true),
   faltante: (v) => (!v.sueldo ? faltaSueldo : v.sistema === "afp" && !v.afp ? "Elige tu AFP para ver el resultado." : null),
+  ejemplo: () => ({ valores: { sueldo: "3000", sistema: "onp" }, leyenda: `Sueldo de ${solesCorto("3000")} con ONP` }),
   calcular: (v, hoy) =>
     calcularSueldoNeto(
       {

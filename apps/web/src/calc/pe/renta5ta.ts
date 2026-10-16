@@ -1,4 +1,5 @@
 import { calcularRenta5ta } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { faltaSueldo, seguro } from "./campos";
 import { anioDe, contexto } from "./contexto";
@@ -17,6 +18,7 @@ export const renta5ta: Definicion = {
   iniciales: (hoy) => ({ sueldo: "", anio: String(anioDe(hoy)), gastos: "", otros: "", seguro: "essalud" }),
   errores: { sueldoMensual: "sueldo", deduccionAdicional: "gastos", otrosIngresos: "otros" },
   faltante: (v) => (!v.sueldo ? faltaSueldo : null),
+  ejemplo: () => ({ valores: { sueldo: "5000" }, leyenda: `Sueldo de ${solesCorto("5000")} al mes` }),
   calcular: (v, hoy) =>
     calcularRenta5ta(
       {

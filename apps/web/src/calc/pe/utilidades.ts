@@ -1,4 +1,5 @@
 import { calcularUtilidades } from "@calc/calc-pe";
+import { solesCorto } from "../../components/calc/formato";
 import type { Definicion } from "../tipos";
 import { anioDe, contexto } from "./contexto";
 
@@ -72,6 +73,7 @@ export const utilidades: Definicion = {
     if (exacto(v) && (!v.diasTotales || !v.diasTrab || !v.remTotales || !v.remTrab)) return "Completa los datos del comunicado de utilidades.";
     return null;
   },
+  ejemplo: () => ({ valores: { sector: "minera", renta: "5000000", trabajadores: "100" }, leyenda: `Minera con renta de ${solesCorto("5000000")} y 100 trabajadores` }),
   calcular: (v, hoy) =>
     calcularUtilidades(
       exacto(v)

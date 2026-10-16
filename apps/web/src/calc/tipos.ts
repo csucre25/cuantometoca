@@ -30,4 +30,6 @@ export type Definicion = {
   /** Etiqueta del total ("Te corresponde", "Tu sueldo neto"…). */
   etiquetaTotal: string;
   calcular: (v: Valores, hoy: string) => ResultadoCalculo;
+  /** Caso de ejemplo para la imagen OG: el monto lo calcula el motor en el build. */
+  ejemplo: (hoy: string) => { valores: Valores; leyenda: string };
 };

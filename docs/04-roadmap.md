@@ -41,7 +41,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: 8 calculadoras con formulario; campos comunes en `calc/pe/campos.ts`; mensaje de espera específico (`faltante`). 38 e2e (cada caso dorado de UI en móvil y escritorio). JS por página ≈ 69 KB gzip.
 - [x] 2.4 `AdSlot` con espacio reservado + `ads.txt` desde config. **CA**: CLS = 0 en Lighthouse con slots vacíos.
   - Nota: Lighthouse móvil con `ADS_PREVIEW=1`: CLS 0, LCP ≤ 1.7 s, rendimiento/accesibilidad/SEO 100. Lighthouse CI en el pipeline. `ads.txt` solo si AdSense está activo. Sin `in_breakdown` (ver decisiones).
-- [ ] 2.5 SEO técnico: sitemap, robots, canonical, schema, OG images estáticas por calculadora. **CA**: Lighthouse SEO ≥ 95, rendimiento móvil ≥ 90.
+- [x] 2.5 SEO técnico: sitemap, robots, canonical, schema, OG images estáticas por calculadora. **CA**: Lighthouse SEO ≥ 95, rendimiento móvil ≥ 90.
+  - Nota: SEO 100 y rendimiento 100 en móvil (exigidos en CI). Sitemap/robots desde config; JSON-LD `WebApplication` + `BreadcrumbList` (calculadoras) y `WebSite` (inicio); OG 1200×630 en PNG con `sharp` (ya incluido por Astro) y monto de ejemplo calculado por el motor.
 - [ ] 2.6 Página "Parámetros vigentes" generada desde params.
 - [ ] 2.7 Guías editoriales base (una por beneficio), redactadas con LLM y revisadas por el usuario.
 
