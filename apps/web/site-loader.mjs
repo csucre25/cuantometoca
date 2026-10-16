@@ -86,7 +86,11 @@ export function loadSite(siteId = process.env.SITE || "pe") {
 
   if (faltantes.length > 0) {
     const msg = `Faltan variables de entorno del site "${siteId}": ${faltantes.join(", ")}`;
-    if (process.env.STRICT_ENV === "1") throw new Error(msg);
+    if (process.env.STRICT_ENV === "1") {
+      // En GitHub Actions, como anotación legible sin abrir los logs.
+      if (process.env.GITHUB_ACTIONS === "true") console.log(`::error title=Variables faltantes::${msg}`);
+      throw new Error(msg);
+    }
     if (!process.env.CI_BUILD) console.warn(`[site] ${msg} (se continúa: STRICT_ENV no está activo)`);
   }
 

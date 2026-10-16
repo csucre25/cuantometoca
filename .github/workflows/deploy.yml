@@ -58,9 +58,14 @@ jobs:
       - run: pnpm validate-config
       - run: pnpm test
       - name: Build (falla si falta una variable requerida del site)
-        run: pnpm --filter @calc/web build
+        run: |
+          set -o pipefail
+          pnpm --filter @calc/web build 2>&1 | tee build.log
         env:
           STRICT_ENV: "1"
+      - name: Motivo del fallo del build como anotación
+        if: failure()
+        run: grep -iE "error|faltan" build.log | grep -v "::error" | head -5 | sed 's/^/::error title=Build::/' || true
       - name: Sin dominios hardcodeados
         run: python3 scripts/check_no_hardcoded_domains.py
       - name: Parámetros sin verificar (aviso, no bloquea)
