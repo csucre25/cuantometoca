@@ -5,6 +5,8 @@ Sin SDK de proveedor (CLAUDE.md: nunca acoplar el código a un proveedor). Se co
   LLM_MODEL          modelo para borradores y uso general
   LLM_MODEL_EXTRACT  modelo para extraer datos de normas (si falta, se usa LLM_MODEL)
   LLM_FALLBACK_BASE_URL, LLM_FALLBACK_API_KEY, LLM_FALLBACK_MODEL (respaldo, ej. Ollama)
+  LLM_MAX_TOKENS     tope de tokens de la respuesta (4000: los modelos de razonamiento gastan
+                     parte en "pensar" antes de escribir el contenido)
 
 Reglas de docs/02 §7: el respaldo es SOLO para borradores. La extracción usa únicamente el
 proveedor principal: nunca se propone un parámetro extraído por el modelo de respaldo.
@@ -95,7 +97,7 @@ def _completar(p: Proveedor, mensajes: list[dict], temperatura: float, client: h
     r = client.post(
         f"{p.base_url.rstrip('/')}/chat/completions",
         headers={"Authorization": f"Bearer {p.api_key}"},
-        json={"model": p.model, "messages": mensajes, "temperature": temperatura, "max_tokens": 1500},
+        json={"model": p.model, "messages": mensajes, "temperature": temperatura, "max_tokens": int(os.environ.get("LLM_MAX_TOKENS", "4000"))},
     )
     r.raise_for_status()
     return r.json()["choices"][0]["message"]["content"] or ""
