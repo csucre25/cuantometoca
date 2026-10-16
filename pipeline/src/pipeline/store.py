@@ -55,6 +55,16 @@ CREATE TABLE IF NOT EXISTS drafts (
   created TEXT NOT NULL,
   updated TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS extraction_queue (
+  norma_id TEXT PRIMARY KEY,
+  titulo TEXT NOT NULL,
+  url TEXT NOT NULL,
+  fecha TEXT NOT NULL,
+  params_json TEXT NOT NULL,
+  intentos INTEGER NOT NULL DEFAULT 0,
+  ultimo_error TEXT,
+  created TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
@@ -194,6 +204,25 @@ class Store:
             self._ejecutar("UPDATE drafts SET status=?, updated=? WHERE id=?", (status, _ahora(), borrador_id))
         else:
             self._ejecutar("UPDATE drafts SET status=?, body=?, updated=? WHERE id=?", (status, body, _ahora(), borrador_id))
+
+    # --- extraction_queue ---------------------------------------------------------------------
+    # Normas cuya extracción con LLM falló: se reintentan en cada corrida (docs/02 §7).
+
+    def encolar_extraccion(self, norma_id: str, titulo: str, url: str, fecha: str, params: list[str], error: str) -> None:
+        self._ejecutar(
+            "INSERT INTO extraction_queue (norma_id, titulo, url, fecha, params_json, intentos, ultimo_error, created) VALUES (?,?,?,?,?,1,?,?) "
+            "ON CONFLICT(norma_id) DO UPDATE SET intentos=intentos+1, ultimo_error=excluded.ultimo_error",
+            (norma_id, titulo, url, fecha, json.dumps(params), error, _ahora()),
+        )
+
+    def extracciones_pendientes(self) -> list[dict[str, Any]]:
+        return [
+            {"norma_id": f["norma_id"], "titulo": f["titulo"], "url": f["url"], "fecha": f["fecha"], "params": json.loads(f["params_json"]), "intentos": f["intentos"]}
+            for f in self._consultar("SELECT * FROM extraction_queue ORDER BY created")
+        ]
+
+    def quitar_extraccion(self, norma_id: str) -> None:
+        self._ejecutar("DELETE FROM extraction_queue WHERE norma_id=?", (norma_id,))
 
     # --- events -------------------------------------------------------------------------------
 

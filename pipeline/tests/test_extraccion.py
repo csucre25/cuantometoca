@@ -16,6 +16,8 @@ CITA = "la Remuneración Mínima Vital pasa a ascender a S/ 1,230.00 (Un Mil Dos
 
 @pytest.fixture(autouse=True)
 def proveedor(monkeypatch):
+    monkeypatch.setattr("tenacity.nap.time.sleep", lambda _s: None)  # sin esperas entre reintentos
+    monkeypatch.delenv("LLM_MODEL_EXTRACT", raising=False)
     monkeypatch.setenv("LLM_BASE_URL", "https://llm.prueba/v1")
     monkeypatch.setenv("LLM_API_KEY", "clave")
     monkeypatch.setenv("LLM_MODEL", "modelo-prueba")
@@ -86,3 +88,36 @@ def test_sin_proveedor_configurado(monkeypatch):
     monkeypatch.setenv("LLM_API_KEY", "")
     with pytest.raises(llm.LLMError, match="LLM_API_KEY"):
         llm.completar([{"role": "user", "content": "hola"}])
+
+
+@respx.mock
+def test_la_extraccion_nunca_usa_el_respaldo_y_usa_su_modelo(monkeypatch):
+    monkeypatch.setenv("LLM_MODEL_EXTRACT", "modelo-extraccion")
+    monkeypatch.setenv("LLM_FALLBACK_BASE_URL", "http://localhost:11434/v1")
+    monkeypatch.setenv("LLM_FALLBACK_MODEL", "qwen2.5:7b-instruct")
+    principal = respx.post(URL).mock(return_value=httpx.Response(401))
+    respaldo = respx.post("http://localhost:11434/v1/chat/completions").mock(return_value=respuesta({"cambios": []}))
+    with pytest.raises(llm.LLMError):
+        extraer_cambios("pe", TEXTO, "2026-09-28", ["rmv"])
+    assert respaldo.call_count == 0
+    assert json.loads(principal.calls.last.request.content)["model"] == "modelo-extraccion"
+    assert [p.model for p in llm.proveedores("general")] == ["modelo-prueba", "qwen2.5:7b-instruct"]
+
+
+@respx.mock
+def test_extraccion_fallida_se_encola_y_se_reintenta(tmp_path):
+    from pipeline import revision
+    from pipeline.store import Store
+
+    store = Store.del_site("pe", data_dir=tmp_path)
+    datos = dict(norma_id="2559163-1", titulo="DECRETO SUPREMO N° 015-2026-TR", url="https://n/1", fecha="2026-09-28", params=["rmv"])
+    ruta = respx.post(URL).mock(return_value=httpx.Response(503))
+    ok, detalle = revision.proponer_desde_norma("pe", store, obtener_texto=lambda _u: TEXTO, **datos)
+    assert not ok and "se reintentará" in detalle
+    assert [p["norma_id"] for p in store.extracciones_pendientes()] == ["2559163-1"]
+
+    ruta.mock(return_value=respuesta({"cambios": [{"clave": "rmv", "valor": "1230.00", "vigente_desde": "2026-10-01", "cita": CITA}]}))
+    terminadas = revision.reintentar_pendientes("pe", store, obtener_texto=lambda _u: TEXTO)
+    assert terminadas and "rmv = 1230.00" in terminadas[0][1]
+    assert store.extracciones_pendientes() == []
+    assert [(p.param_key, p.value, p.status) for p in store.propuestas()] == [("rmv", "1230.00", "pendiente")]

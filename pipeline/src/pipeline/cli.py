@@ -57,7 +57,7 @@ def params_check(
     from datetime import date, datetime
     from zoneinfo import ZoneInfo
 
-    from pipeline import notificar
+    from pipeline import notificar, revision
     from pipeline.watchers import afp, elperuano
 
     sites = [s for s in cargar_sites(solo_habilitados=True) if s.country == country]
@@ -67,12 +67,21 @@ def params_check(
 
     for site in sites:
         store = Store.del_site(site.site_id)
+
+        # Extracciones que fallaron en corridas anteriores.
+        for titulo, detalle in revision.reintentar_pendientes(country, store):
+            typer.echo(f"[{site.site_id}] Reintento de extracción: {titulo}\n    {detalle}")
+            if notify:
+                notificar.enviar(site, f"🔁 <b>Extracción completada</b>: {titulo}\n{detalle}")
+
         alertas = elperuano.revisar(country, fecha, store)
         store.registrar("params_check", fuente="elperuano", dia=fecha.isoformat(), alertas=len(alertas))
         typer.echo(f"[{site.site_id}] El Peruano {fecha.isoformat()}: {len(alertas)} norma(s) nueva(s) relevante(s)")
         for a in alertas:
             typer.echo(f"  - {a.norma.titulo}: {a.norma.sumilla[:100]} [{', '.join(a.reglas)}]")
-            detalle = _proponer_desde_norma(country, a, store)
+            _, detalle = revision.proponer_desde_norma(
+                country, store, norma_id=a.norma.id, titulo=a.norma.titulo, url=a.norma.url, fecha=a.norma.fecha, params=a.params
+            )
             typer.echo(f"    {detalle}")
             if notify:
                 notificar.enviar(site, elperuano.mensaje(a) + "\n\n" + detalle)
@@ -86,28 +95,6 @@ def params_check(
             if notify:
                 notificar.enviar(site, afp.mensaje(c))
                 store.registrar("aviso_enviado", fuente="afp", propuesta=c.propuesta_id)
-
-
-def _proponer_desde_norma(country: str, alerta, store: Store) -> str:
-    """Extrae con LLM los valores de la norma y crea propuestas pendientes. Devuelve el texto para el aviso."""
-    from pipeline.extraccion import extraer_cambios
-    from pipeline.llm.client import LLMError, proveedores
-    from pipeline.watchers import elperuano
-
-    if not proveedores():
-        return "Extracción automática no disponible (sin LLM configurado): revisar la norma a mano."
-    try:
-        texto = elperuano.texto_norma(alerta.norma.url)
-        aceptados, descartes = extraer_cambios(country, texto, alerta.norma.fecha, alerta.params)
-    except (LLMError, ValueError, OSError) as e:
-        return f"No se pudo extraer el valor automáticamente ({e}). Revisar la norma a mano."
-    lineas = []
-    for c in aceptados:
-        pid = store.proponer_parametro(country, c.clave, c.valor, c.vigente_desde.isoformat(), alerta.norma.titulo, alerta.norma.url)
-        lineas.append(f"Valor detectado (LLM): {c.clave} = {c.valor} desde {c.vigente_desde.isoformat()} → propuesta #{pid}")
-    if descartes:
-        lineas.append("Descartado por no estar respaldado en el texto: " + "; ".join(descartes))
-    return "\n".join(lineas) or "La norma no fija un valor nuevo concreto para los parámetros vigilados."
 
 
 @app.command()

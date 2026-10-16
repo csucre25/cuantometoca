@@ -74,7 +74,8 @@ def extraer_cambios(country: str, texto_norma: str, fecha_publicacion: str, posi
         f"Fecha de publicación: {fecha_publicacion}\n"
         f"Claves posibles:\n" + "\n".join(f"- {k}: {d}" for k, d in claves.items()) + f"\n\nTexto de la norma:\n{texto_norma[:12000]}"
     )
-    resultado = llm.extraer(SISTEMA, usuario, Extraccion)
+    # Solo el proveedor principal con LLM_MODEL_EXTRACT; nunca el respaldo (docs/02 §7).
+    resultado = llm.extraer(SISTEMA, usuario, Extraccion, tarea="extraccion")
     texto_norm = normalizar(texto_norma)
     aceptados, descartes = [], []
     for c in resultado.cambios:

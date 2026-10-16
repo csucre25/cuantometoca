@@ -1,10 +1,14 @@
 """Cliente LLM sobre el endpoint estándar /chat/completions (OpenAI-compatible).
 
 Sin SDK de proveedor (CLAUDE.md: nunca acoplar el código a un proveedor). Se configura con:
-  LLM_BASE_URL, LLM_API_KEY, LLM_MODEL, LLM_MAX_RPM            (principal; NVIDIA por defecto)
-  LLM_FALLBACK_BASE_URL, LLM_FALLBACK_API_KEY, LLM_FALLBACK_MODEL (respaldo opcional, ej. Ollama)
+  LLM_BASE_URL, LLM_API_KEY, LLM_MAX_RPM                         (proveedor principal; NVIDIA por defecto)
+  LLM_MODEL          modelo para borradores y uso general
+  LLM_MODEL_EXTRACT  modelo para extraer datos de normas (si falta, se usa LLM_MODEL)
+  LLM_FALLBACK_BASE_URL, LLM_FALLBACK_API_KEY, LLM_FALLBACK_MODEL (respaldo, ej. Ollama)
 
-Uso permitido (docs/02 §7): extraer datos de normas y redactar borradores. Nunca calcular montos.
+Reglas de docs/02 §7: el respaldo es SOLO para borradores. La extracción usa únicamente el
+proveedor principal: nunca se propone un parámetro extraído por el modelo de respaldo.
+Nunca se usa el LLM para calcular montos.
 """
 
 from __future__ import annotations
@@ -15,7 +19,7 @@ import re
 import threading
 import time
 from dataclasses import dataclass
-from typing import TypeVar
+from typing import Literal, TypeVar
 
 import httpx
 from pydantic import BaseModel, ValidationError
@@ -24,6 +28,8 @@ from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponen
 from pipeline.config import cargar_env
 
 M = TypeVar("M", bound=BaseModel)
+Tarea = Literal["general", "extraccion"]
+MODELO_GENERAL = "nvidia/nemotron-3-super-120b-a12b"
 
 
 class LLMError(RuntimeError):
@@ -42,20 +48,22 @@ class Proveedor:
         return f"{self.model} @ {httpx.URL(self.base_url).host}"
 
 
-def proveedores() -> list[Proveedor]:
-    """Principal y, si está configurado, respaldo."""
+def proveedores(tarea: Tarea = "general") -> list[Proveedor]:
+    """Proveedores a probar en orden. La extracción solo usa el principal, con su modelo propio."""
     cargar_env()
     lista = []
     if os.environ.get("LLM_API_KEY"):
+        modelo_general = os.environ.get("LLM_MODEL") or MODELO_GENERAL
+        modelo = (os.environ.get("LLM_MODEL_EXTRACT") or modelo_general) if tarea == "extraccion" else modelo_general
         lista.append(
             Proveedor(
                 os.environ.get("LLM_BASE_URL", "https://integrate.api.nvidia.com/v1"),
                 os.environ["LLM_API_KEY"],
-                os.environ.get("LLM_MODEL", "meta/llama-3.3-70b-instruct"),
+                modelo,
                 int(os.environ.get("LLM_MAX_RPM", "30")),
             )
         )
-    if os.environ.get("LLM_FALLBACK_BASE_URL") and os.environ.get("LLM_FALLBACK_MODEL"):
+    if tarea == "general" and os.environ.get("LLM_FALLBACK_BASE_URL") and os.environ.get("LLM_FALLBACK_MODEL"):
         lista.append(
             Proveedor(os.environ["LLM_FALLBACK_BASE_URL"], os.environ.get("LLM_FALLBACK_API_KEY", "x"), os.environ["LLM_FALLBACK_MODEL"])
         )
@@ -93,9 +101,11 @@ def _completar(p: Proveedor, mensajes: list[dict], temperatura: float, client: h
     return r.json()["choices"][0]["message"]["content"] or ""
 
 
-def completar(mensajes: list[dict], *, temperatura: float = 0.0, client: httpx.Client | None = None) -> tuple[str, Proveedor]:
-    """Texto de la respuesta, probando el proveedor principal y luego el de respaldo."""
-    lista = proveedores()
+def completar(
+    mensajes: list[dict], *, tarea: Tarea = "general", temperatura: float = 0.0, client: httpx.Client | None = None
+) -> tuple[str, Proveedor]:
+    """Texto de la respuesta. En tareas generales, si falla el principal, prueba el respaldo."""
+    lista = proveedores(tarea)
     if not lista:
         raise LLMError("No hay proveedor LLM configurado (falta LLM_API_KEY)")
     errores = []
@@ -121,10 +131,10 @@ def _json_de(texto: str) -> dict:
     return json.loads(m.group(0))
 
 
-def extraer(sistema: str, usuario: str, modelo: type[M], *, client: httpx.Client | None = None) -> M:
+def extraer(sistema: str, usuario: str, modelo: type[M], *, tarea: Tarea = "general", client: httpx.Client | None = None) -> M:
     """Pide una respuesta JSON y la valida con pydantic; si no valida, reintenta una vez con el error."""
     mensajes = [{"role": "system", "content": sistema}, {"role": "user", "content": usuario}]
-    texto, _ = completar(mensajes, client=client)
+    texto, _ = completar(mensajes, tarea=tarea, client=client)
     try:
         return modelo.model_validate(_json_de(texto))
     except (ValueError, ValidationError) as e:
@@ -132,7 +142,7 @@ def extraer(sistema: str, usuario: str, modelo: type[M], *, client: httpx.Client
             {"role": "assistant", "content": texto},
             {"role": "user", "content": f"Tu respuesta no es válida: {e}. Responde solo con el JSON corregido."},
         ]
-        texto, _ = completar(mensajes, client=client)
+        texto, _ = completar(mensajes, tarea=tarea, client=client)
         try:
             return modelo.model_validate(_json_de(texto))
         except (ValueError, ValidationError) as e2:
