@@ -1,0 +1,37 @@
+# Vigilancia normativa de Perú (pipeline/src/pipeline/watchers/).
+# Términos que, si aparecen en el título o la sumilla de una norma, generan un aviso por Telegram.
+# Se comparan sin tildes ni mayúsculas. `params` = parámetros de params.json que podría afectar.
+
+elperuano:
+  url_filtro: "https://diariooficial.elperuano.pe/Normas/Filtro"
+  reglas:
+    - id: rmv
+      terminos: ["remuneracion minima vital", "remuneracion minima"]
+      params: [rmv]
+    - id: uit
+      terminos: ["unidad impositiva tributaria"]
+      params: [uit]
+    - id: gratificacion
+      terminos: ["gratificacion", "bonificacion extraordinaria"]
+      params: [gratificacion_fechas_pago, bonificacion_extraordinaria_essalud, bonificacion_extraordinaria_eps]
+    - id: cts
+      terminos: ["compensacion por tiempo de servicios", "cts"]
+      params: [cts_fechas_deposito, cts_jornada_minima_horas, cts_retiro_extraordinario]
+    - id: utilidades
+      terminos: ["participacion en las utilidades", "participacion de los trabajadores en las utilidades"]
+      params: [utilidades_porcentajes, utilidades_tope_remuneraciones]
+    - id: pensiones
+      terminos: ["sistema privado de pensiones", "sistema nacional de pensiones", "administradoras de fondos de pensiones", "remuneracion maxima asegurable"]
+      params: [afp_prima_seguro, afp_remuneracion_maxima_asegurable, afp_comisiones, onp_tasa, afp_aporte_obligatorio]
+    - id: renta_quinta
+      terminos: ["renta de quinta categoria", "impuesto a la renta"]
+      params: [renta5ta_tramos, renta5ta_deduccion_uit, renta5ta_deduccion_adicional_max_uit]
+    - id: jornada
+      terminos: ["jornada de trabajo", "trabajo en sobretiempo", "horas extras"]
+      params: [jornada_maxima_horas, horas_extras_recargos]
+    - id: mype
+      terminos: ["micro y pequena empresa", "remype"]
+      params: [regimenes]
+    - id: asignacion_familiar
+      terminos: ["asignacion familiar"]
+      params: [asignacion_familiar_pct]

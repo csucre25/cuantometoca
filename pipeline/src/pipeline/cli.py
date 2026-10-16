@@ -47,5 +47,35 @@ def estado(site: str = typer.Option(..., help="site_id, ej. pe")) -> None:
         typer.echo(f"  #{b.id} [{b.kind}] {b.title}")
 
 
+@app.command("params-check")
+def params_check(
+    country: str = typer.Option(..., help="País, ej. pe"),
+    dia: str = typer.Option("", help="Fecha YYYY-MM-DD (por defecto, hoy en la zona horaria del site)"),
+    notify: bool = typer.Option(False, help="Enviar los avisos por Telegram a los sites del país"),
+) -> None:
+    """Revisa El Peruano y avisa las normas que podrían cambiar un parámetro."""
+    from datetime import date, datetime
+    from zoneinfo import ZoneInfo
+
+    from pipeline import notificar
+    from pipeline.watchers import elperuano
+
+    sites = [s for s in cargar_sites(solo_habilitados=True) if s.country == country]
+    if not sites:
+        raise typer.BadParameter(f"No hay sites habilitados para el país '{country}'")
+    fecha = date.fromisoformat(dia) if dia else datetime.now(ZoneInfo(sites[0].timezone)).date()
+
+    for site in sites:
+        store = Store.del_site(site.site_id)
+        alertas = elperuano.revisar(country, fecha, store)
+        store.registrar("params_check", fuente="elperuano", dia=fecha.isoformat(), alertas=len(alertas))
+        typer.echo(f"[{site.site_id}] El Peruano {fecha.isoformat()}: {len(alertas)} norma(s) nueva(s) relevante(s)")
+        for a in alertas:
+            typer.echo(f"  - {a.norma.titulo}: {a.norma.sumilla[:100]} [{', '.join(a.reglas)}]")
+            if notify:
+                notificar.enviar(site, elperuano.mensaje(a))
+                store.registrar("aviso_enviado", fuente="elperuano", norma=a.norma.id)
+
+
 if __name__ == "__main__":
     app()
