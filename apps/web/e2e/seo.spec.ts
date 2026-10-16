@@ -37,3 +37,24 @@ test.describe("SEO técnico", () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
   });
 });
+
+test.describe("parámetros vigentes", () => {
+  test("muestra los valores con vigencia y fuente, sin notas internas", async ({ page }) => {
+    await page.goto("/parametros-vigentes/");
+    for (const t of ["Remuneraciones", "Gratificación y CTS", "Impuesto a la renta de quinta categoría", "Pensiones", "Utilidades"]) {
+      await expect(page.getByRole("heading", { name: t, level: 2 })).toBeVisible();
+    }
+    const fila = page.locator(".fila", { hasText: "Remuneración mínima vital" });
+    await expect(fila.locator("strong")).toHaveText(/^S\/\s[\d,]+\.\d{2}$/);
+    await expect(fila.locator(".fuente")).toContainText(/Desde \d{2}\/\d{2}\/\d{4} · DS/);
+    // Las notas internas de params.json (campo "nota") nunca se publican.
+    await expect(page.locator("body")).not.toContainText("afpintegra");
+    await expect(page.locator("body")).not.toContainText("segundo tramo");
+  });
+
+  test("está en el sitemap y en el pie", async ({ page, request }) => {
+    expect(await (await request.get("/sitemap.xml")).text()).toContain("/parametros-vigentes/");
+    await page.goto("/");
+    await expect(page.locator("footer").getByRole("link", { name: "Parámetros vigentes" })).toHaveAttribute("href", "/parametros-vigentes/");
+  });
+});

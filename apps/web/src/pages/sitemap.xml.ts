@@ -7,6 +7,7 @@ export const GET: APIRoute = () => {
   const rutas = [
     "/",
     ...site.calculators.filter((c) => definicion(site.country, c.id)).map((c) => `/${c.slug}/`),
+    "/parametros-vigentes/",
     "/sobre-nosotros/",
     "/contacto/",
     "/privacidad/",

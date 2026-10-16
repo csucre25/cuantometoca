@@ -1,14 +1,14 @@
 {
   "country": "pe",
   "currency": "PEN",
-  "_nota": "Valores como string decimal. Nunca sobrescribir: agregar entradas al history con from/to. 'verified': false = debe confirmarse contra la fuente oficial antes de publicar.",
+  "_nota": "source = fuente pública (se muestra al usuario); nota = comentario interno (no se muestra). Valores como string decimal. Nunca sobrescribir: agregar entradas al history con from/to. 'verified': false = debe confirmarse contra la fuente oficial antes de publicar.",
   "params": {
     "rmv": {
       "description": "Remuneración Mínima Vital (régimen privado, jornada completa)",
       "unit": "PEN",
       "history": [
         { "value": "1130.00", "from": "2025-01-01", "to": "2026-09-30", "source": "DS 006-2024-TR", "verified": true },
-        { "value": "1230.00", "from": "2026-10-01", "to": null, "source": "DS 015-2026-TR (primer tramo; segundo tramo a S/ 1,300 previsto para el primer semestre de 2027 mediante nuevo DS)", "verified": true }
+        { "value": "1230.00", "from": "2026-10-01", "to": null, "source": "DS 015-2026-TR", "nota": "Primer tramo; segundo tramo a S/ 1,300 previsto para el primer semestre de 2027 mediante nuevo DS", "verified": true }
       ]
     },
     "uit": {
@@ -52,12 +52,12 @@
     "afp_prima_seguro": {
       "description": "Prima de seguro de invalidez, sobrevivencia y gastos de sepelio. Actualizar desde la SBS (watcher sbs_afp).",
       "unit": "ratio",
-      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS — igual para las 4 AFP; tomado de la tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15)", "verified": false } ]
+      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS", "nota": "Igual para las 4 AFP; tomado de la tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15)", "verified": false } ]
     },
     "afp_remuneracion_maxima_asegurable": {
       "description": "Tope de remuneración para el cálculo de la prima de seguro. Actualizar trimestralmente desde la SBS.",
       "unit": "PEN",
-      "history": [ { "value": "12732.70", "from": "2026-10-01", "to": null, "source": "SBS — vigente oct–dic 2026 según afpintegra.pe/cliente/comisiones (consultada 2026-10-15); actualizar cada trimestre", "verified": false } ]
+      "history": [ { "value": "12732.70", "from": "2026-10-01", "to": null, "source": "SBS", "nota": "Vigente oct–dic 2026 según afpintegra.pe/cliente/comisiones (consultada 2026-10-15); actualizar cada trimestre", "verified": false } ]
     },
     "afp_comisiones": {
       "description": "Comisión por AFP (flujo y mixta). Estructura: { afp: { flujo: ratio, mixta_flujo: ratio, mixta_saldo_anual: ratio } }. Poblar desde la SBS.",
@@ -70,7 +70,7 @@
             "profuturo": { "flujo": "0.0169", "mixta_flujo": "0", "mixta_saldo_anual": "0.0068" }
           },
           "from": "2026-10-01", "to": null,
-          "source": "SBS — tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15); confirmar contra sbs.gob.pe",
+          "source": "SBS", "nota": "Tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15); confirmar contra sbs.gob.pe",
           "verified": false
         } ]
     },

@@ -33,3 +33,14 @@ export type Definicion = {
   /** Caso de ejemplo para la imagen OG: el monto lo calcula el motor en el build. */
   ejemplo: (hoy: string) => { valores: Valores; leyenda: string };
 };
+
+/** Página "Parámetros vigentes": contenido ya formateado, generado desde params.json. */
+export type Seccion = {
+  titulo: string;
+  /** Slug de la calculadora relacionada. */
+  calculadora?: string;
+  filas: { etiqueta: string; valor: string; desde: string; fuente: string }[];
+  tabla?: { titulo: string; columnas: string[]; filas: string[][]; nota: string };
+};
+
+export type PaginaParametros = { titulo: string; descripcion: string; secciones: Seccion[] };

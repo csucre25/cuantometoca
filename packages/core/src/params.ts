@@ -8,7 +8,10 @@ export type EntradaParametro = {
   value: unknown;
   from: FechaISO;
   to: FechaISO | null;
+  /** Fuente pública (norma o entidad). Se muestra al usuario. */
   source: string;
+  /** Comentario interno (cómo se obtuvo, qué falta verificar). No se muestra. */
+  nota?: string;
   verified?: boolean;
 };
 

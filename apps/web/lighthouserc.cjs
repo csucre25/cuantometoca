@@ -8,6 +8,7 @@ module.exports = {
         "http://localhost/",
         "http://localhost/gratificacion/",
         "http://localhost/liquidacion/",
+        "http://localhost/parametros-vigentes/",
         // Enlace compartido: el resultado aparece al hidratar (mide el salto que eso provoca).
         "http://localhost/liquidacion/?sueldo=2500&ingreso=2023-03-01&cese=2026-08-20&motivo=despido_arbitrario",
       ],

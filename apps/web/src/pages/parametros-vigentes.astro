@@ -1,0 +1,217 @@
+---
+import Base from "../layouts/Base.astro";
+import { paises } from "../calc";
+import { configurarMoneda, fecha } from "../components/calc/formato";
+import { site } from "../site.config";
+
+// Valores legales vigentes a la fecha del build (cada deploy la regenera desde params.json).
+configurarMoneda(site.locale, site.currency, site.glossary.moneda.simbolo);
+const hoy = new Date().toISOString().slice(0, 10);
+const pagina = paises[site.country]!.paginaParametros(hoy);
+const nombres = Object.fromEntries(site.calculators.map((c) => [c.slug, c.nombre]));
+const ancla = (t: string) => t.toLowerCase().normalize("NFD").replace(/[^\w]+/g, "-");
+---
+
+<Base title={pagina.titulo} description={pagina.descripcion}>
+  <div class="contenedor">
+    <header class="encabezado">
+      <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> / Parámetros vigentes</nav>
+      <h1>{pagina.titulo}</h1>
+      <p class="muted">{pagina.descripcion}</p>
+      <p class="fecha">Valores vigentes al {fecha(hoy)}</p>
+    </header>
+
+    <div class="secciones">
+      {
+        pagina.secciones.map((s) => (
+          <section class="seccion" aria-labelledby={ancla(s.titulo)}>
+            <div class="cabeza">
+              <h2 id={ancla(s.titulo)}>{s.titulo}</h2>
+              {s.calculadora && nombres[s.calculadora] && (
+                <a href={`/${s.calculadora}/`} class="ir">
+                  Ir a la calculadora →
+                </a>
+              )}
+            </div>
+            <dl class="filas">
+              {s.filas.map((f) => (
+                <div class="fila">
+                  <dt>{f.etiqueta}</dt>
+                  <dd>
+                    <strong>{f.valor}</strong>
+                    <span class="fuente">
+                      Desde {f.desde} · {f.fuente}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            {s.tabla && (
+              <div class="tabla">
+                <h3>{s.tabla.titulo}</h3>
+                <div class="desliza">
+                  <table>
+                    <thead>
+                      <tr>
+                        {s.tabla.columnas.map((c) => (
+                          <th scope="col">{c}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {s.tabla.filas.map((f) => (
+                        <tr>{f.map((celda, i) => (i === 0 ? <th scope="row">{celda}</th> : <td>{celda}</td>))}</tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p class="fuente">{s.tabla.nota}</p>
+              </div>
+            )}
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<style>
+  .encabezado {
+    padding-block: 1.5rem 1.25rem;
+    max-width: var(--lectura);
+  }
+  .encabezado h1 {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem);
+  }
+  .encabezado p {
+    margin: 0;
+  }
+  .migas {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+  }
+  .migas a {
+    color: inherit;
+  }
+  .fecha {
+    margin-top: 0.75rem !important;
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand-ink);
+    background: var(--brand-soft);
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+  }
+  .secciones {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 60rem) {
+    .secciones {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .seccion {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.15rem 1.25rem;
+    min-width: 0;
+  }
+  .cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .cabeza h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .ir {
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .filas {
+    margin: 0;
+  }
+  .fila {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--border);
+  }
+  @media (min-width: 30rem) {
+    .fila {
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+    }
+    .fila dd {
+      text-align: right;
+      max-width: 16rem;
+    }
+  }
+  dt {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+  }
+  dd {
+    margin: 0;
+  }
+  dd strong {
+    display: block;
+    font-variant-numeric: tabular-nums;
+  }
+  .fuente {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+  .tabla {
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+  }
+  .tabla h3 {
+    font-size: 0.93rem;
+    margin: 0 0 0.5rem;
+  }
+  .desliza {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.45rem 0.75rem 0.45rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  thead th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+  tbody th {
+    font-weight: 500;
+  }
+  td:last-child,
+  th:last-child {
+    text-align: right;
+    padding-right: 0;
+  }
+  .tabla .fuente {
+    margin: 0.5rem 0 0;
+  }
+</style>

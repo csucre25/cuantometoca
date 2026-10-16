@@ -145,7 +145,7 @@ test("todas las calculadoras del inicio tienen página", async ({ page }) => {
 });
 
 test("sin scroll horizontal en ninguna página", async ({ page }) => {
-  const rutas = ["/", "/gratificacion/?sueldo=2500", "/cts/?sueldo=2500", "/liquidacion/?sueldo=2500&ingreso=2024-01-01", "/utilidades/?modo=exacto", "/sueldo-neto/?sueldo=2500&afp=prima", "/privacidad/"];
+  const rutas = ["/", "/gratificacion/?sueldo=2500", "/cts/?sueldo=2500", "/liquidacion/?sueldo=2500&ingreso=2024-01-01", "/utilidades/?modo=exacto", "/sueldo-neto/?sueldo=2500&afp=prima", "/parametros-vigentes/", "/privacidad/"];
   for (const ruta of rutas) {
     await page.goto(ruta);
     const desborde = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

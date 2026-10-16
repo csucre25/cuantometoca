@@ -40,7 +40,8 @@
         },
         "from": { "$ref": "#/definitions/fecha" },
         "to": { "anyOf": [{ "$ref": "#/definitions/fecha" }, { "type": "null" }] },
-        "source": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1, "description": "Fuente pública que ve el usuario (norma o entidad)" },
+        "nota": { "type": "string", "description": "Comentario interno; no se muestra" },
         "verified": { "type": "boolean" }
       }
     }

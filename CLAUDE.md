@@ -20,6 +20,7 @@ Objetivo de negocio y métricas: `docs/00-vision-y-objetivo.md`.
 | Dominios y marca | `docs/06-dominios-y-marca.md` |
 | AdSense, páginas legales, avisos | `docs/07-monetizacion-y-politicas.md` |
 | Guiones y distribución en redes | `docs/08-distribucion-social.md` |
+| Riesgos legales, privacidad y revisión final antes de desplegar | `docs/09-revision-legal.md` |
 
 ## Stack (no cambiar sin aprobación del usuario)
 - **Monorepo pnpm** — `apps/web` (Astro, salida 100% estática), `packages/core` (motor de parámetros y utilidades, TypeScript), `packages/calc-pe` (fórmulas de Perú, TypeScript puro sin dependencias de UI).
@@ -60,6 +61,7 @@ uv run python -m pipeline.cli bot --site pe                # bot de Telegram del
 - Avanza por el roadmap (`docs/04-roadmap.md`) tarea por tarea; marca `[x]` al terminar y deja nota breve si algo cambió.
 - Antes de implementar una fórmula, cita en el código (comentario) la norma y artículo.
 - Si una regla legal es ambigua o no está en `docs/01`, **pregunta** antes de asumir.
+- Al tocar formularios, URL, anuncios, analítica, textos legales o contenido LLM, revisa la sección correspondiente de `docs/09-revision-legal.md`. Ningún deploy a producción sin su revisión final (`/publicar`).
 - Commits pequeños, en español, formato `tipo(ámbito): mensaje` (ej. `feat(calc-pe): gratificación trunca`).
 - No instales dependencias nuevas sin justificarlo en el PR/commit.
 

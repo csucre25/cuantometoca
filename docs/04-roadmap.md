@@ -43,13 +43,16 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: Lighthouse móvil con `ADS_PREVIEW=1`: CLS 0, LCP ≤ 1.7 s, rendimiento/accesibilidad/SEO 100. Lighthouse CI en el pipeline. `ads.txt` solo si AdSense está activo. Sin `in_breakdown` (ver decisiones).
 - [x] 2.5 SEO técnico: sitemap, robots, canonical, schema, OG images estáticas por calculadora. **CA**: Lighthouse SEO ≥ 95, rendimiento móvil ≥ 90.
   - Nota: SEO 100 y rendimiento 100 en móvil (exigidos en CI). Sitemap/robots desde config; JSON-LD `WebApplication` + `BreadcrumbList` (calculadoras) y `WebSite` (inicio); OG 1200×630 en PNG con `sharp` (ya incluido por Astro) y monto de ejemplo calculado por el motor.
-- [ ] 2.6 Página "Parámetros vigentes" generada desde params.
+- [x] 2.6 Página "Parámetros vigentes" generada desde params.
+  - Nota: `/parametros-vigentes/` agrupa los valores por tema con vigencia, fuente y enlace a la calculadora. `params.json` separa `source` (pública) de `nota` (interna, no se publica).
 - [ ] 2.7 Guías editoriales base (una por beneficio), redactadas con LLM y revisadas por el usuario.
 
 ## Fase 3 — Despliegue configurable (1 sesión)
 - [ ] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.
 - [ ] 3.2 Documentar en `README.md` cómo conectar un dominio nuevo y una cuenta nueva de Cloudflare.
 - [ ] 3.3 Cloudflare Web Analytics vía config.
+- [ ] 3.4 Cerrar los pendientes bloqueantes de `docs/09-revision-legal.md` (montos fuera de la query string mientras se escribe, privacidad acorde, aviso de cookies). **CA**: los 🔴 de las secciones 1–8 cumplidos.
+- [ ] 3.5 Revisión legal final antes del primer despliegue a producción (`/publicar pe`, sección 9 de `docs/09`). **CA**: "Revisión legal: OK" registrada en el PR `develop` → `main`.
 
 ## Fase 4 — Pipeline y bot (2–3 sesiones)
 - [ ] 4.1 `config.py` + `store.py` (SQLite) + CLI Typer.
@@ -68,7 +71,7 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [ ] 5.5 Medir en Search Console y podar páginas sin impresiones a los 90 días (noindex o fusión).
 
 ## Fase 6 — AdSense y optimización
-- [ ] 6.1 Solicitar AdSense cuando haya ≥ 20 páginas útiles + legales + dominio propio.
+- [ ] 6.1 Solicitar AdSense cuando haya ≥ 20 páginas útiles + legales + dominio propio, y con los 🟡 de `docs/09-revision-legal.md` cumplidos (CMP, cookies, etiquetas de publicidad).
 - [ ] 6.2 Ubicaciones: debajo del resultado (la de mayor valor), dentro del desglose, al final de la guía. Evitar anuncios encima del formulario.
 - [ ] 6.3 Experimentos de ubicación (una variable a la vez, 2 semanas).
 

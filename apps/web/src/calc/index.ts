@@ -1,10 +1,11 @@
 import type { ParametrosPais } from "@calc/core";
-import type { Definicion } from "./tipos";
+import type { Definicion, PaginaParametros } from "./tipos";
 import { ETIQUETAS_PARAMETROS, paramsPe } from "./pe/contexto";
 import { cts } from "./pe/cts";
 import { gratificacion } from "./pe/gratificacion";
 import { horasExtras } from "./pe/horasExtras";
 import { liquidacion } from "./pe/liquidacion";
+import { paginaParametros } from "./pe/parametrosVigentes";
 import { renta5ta } from "./pe/renta5ta";
 import { sueldoNeto } from "./pe/sueldoNeto";
 import { utilidades } from "./pe/utilidades";
@@ -16,6 +17,7 @@ type Pais = {
   definiciones: Record<string, Definicion>;
   params: ParametrosPais;
   etiquetasParametros: Record<string, string>;
+  paginaParametros: (hoy: string) => PaginaParametros;
 };
 
 export const paises: Record<string, Pais> = {
@@ -33,6 +35,7 @@ export const paises: Record<string, Pais> = {
     },
     params: paramsPe,
     etiquetasParametros: ETIQUETAS_PARAMETROS,
+    paginaParametros,
   },
 };
 
