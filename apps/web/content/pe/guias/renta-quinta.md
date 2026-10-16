@@ -2,7 +2,7 @@
 titulo: "Renta de quinta categoría: cuánto pagas de impuesto por tu sueldo"
 descripcion: "Guía del impuesto a la renta de quinta categoría: desde qué sueldo se paga, cómo se calcula, qué gastos puedes deducir y cómo funciona la retención mensual."
 calculadora: renta_quinta
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 
@@ -34,4 +34,4 @@ Además de las {{param:renta5ta_deduccion_uit}} UIT, puedes deducir una parte de
 
 ## La retención mensual
 
-Tu empleador proyecta tus ingresos del año y retiene cada mes una parte del impuesto. En diciembre regulariza la diferencia. Si al final te retuvieron más de lo que correspondía, puedes solicitar la devolución a SUNAT.
+Tu empleador proyecta tus ingresos del año y retiene cada mes una parte del impuesto. En diciembre regulariza la diferencia. Si al final del año te retuvieron más de lo que correspondía, SUNAT te devuelve la diferencia; en muchos casos lo hace de oficio, sin que tengas que pedirlo.

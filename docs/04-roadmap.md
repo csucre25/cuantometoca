@@ -45,8 +45,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: SEO 100 y rendimiento 100 en móvil (exigidos en CI). Sitemap/robots desde config; JSON-LD `WebApplication` + `BreadcrumbList` (calculadoras) y `WebSite` (inicio); OG 1200×630 en PNG con `sharp` (ya incluido por Astro) y monto de ejemplo calculado por el motor.
 - [x] 2.6 Página "Parámetros vigentes" generada desde params.
   - Nota: `/parametros-vigentes/` agrupa los valores por tema con vigencia, fuente y enlace a la calculadora. `params.json` separa `source` (pública) de `nota` (interna, no se publica).
-- [ ] 2.7 Guías editoriales base (una por beneficio), redactadas con LLM y revisadas por el usuario.
-  - Avance: infraestructura lista (colección con loader propio que resuelve marcadores con el motor, vista previa de borradores, e2e que impide publicarlos). Gratificación y CTS aprobadas y publicadas; las 6 restantes en borrador, en revisión del usuario.
+- [x] 2.7 Guías editoriales base (una por beneficio), redactadas con LLM y revisadas por el usuario.
+  - Avance: infraestructura lista (colección con loader propio que resuelve marcadores con el motor, vista previa de borradores, e2e que impide publicarlos). Las 8 guías aprobadas por el usuario y publicadas debajo de su calculadora; cada dato legal citado fue confirmado con fuente.
 
 ## Fase 3 — Despliegue configurable (1 sesión)
 - [ ] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.

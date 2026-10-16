@@ -2,7 +2,7 @@
 titulo: "Horas extras: cuánto te deben pagar por tu sobretiempo"
 descripcion: "Guía de las horas extras: cuándo hay sobretiempo, los recargos que corresponden, cómo se calcula el valor de tu hora y qué hacer si no te las pagan."
 calculadora: horas_extras
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 

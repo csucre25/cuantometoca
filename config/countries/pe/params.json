@@ -163,17 +163,17 @@
     "liquidacion_plazo_pago_horas": {
       "description": "Plazo para pagar los beneficios sociales tras el cese",
       "unit": "hours",
-      "history": [ { "value": "48", "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 3", "verified": false } ]
+      "history": [ { "value": "48", "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 3", "nota": "Confirmado por el usuario con SUNAFIL (gob.pe/institucion/sunafil/noticias/661238), 2026-10-16", "verified": true } ]
     },
     "utilidades_plazo_pago_dias": {
       "description": "Días naturales para pagar utilidades tras el vencimiento de la declaración jurada anual del impuesto a la renta",
       "unit": "days",
-      "history": [ { "value": "30", "from": "1996-11-12", "to": null, "source": "DL 892 art. 6", "verified": false } ]
+      "history": [ { "value": "30", "from": "1996-11-12", "to": null, "source": "DL 892 art. 6", "nota": "Confirmado por el usuario (El Comercio, utilidades 2026), 2026-10-16", "verified": true } ]
     },
     "jornada_maxima_horas": {
       "description": "Jornada ordinaria máxima",
       "unit": "object",
-      "history": [ { "value": { "diaria": "8", "semanal": "48" }, "from": "2002-07-04", "to": null, "source": "Constitución art. 25; DS 007-2002-TR art. 1", "verified": false } ]
+      "history": [ { "value": { "diaria": "8", "semanal": "48" }, "from": "2002-07-04", "to": null, "source": "Constitución art. 25; DS 007-2002-TR art. 1", "nota": "Confirmado por el usuario con el TUO publicado en LP Derecho, 2026-10-16", "verified": true } ]
     },
     "cts_jornada_minima_horas": {
       "description": "Jornada diaria mínima promedio para tener derecho a CTS",

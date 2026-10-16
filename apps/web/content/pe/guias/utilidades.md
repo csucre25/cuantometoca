@@ -2,7 +2,7 @@
 titulo: "Utilidades: quién las recibe, cuánto te toca y cuándo se pagan"
 descripcion: "Guía de la participación en las utilidades: qué empresas las reparten, cómo se calcula tu parte, el tope por trabajador y la fecha de pago."
 calculadora: utilidades
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 

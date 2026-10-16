@@ -7,6 +7,8 @@ async function abrir(page: Page, ruta: string) {
 }
 
 const total = (page: Page) => page.locator(".calc-total");
+// Las interacciones se limitan al formulario: las guías de la página pueden repetir esos textos.
+const form = (page: Page) => page.locator(".calc-formulario");
 
 test.describe("gratificación", () => {
   test("un enlace compartido reproduce el cálculo (caso G3)", async ({ page }) => {
@@ -41,7 +43,7 @@ test.describe("gratificación", () => {
 
   test("por fechas: calcula los meses calendario completos", async ({ page }) => {
     await abrir(page, "/gratificacion/?sueldo=2000&periodo=julio&anio=2026");
-    await page.getByText("Por fechas").click();
+    await form(page).getByText("Por fechas").click();
     await page.fill("#c-ingreso", "2026-03-15");
     await expect(total(page)).toHaveText("S/ 1,090.00");
   });
@@ -57,7 +59,7 @@ test.describe("CTS", () => {
   test("caso C1 desde el formulario", async ({ page }) => {
     await abrir(page, "/cts/?periodo=mayo&anio=2026");
     await page.fill("#c-sueldo", "3000");
-    await page.getByText("Más opciones").click();
+    await form(page).getByText("Más opciones").click();
     await page.fill("#c-grati", "3000");
     await expect(total(page)).toHaveText("S/ 1,750.00");
   });
@@ -93,7 +95,7 @@ test.describe("resto de calculadoras", () => {
   test("liquidación: plazo fijo pide la fecha de vencimiento", async ({ page }) => {
     await abrir(page, "/liquidacion/?sueldo=3000&ingreso=2025-01-01&cese=2026-08-15&motivo=despido_arbitrario");
     await expect(page.locator("#c-fin")).toHaveCount(0);
-    await page.getByText("A plazo fijo").click();
+    await form(page).getByText("A plazo fijo").click();
     await expect(page.locator(".calc-espera")).toContainText("vencía tu contrato");
     await page.fill("#c-fin", "2026-12-31");
     await expect(page.locator(".calc-conceptos")).toContainText("S/ 20,400.00");

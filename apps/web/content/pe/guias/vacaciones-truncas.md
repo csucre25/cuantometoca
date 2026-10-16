@@ -2,7 +2,7 @@
 titulo: "Vacaciones truncas: qué son y cuánto te deben pagar"
 descripcion: "Guía de las vacaciones truncas y no gozadas: cómo se calculan al dejar tu trabajo, cuántos días te corresponden y qué pasa si no las tomaste."
 calculadora: vacaciones_truncas
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 

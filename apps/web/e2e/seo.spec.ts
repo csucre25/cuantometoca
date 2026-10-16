@@ -59,15 +59,11 @@ test.describe("parámetros vigentes", () => {
   });
 });
 
-test("las guías aprobadas se publican y los borradores no (CLAUDE.md, regla 6)", async ({ page }) => {
-  for (const ruta of ["/gratificacion/", "/cts/"]) {
+test("cada calculadora publica su guía aprobada, sin aviso de borrador (CLAUDE.md, regla 6)", async ({ page }) => {
+  for (const ruta of ["/gratificacion/", "/cts/", "/vacaciones-truncas/", "/liquidacion/", "/utilidades/", "/sueldo-neto/", "/renta-quinta-categoria/", "/horas-extras/"]) {
     await page.goto(ruta);
-    await expect(page.locator(".guia")).toBeVisible();
+    await expect(page.locator(".guia"), ruta).toBeVisible();
     await expect(page.getByText("Borrador pendiente de aprobación")).toHaveCount(0);
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
-  }
-  for (const ruta of ["/vacaciones-truncas/", "/liquidacion/", "/utilidades/", "/sueldo-neto/", "/renta-quinta-categoria/", "/horas-extras/"]) {
-    await page.goto(ruta);
-    await expect(page.locator(".guia"), ruta).toHaveCount(0);
   }
 });

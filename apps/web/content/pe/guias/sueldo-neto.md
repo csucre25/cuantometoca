@@ -2,7 +2,7 @@
 titulo: "Sueldo neto: qué te descuentan y por qué"
 descripcion: "Guía de los descuentos de tu sueldo: AFP u ONP, comisión de la AFP, prima de seguro y renta de quinta categoría, con ejemplos."
 calculadora: sueldo_neto
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 
@@ -36,4 +36,4 @@ Ejemplos sin asignación familiar, con la retención de renta de quinta estimada
 
 ## Si te descuentan de más
 
-Revisa tu boleta y compara cada descuento con el cálculo de arriba. Si hay un error, pide la corrección a tu empleador. Si te retuvieron más renta de la que correspondía en el año, puedes solicitar la devolución a SUNAT.
+Revisa tu boleta y compara cada descuento con el cálculo de arriba. Si hay un error, pide la corrección a tu empleador. Si en el año te retuvieron más renta de la que correspondía, SUNAT te devuelve la diferencia; en muchos casos lo hace de oficio.

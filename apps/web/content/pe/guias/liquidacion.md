@@ -2,7 +2,7 @@
 titulo: "Liquidación de beneficios sociales: qué te deben pagar al salir"
 descripcion: "Guía de la liquidación al dejar tu trabajo: qué conceptos incluye, cuándo corresponde indemnización, en qué plazo te deben pagar y qué hacer si no te pagan."
 calculadora: liquidacion
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 
