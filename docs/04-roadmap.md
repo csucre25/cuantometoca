@@ -58,7 +58,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [ ] 3.5 Revisión legal final antes del primer despliegue a producción (`/publicar pe`, sección 9 de `docs/09`). **CA**: "Revisión legal: OK" registrada en el PR `develop` → `main`.
 
 ## Fase 4 — Pipeline y bot (2–3 sesiones)
-- [ ] 4.1 `config.py` + `store.py` (SQLite) + CLI Typer.
+- [x] 4.1 `config.py` + `store.py` (SQLite) + CLI Typer.
+  - Nota: secretos genérica → `*_<SITE>` (igual que la web); SQLite `pipeline/data/<site>.db` con `seen_items`, `param_proposals`, `drafts`, `events`; CLI `rutas`, `sitios`, `estado`.
 - [ ] 4.2 Watcher El Peruano (con fixtures HTML guardados para tests offline).
 - [ ] 4.3 Watcher SBS (comisiones AFP, prima, tope).
 - [ ] 4.4 Cliente LLM compatible OpenAI con fallback + extracción estructurada de normas (pydantic).
