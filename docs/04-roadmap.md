@@ -49,8 +49,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Avance: infraestructura lista (colección con loader propio que resuelve marcadores con el motor, vista previa de borradores, e2e que impide publicarlos). Las 8 guías aprobadas por el usuario y publicadas debajo de su calculadora; cada dato legal citado fue confirmado con fuente.
 
 ## Fase 3 — Despliegue configurable (1 sesión)
-- [ ] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.
-  - Avance: workflow listo (PyYAML, wrangler 4.146.0 fijado, `STRICT_ENV`, aviso de parámetros sin verificar, `_headers` con caché, seguridad y `noindex` en `*.pages.dev`). Falta: proyecto de Pages, secretos y primer deploy (usuario).
+- [x] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.
+  - Avance: workflow listo (PyYAML, wrangler 4.146.0 fijado, `STRICT_ENV`, aviso de parámetros sin verificar, `_headers` con caché, seguridad y `noindex` en `*.pages.dev`). Primer deploy exitoso el 2026-10-16 (run 38857035930) a `calc-laborales-pe.pages.dev` usando solo secretos; verificado en producción (páginas, cabeceras, `noindex` en pages.dev, cálculo G3). Dominio `cuantometoca.pe` en propagación de DNS.
 - [x] 3.2 Documentar en `README.md` cómo conectar un dominio nuevo y una cuenta nueva de Cloudflare.
 - [x] 3.3 Cloudflare Web Analytics vía config.
   - Nota: beacon sin cookies solo si hay `CF_BEACON_TOKEN` y fuera de desarrollo.
