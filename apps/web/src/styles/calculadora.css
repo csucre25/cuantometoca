@@ -253,7 +253,14 @@
 
 /* Resultado */
 .calc-resultado {
-  min-height: 12rem; /* reserva espacio: sin saltos al aparecer el resultado */
+  min-height: 20rem; /* reserva espacio: menos saltos al aparecer el resultado */
+}
+
+.calc-espera {
+  min-height: calc(20rem - 2.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .calc-total-etiqueta {

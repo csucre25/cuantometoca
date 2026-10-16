@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import AdSlot from "../components/AdSlot.astro";
 import Calculadora from "../components/calc/Calculadora";
 import { definicion } from "../calc";
 import { site, type Calculadora as TCalc } from "../site.config";
@@ -31,6 +32,8 @@ const hoyBuild = new Date().toISOString().slice(0, 10);
       hoyBuild={hoyBuild}
       moneda={{ locale: site.locale, codigo: site.currency, simbolo: site.glossary.moneda.simbolo }}
     />
+
+    <AdSlot posicion="after_result" />
 
     <p class="aviso">
       {`Cálculo referencial basado en la normativa vigente a la fecha indicada. No constituye asesoría legal. Ante dudas, consulta a ${entities.fiscalizador} o al ${entities.ministerio}.`}

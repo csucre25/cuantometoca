@@ -29,6 +29,10 @@ jobs:
         run: |
           pnpm --filter @calc/web exec playwright install --with-deps chromium
           pnpm --filter @calc/web test:e2e
+      - name: Lighthouse móvil con espacios de anuncio reservados (CLS, LCP, rendimiento, a11y)
+        run: |
+          ADS_PREVIEW=1 SITE=pe CI_BUILD=1 pnpm --filter @calc/web build
+          pnpm --filter @calc/web lighthouse
       - name: Sin dominios hardcodeados
         run: python3 scripts/check_no_hardcoded_domains.py
 

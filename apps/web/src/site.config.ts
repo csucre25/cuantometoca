@@ -12,7 +12,7 @@ export type Site = {
   domain: string;
   url: string;
   brand: { name: string; tagline: string; primary_color: string; accent_color: string };
-  adsense: { enabled: boolean; client?: string; slots: Record<string, string | undefined> };
+  adsense: { enabled: boolean; client?: string; slots: Record<string, string | undefined>; preview: boolean };
   analytics: { cfBeaconToken?: string; ga4Id?: string };
   consent: { mode: "simple_banner" | "google_cmp" };
   calculators: Calculadora[];

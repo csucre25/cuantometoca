@@ -15,6 +15,8 @@ const { title, description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const tituloCompleto = title === site.brand.name ? title : `${title} | ${site.brand.name}`;
 const marca = `--brand:${site.brand.primary_color};--accent:${site.brand.accent_color}`;
+const { adsense } = site;
+const cargarAdsense = adsense.enabled && Boolean(adsense.client) && !adsense.preview && !import.meta.env.DEV;
 ---
 
 <!doctype html>
@@ -34,6 +36,16 @@ const marca = `--brand:${site.brand.primary_color};--accent:${site.brand.accent_
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      cargarAdsense && (
+        <script
+          is:inline
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
     <slot name="head" />
   </head>
   <body>

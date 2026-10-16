@@ -67,7 +67,13 @@ export function loadSite(siteId = process.env.SITE || "pe") {
     domain: site.domain,
     url: `https://${site.domain}`,
     brand: site.brand,
-    adsense: { enabled: adsenseActivo, client: env(site.adsense?.client_env, { requerida: adsenseActivo }), slots },
+    adsense: {
+      enabled: adsenseActivo,
+      client: env(site.adsense?.client_env, { requerida: adsenseActivo }),
+      slots,
+      // ADS_PREVIEW=1 dibuja los espacios reservados sin cargar AdSense (medir CLS y revisar el diseño).
+      preview: process.env.ADS_PREVIEW === "1",
+    },
     analytics: {
       cfBeaconToken: env(site.analytics?.cf_beacon_token_env, { requerida: !opcionales.has("cf_beacon_token_env") }),
       ga4Id: env(site.analytics?.ga4_id_env, { requerida: !opcionales.has("ga4_id_env") }),

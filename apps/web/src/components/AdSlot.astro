@@ -1,0 +1,77 @@
+---
+import { site } from "../site.config";
+
+// Espacio de anuncio con altura reservada (sin saltos de diseño al cargar). Ubicaciones y
+// reglas en docs/07: nunca encima del formulario ni pegado a un botón.
+interface Props {
+  posicion: "after_result" | "in_article";
+}
+
+const { posicion } = Astro.props;
+const { enabled, client, slots, preview } = site.adsense;
+const slot = slots[posicion];
+const real = enabled && Boolean(client) && Boolean(slot) && !preview && !import.meta.env.DEV;
+const mostrar = real || preview;
+---
+
+{
+  mostrar && (
+    <aside class="anuncio" aria-label="Publicidad">
+      <span class="etiqueta">Publicidad</span>
+      <div class="espacio">
+        {real ? (
+          <>
+            <ins
+              class="adsbygoogle"
+              style="display:block"
+              data-ad-client={client}
+              data-ad-slot={slot}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+            <script is:inline>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+          </>
+        ) : (
+          <span class="vista-previa">Espacio de anuncio ({posicion})</span>
+        )}
+      </div>
+    </aside>
+  )
+}
+
+<style>
+  .anuncio {
+    margin-block: 1.5rem;
+  }
+  .etiqueta {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+  }
+  /* Altura fija reservada: el anuncio responsivo más alto en móvil mide ~280 px. */
+  .espacio {
+    min-height: 280px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  @media (min-width: 48rem) {
+    .espacio {
+      min-height: 250px;
+    }
+  }
+  .vista-previa {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+</style>
