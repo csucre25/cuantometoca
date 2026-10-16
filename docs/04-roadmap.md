@@ -69,8 +69,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [x] 4.5 Bot de Telegram del site: aprobación de parámetros y borradores, comandos de `docs/03`.
   - Nota: aiogram 3 en polling, solo atiende al chat administrador. Botones Confirmar / Corregir / Ignorar (corregir deja la propuesta pendiente para confirmarla de nuevo; las tablas no se corrigen por chat) y Aprobar / Descartar borradores. Comandos `/estado`, `/pendientes`, `/parametros`, `/temporada` (desde `config/countries/<pais>/temporadas.yaml`), `/deploy` (con confirmación; necesita `GITHUB_TOKEN`), `/pausa`, `/reanudar`. `/borrador` queda para la fase 5 (generación de contenido). Confirmar no toca `params.json`: lo aplica la 4.6.
 - [ ] 4.6 Commit/PR automático de parámetros confirmados.
-- [ ] 4.7 `watchers.yml` (cron) y `docker-compose.yml` (bot local).
-  - Nota: `docker-compose.yml` hecho (bot + worker). Cambio: la revisión diaria corre en el worker local y no en un cron de GitHub Actions, porque la base SQLite debe persistir y ser la misma que lee el bot (ver `docs/decisiones.md`). Falta: probarlo en el Ubuntu del usuario.
+- [x] 4.7 `watchers.yml` (cron) y `docker-compose.yml` (bot local).
+  - Nota: `docker-compose.yml` hecho (bot + worker). Cambio: la revisión diaria corre en el worker local y no en un cron de GitHub Actions, porque la base SQLite debe persistir y ser la misma que lee el bot (ver `docs/decisiones.md`). Probado el 16/10/2026 en el WSL Ubuntu del usuario (Docker Desktop): bot respondiendo y primera revisión diaria hecha. Sin cron en GitHub Actions.
 
 ## Fase 5 — SEO programático y contenido (continuo)
 - [ ] 5.1 Matriz de casos en `calculators.yaml` (empezar con ~150 páginas de alto valor, ver `docs/05`).

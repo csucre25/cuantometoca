@@ -62,8 +62,10 @@ El deploy muestra como aviso los parámetros legales vigentes con `"verified": f
 ## Servicios locales (bot de Telegram y revisión diaria)
 Corren con Docker en una PC o servidor siempre encendido (ej. Ubuntu). La base `pipeline/data/<site>.db` vive ahí: es la que comparten el bot y el worker, así que **solo una máquina** debe correr estos servicios (dos bots con el mismo token chocan).
 
+En WSL, clonar en la carpeta de Linux (`cd ~`), no en `/mnt/c/...`: Ubuntu abre en `C:\Windows\System32`, donde no se puede escribir, y SQLite falla en discos de Windows.
+
 ```bash
-git clone https://github.com/<dueño>/<repo>.git && cd <repo>
+cd ~ && git clone https://github.com/<dueño>/<repo>.git && cd <repo>
 cp .env.example .env && nano .env    # TELEGRAM_*_PE, LLM_*, GITHUB_TOKEN (opcional, para /deploy)
 docker compose up -d --build         # bot-pe + worker
 docker compose logs -f               # ver que ambos arrancaron
