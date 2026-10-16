@@ -31,6 +31,8 @@ const beacon = !import.meta.env.DEV && site.analytics.cfBeaconToken ? JSON.strin
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Primero: scripts de privacidad de la página (antes de cualquier script externo). -->
+    <slot name="head" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -59,7 +61,6 @@ const beacon = !import.meta.env.DEV && site.analytics.cfBeaconToken ? JSON.strin
         />
       )
     }
-    <slot name="head" />
   </head>
   <body>
     <a class="saltar" href="#contenido">Saltar al contenido</a>

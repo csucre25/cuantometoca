@@ -8,9 +8,11 @@ type Props = {
   params: ParametrosPais;
   etiquetasParametros: Record<string, string>;
   titulo: string;
+  /** Genera el enlace compartible (con los datos en el fragmento #). */
+  enlace: () => string;
 };
 
-export function Resultado({ r, etiquetaTotal, params, etiquetasParametros, titulo }: Props) {
+export function Resultado({ r, etiquetaTotal, params, etiquetasParametros, titulo, enlace }: Props) {
   // Un solo concepto igual al total no aporta: se omite la lista.
   const mostrarConceptos = r.conceptos.length > 1;
 
@@ -92,15 +94,16 @@ export function Resultado({ r, etiquetaTotal, params, etiquetasParametros, titul
         </ul>
       </details>
 
-      <Compartir titulo={titulo} total={soles(r.total)} />
+      <Compartir titulo={titulo} total={soles(r.total)} enlace={enlace} />
     </div>
   );
 }
 
-function Compartir({ titulo, total }: { titulo: string; total: string }) {
+function Compartir({ titulo, total, enlace }: { titulo: string; total: string; enlace: () => string }) {
   const [copiado, setCopiado] = useState(false);
-  async function compartir() {
-    const url = window.location.href;
+  async function compartir(e: Event) {
+    const url = enlace();
+    (e.currentTarget as HTMLElement).dataset.enlace = url; // para pruebas e2e
     if (navigator.share) {
       try {
         await navigator.share({ title: titulo, text: `${titulo}: ${total}`, url });

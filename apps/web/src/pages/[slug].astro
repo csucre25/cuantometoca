@@ -49,6 +49,23 @@ const jsonLd = [
   jsonLd={jsonLd}
   noindex={guia?.data.estado === "borrador"}
 >
+  <!--
+    Privacidad (docs/09 §2): los datos de un enlace compartido (#sueldo=… o el formato antiguo ?sueldo=…)
+    se guardan en memoria y se quitan de la barra de direcciones antes de que se ejecute cualquier otro
+    script (analítica, anuncios). Se conservan los parámetros de campaña utm_*.
+  -->
+  <script is:inline slot="head">
+    (function () {
+      var calc = [], campana = [];
+      location.search.slice(1).split("&").forEach(function (p) {
+        if (p) (/^utm_/.test(p) ? campana : calc).push(p);
+      });
+      var h = location.hash.slice(1);
+      if (h.indexOf("=") > -1) calc.push(h);
+      window.__calcEstado = calc.join("&");
+      if (calc.length) history.replaceState(null, "", location.pathname + (campana.length ? "?" + campana.join("&") : ""));
+    })();
+  </script>
   <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> / {calc.nombre}</nav>

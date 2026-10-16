@@ -2,45 +2,85 @@
 import Legal from "../components/Legal.astro";
 import Correo from "../components/Correo.astro";
 import { site } from "../site.config";
+
+// Cada afirmación debe corresponder a lo que hace el código (docs/09 §2). Si cambia un tracker,
+// el manejo de la URL o se activa la publicidad, se actualiza este texto y su fecha.
+const publicidadActiva = site.adsense.enabled;
 ---
 
 <Legal
   title="Política de privacidad"
   description={`Cómo ${site.brand.name} trata la información: los cálculos se hacen en tu navegador y no pedimos datos personales.`}
-  actualizado="15 de octubre de 2026"
+  actualizado="16 de octubre de 2026"
 >
   <p>
-    En {site.brand.name} no te pedimos registrarte ni datos personales. Los montos que ingresas en las calculadoras se
-    procesan en tu propio navegador y no se envían a nuestros servidores.
+    En {site.brand.name} no te pedimos registrarte ni datos que te identifiquen. Esta política explica qué ocurre con la
+    información cuando usas el sitio.
   </p>
 
-  <h2>Qué información se recoge</h2>
+  <h2>Los datos que escribes en las calculadoras</h2>
   <ul>
     <li>
-      <strong>Estadísticas de uso anónimas.</strong> Usamos Cloudflare Web Analytics para saber cuántas personas visitan
-      cada página. No usa cookies ni identifica a las personas.
+      El sueldo, las fechas y demás datos que ingresas se procesan <strong>solo en tu navegador</strong>. No los enviamos a
+      nuestros servidores ni a terceros, y no se guardan cuando cierras la página.
     </li>
     <li>
-      <strong>Publicidad.</strong> Este sitio se financia con anuncios de Google AdSense. Google y sus socios pueden usar
-      cookies para mostrar anuncios según tus visitas a este y otros sitios. Puedes desactivar la publicidad personalizada
-      en la <a href="https://adssettings.google.com" rel="noopener">configuración de anuncios de Google</a> y conocer más
-      en <a href="https://policies.google.com/technologies/ads" rel="noopener">cómo usa Google las cookies en publicidad</a>.
+      Mientras calculas, esos datos <strong>no se escriben en la dirección de la página</strong>, para que ningún script de
+      analítica o de publicidad pueda leerlos.
     </li>
     <li>
-      <strong>Enlaces compartidos.</strong> Si compartes un cálculo, los valores viajan en la dirección del enlace. No los
-      guardamos.
+      Si pulsas <strong>“Compartir este cálculo”</strong>, generamos un enlace que incluye tus valores después del signo
+      <code>#</code>. Esa parte del enlace no se envía a ningún servidor al abrirlo. Al abrirlo, la página lee los valores y los
+      quita de la barra de direcciones. Ten en cuenta que quien reciba el enlace podrá ver esos valores.
     </li>
+  </ul>
+
+  <h2>Información técnica que recibimos</h2>
+  <ul>
+    <li>
+      <strong>Alojamiento.</strong> El sitio se sirve a través de Cloudflare. Como cualquier servidor web, recibe datos técnicos
+      de cada visita (dirección IP, navegador, página solicitada) para entregar el contenido y protegerlo de ataques.
+    </li>
+    <li>
+      <strong>Estadísticas.</strong> Usamos Cloudflare Web Analytics para contar visitas por página. No usa cookies ni crea
+      perfiles de las personas.
+    </li>
+    {
+      publicidadActiva ? (
+        <li>
+          <strong>Publicidad.</strong> Mostramos anuncios de Google AdSense. Google y sus socios pueden usar cookies para mostrar
+          anuncios según tus visitas a este y otros sitios. Puedes desactivar la publicidad personalizada en la{" "}
+          <a href="https://adssettings.google.com" rel="noopener">configuración de anuncios de Google</a> y conocer más sobre{" "}
+          <a href="https://policies.google.com/technologies/ads" rel="noopener">cómo usa Google las cookies en publicidad</a>.
+        </li>
+      ) : (
+        <li>
+          <strong>Publicidad.</strong> Por ahora el sitio no muestra anuncios. Si los incorporamos (Google AdSense), lo indicaremos
+          aquí antes de activarlos, junto con el aviso de cookies correspondiente.
+        </li>
+      )
+    }
   </ul>
 
   <h2>Cookies</h2>
   <p>
-    Nuestro sitio no crea cookies propias. Las cookies de publicidad son de terceros y puedes bloquearlas o borrarlas
-    desde la configuración de tu navegador.
+    {
+      publicidadActiva
+        ? "Nuestro sitio no crea cookies propias. Las cookies de publicidad son de terceros y puedes bloquearlas o borrarlas desde la configuración de tu navegador."
+        : "Actualmente el sitio no usa cookies."
+    }
   </p>
 
-  <h2>Responsable y contacto</h2>
+  <h2>Responsable y tus derechos</h2>
   <p>
-    El responsable del sitio es {site.legal.ownerName}. Para cualquier consulta sobre privacidad, escríbenos a <Correo />.
+    El responsable del sitio es {site.legal.ownerName}. Conforme a la Ley N.° 29733, Ley de Protección de Datos Personales, puedes
+    ejercer tus derechos de acceso, rectificación, cancelación y oposición escribiendo a <Correo />. Como no guardamos los datos
+    que escribes en las calculadoras, en la mayoría de los casos no tendremos información tuya que entregar o borrar, pero
+    responderemos cualquier consulta.
+  </p>
+  <p>
+    Si consideras que no atendimos tu solicitud, puedes acudir a la Autoridad Nacional de Protección de Datos Personales del
+    Ministerio de Justicia y Derechos Humanos.
   </p>
 
   <h2>Cambios</h2>

@@ -35,13 +35,14 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
   const [hoy, setHoy] = useState(hoyBuild);
   const [valores, setValores] = useState<Valores>(() => def.iniciales(hoyBuild));
   const [tocados, setTocados] = useState<Set<string>>(new Set());
-  const montado = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  // Al montar: fecha real de hoy y valores del enlace compartido (?sueldo=1500&meses=6…).
+  // Al montar: fecha real de hoy y valores de un enlace compartido. Los datos del usuario nunca se
+  // escriben en la URL mientras calcula (docs/09 §2): solo van en el enlace que genera "Compartir",
+  // después del "#", y un script en <head> los lee y los quita de la barra antes que otros scripts.
   useEffect(() => {
     const hoyReal = hoyLocal();
-    const desdeUrl = Object.fromEntries(new URLSearchParams(window.location.search));
+    const desdeUrl = Object.fromEntries(new URLSearchParams(estadoCompartido()));
     const iniciales = def.iniciales(hoyReal);
     const conocidos = new Set([...def.campos, ...def.avanzados].map((c) => c.id));
     const validos = Object.fromEntries(Object.entries(desdeUrl).filter(([k]) => conocidos.has(k)));
@@ -50,18 +51,15 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
     setHoy(hoyReal);
     setValores({ ...iniciales, ...validos, ...escritos });
     setTocados(new Set([...Object.keys(validos), ...Object.keys(escritos)]));
-    montado.current = true;
   }, []);
 
-  // El estado vive en la URL para que cualquier enlace reproduzca el cálculo.
-  useEffect(() => {
-    if (!montado.current) return;
+  // Enlace para compartir: solo los valores distintos de los iniciales, en el fragmento (#).
+  const enlace = () => {
     const iniciales = def.iniciales(hoy);
     const q = new URLSearchParams();
     for (const [k, v] of Object.entries(valores)) if (v !== "" && v !== iniciales[k]) q.set(k, v);
-    const qs = q.toString();
-    history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [valores, hoy]);
+    return `${window.location.origin}${window.location.pathname}#${q.toString()}`;
+  };
 
   const salida = useMemo(() => {
     const falta = def.faltante(valores);
@@ -106,7 +104,14 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
 
       <section class="calc-resultado" aria-live="polite" aria-label="Resultado">
         {"r" in salida && salida.r ? (
-          <Resultado r={salida.r} etiquetaTotal={def.etiquetaTotal} params={pais.params} etiquetasParametros={pais.etiquetasParametros} titulo={titulo} />
+          <Resultado
+            r={salida.r}
+            etiquetaTotal={def.etiquetaTotal}
+            params={pais.params}
+            etiquetasParametros={pais.etiquetasParametros}
+            titulo={titulo}
+            enlace={enlace}
+          />
         ) : (
           <div class="calc-espera">
             <p class="calc-total-etiqueta">{def.etiquetaTotal}</p>
@@ -117,6 +122,13 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
       </section>
     </div>
   );
+}
+
+/** Estado de un enlace compartido que el script de <head> guardó (y quitó de la URL). */
+function estadoCompartido(): string {
+  const w = window as unknown as { __calcEstado?: string };
+  if (typeof w.__calcEstado === "string") return w.__calcEstado;
+  return window.location.hash.slice(1) || window.location.search.slice(1);
 }
 
 /** Valores de texto ya escritos en el HTML inicial (antes de hidratar). */

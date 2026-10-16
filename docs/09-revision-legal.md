@@ -104,10 +104,10 @@ Se ejecuta con `/publicar <site>` y su resultado se deja en el PR de `develop` �
 
 ## Estado conocido (actualizar al corregir)
 
-| Punto | Estado al 15/10/2026 |
+| Punto | Estado al 16/10/2026 |
 |---|---|
-| 2 — Montos en la query string mientras se escribe (`Calculadora.tsx`) | ❌ Pendiente: bloquea el despliegue con analítica o anuncios activos |
-| 2 — Texto de privacidad "no se envían" | ❌ Ajustar junto con el punto anterior |
+| 2 — Montos en la query string mientras se escribe (`Calculadora.tsx`) | ✅ La URL no cambia al calcular; "Compartir" pone los datos tras `#` y un script en `<head>` los quita de la barra antes de cualquier otro script (también `?sueldo=` antiguos; se conservan `utm_*`). e2e verifica que ninguna petición a terceros los lleve |
+| 2 — Texto de privacidad "no se envían" | ✅ Reescrito: describe navegador, enlace compartido (#), Cloudflare (alojamiento y Web Analytics), publicidad según config y derechos ARCO (Ley 29733) |
 | 3 — Aviso de cookies (`consent.mode: simple_banner`) | ❌ Configurado pero no implementado |
 | 3 — CMP para EEE/Reino Unido | ❌ Pendiente (antes de AdSense) |
 | 1 — Parámetros AFP con `verified: false` | ⚠️ Confirmar en sbs.gob.pe (D8) |

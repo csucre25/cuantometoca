@@ -17,17 +17,44 @@ test.describe("gratificación", () => {
     await expect(page.locator(".calc-conceptos")).toContainText("Bonificación extraordinaria (9%)");
   });
 
-  test("escribir el sueldo calcula en vivo y actualiza la URL", async ({ page }) => {
+  test("escribir el sueldo calcula en vivo sin escribir los datos en la URL (docs/09 §2)", async ({ page }) => {
     await abrir(page, "/gratificacion/");
     await expect(page.locator(".calc-espera")).toContainText("Ingresa tu sueldo");
     await page.fill("#c-sueldo", "2,000");
     await expect(total(page)).toHaveText("S/ 2,180.00");
-    await expect(page).toHaveURL(/sueldo=2000/);
+    expect(page.url()).not.toContain("2000");
+  });
 
-    // Recargar el enlace da el mismo resultado.
-    await page.reload();
-    await page.waitForSelector("astro-island:not([ssr])");
+  test("Compartir genera un enlace con los datos tras # que reproduce el cálculo y se limpia de la barra", async ({ page }) => {
+    await abrir(page, "/gratificacion/");
+    await page.fill("#c-sueldo", "2000");
+    const boton = page.locator(".calc-compartir");
+    await boton.click();
+    const enlace = await boton.getAttribute("data-enlace");
+    expect(enlace).toMatch(/\/gratificacion\/#.*sueldo=2000/);
+    expect(new URL(enlace!).search).toBe("");
+
+    // Quien recibe el enlace lo abre como página nueva (no como salto interno con #).
+    await page.goto("about:blank");
+    await abrir(page, new URL(enlace!).pathname + new URL(enlace!).hash);
     await expect(total(page)).toHaveText("S/ 2,180.00");
+    expect(page.url()).not.toContain("2000");
+  });
+
+  test("los enlaces antiguos con ?sueldo= funcionan, se limpian y conservan utm_*", async ({ page }) => {
+    await abrir(page, "/gratificacion/?sueldo=2000&utm_source=tiktok");
+    await expect(total(page)).toHaveText("S/ 2,180.00");
+    expect(new URL(page.url()).search).toBe("?utm_source=tiktok");
+  });
+
+  test("ninguna petición a terceros lleva los datos escritos (docs/09 §2)", async ({ page }) => {
+    const urls: string[] = [];
+    page.on("request", (r) => urls.push(r.url() + " " + (r.postData() ?? "")));
+    await abrir(page, "/liquidacion/");
+    await page.fill("#c-sueldo", "4321");
+    await page.fill("#c-ingreso", "2021-03-17");
+    await expect(total(page)).not.toHaveText("—");
+    expect(urls.filter((u) => u.includes("4321") || u.includes("2021-03-17"))).toEqual([]);
   });
 
   test("el desglose y las condiciones están plegados y se abren", async ({ page }) => {
