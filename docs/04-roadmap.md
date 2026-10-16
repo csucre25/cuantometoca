@@ -50,8 +50,10 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 
 ## Fase 3 — Despliegue configurable (1 sesión)
 - [ ] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.
-- [ ] 3.2 Documentar en `README.md` cómo conectar un dominio nuevo y una cuenta nueva de Cloudflare.
-- [ ] 3.3 Cloudflare Web Analytics vía config.
+  - Avance: workflow listo (PyYAML, wrangler 4.146.0 fijado, `STRICT_ENV`, aviso de parámetros sin verificar, `_headers` con caché, seguridad y `noindex` en `*.pages.dev`). Falta: proyecto de Pages, secretos y primer deploy (usuario).
+- [x] 3.2 Documentar en `README.md` cómo conectar un dominio nuevo y una cuenta nueva de Cloudflare.
+- [x] 3.3 Cloudflare Web Analytics vía config.
+  - Nota: beacon sin cookies solo si hay `CF_BEACON_TOKEN` y fuera de desarrollo.
 - [ ] 3.4 Cerrar los pendientes bloqueantes de `docs/09-revision-legal.md` (montos fuera de la query string mientras se escribe, privacidad acorde, aviso de cookies). **CA**: los 🔴 de las secciones 1–8 cumplidos.
 - [ ] 3.5 Revisión legal final antes del primer despliegue a producción (`/publicar pe`, sección 9 de `docs/09`). **CA**: "Revisión legal: OK" registrada en el PR `develop` → `main`.
 

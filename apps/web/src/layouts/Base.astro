@@ -22,6 +22,8 @@ const tituloCompleto = title === site.brand.name ? title : `${title} | ${site.br
 const marca = `--brand:${site.brand.primary_color};--accent:${site.brand.accent_color}`;
 const { adsense } = site;
 const cargarAdsense = adsense.enabled && Boolean(adsense.client) && !adsense.preview && !import.meta.env.DEV;
+// Cloudflare Web Analytics: sin cookies; solo si hay token y fuera de desarrollo (tarea 3.3).
+const beacon = !import.meta.env.DEV && site.analytics.cfBeaconToken ? JSON.stringify({ token: site.analytics.cfBeaconToken }) : null;
 ---
 
 <!doctype html>
@@ -66,6 +68,7 @@ const cargarAdsense = adsense.enabled && Boolean(adsense.client) && !adsense.pre
       <slot />
     </main>
     <Footer />
+    {beacon && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={beacon} />}
   </body>
 </html>
 

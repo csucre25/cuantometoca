@@ -2,30 +2,64 @@
 
 Sitios estáticos de calculadoras de beneficios laborales (gratificación, CTS, liquidación, utilidades, sueldo neto, renta de 5ta, horas extras) monetizados con AdSense. Un *site* por país, cada uno con su dominio, cuenta de Cloudflare, AdSense y bot de Telegram, todo por configuración.
 
-> Este paquete contiene **especificación + esqueleto**. La implementación la construye Claude Code siguiendo `CLAUDE.md` y `docs/04-roadmap.md`.
+Las reglas del proyecto están en `CLAUDE.md`; el avance, en `docs/04-roadmap.md`.
 
-## Empezar con Claude Code
+## Desarrollo local
 ```bash
-git init && git add . && git commit -m "chore: especificación inicial"
-claude          # abre Claude Code en esta carpeta
+pnpm install
+cp .env.example .env              # completar las variables del site
+pnpm dev                          # http://localhost:4321 (SITE=pe por defecto)
+MOSTRAR_BORRADORES=1 pnpm dev     # ver guías en borrador antes de aprobarlas
+pnpm test                         # tests unitarios (motor y marcadores)
+pnpm --filter @calc/web test:e2e  # e2e con Playwright (requiere un build previo)
 ```
-Primer mensaje sugerido:
-> Lee CLAUDE.md y docs/. Empieza por la Fase 0 del roadmap. Antes de escribir código, dime si encuentras ambigüedades en la especificación.
 
-## Configurar un site (ej. Perú)
-1. Elegir dominio (`docs/06-dominios-y-marca.md`) y ponerlo en `config/sites/pe.yaml → domain`.
-2. En la cuenta de Cloudflare del site: crear el proyecto de Pages con el nombre de `cloudflare.pages_project` (tipo *Direct Upload*) y conectar el dominio personalizado.
-3. Crear un token de API con permiso *Account → Cloudflare Pages → Edit*.
-4. Crear el bot con @BotFather y obtener tu `chat_id`.
-5. En GitHub → Settings → Secrets, crear: `CF_ACCOUNT_ID_PE`, `CF_API_TOKEN_PE`, `TELEGRAM_BOT_TOKEN_PE`, `TELEGRAM_ADMIN_CHAT_ID_PE`, `CONTACT_EMAIL_PE`, `LLM_API_KEY` y, tras la aprobación de AdSense, `ADSENSE_CLIENT_PE`. En Variables: `LLM_BASE_URL`, `LLM_MODEL`.
-6. Copiar `.env.example` a `.env` para uso local.
+## Publicar un site (ej. Perú)
 
-Cambiar de cuenta de Cloudflare = cambiar los secretos `*_PE` (y el nombre del proyecto si difiere). El código no cambia.
+El deploy lo hace GitHub Actions (`.github/workflows/deploy.yml`) en cada push a `main`. Flujo de trabajo: se desarrolla en `develop` (CI completo) y se pasa a `main` con un pull request.
+
+### 1. Cloudflare: cuenta, proyecto y token
+1. En la cuenta de Cloudflare del site: **Workers & Pages → Create → Pages → Upload assets (Direct Upload)**. Nombre del proyecto: el de `cloudflare.pages_project` en `config/sites/<site>.yaml` (Perú: `calc-laborales-pe`). Basta con crearlo vacío; el primer contenido lo sube el deploy.
+2. **My Profile → API Tokens → Create Token → Custom token** con el permiso *Account → Cloudflare Pages → Edit*, limitado a esa cuenta.
+3. El **Account ID** aparece en la página de inicio de la cuenta (columna derecha) o en la URL del panel.
+4. **Analytics & Logs → Web Analytics → Add a site** con el dominio, y copiar el token del fragmento de JavaScript (el valor de `"token"`).
+
+### 2. GitHub: secretos del site
+En **Settings → Secrets and variables → Actions → New repository secret** (sufijo = `site_id` en mayúsculas):
+
+| Secreto | Obligatorio | Valor |
+|---|---|---|
+| `CF_ACCOUNT_ID_PE` | Sí | Account ID de Cloudflare |
+| `CF_API_TOKEN_PE` | Sí | Token del paso 1.2 |
+| `CONTACT_EMAIL_PE` | Sí | Correo de contacto de las páginas legales |
+| `CF_BEACON_TOKEN_PE` | Sí | Token de Web Analytics del paso 1.4 |
+| `TELEGRAM_BOT_TOKEN_PE`, `TELEGRAM_ADMIN_CHAT_ID_PE` | No (Fase 4) | Bot de avisos de deploy |
+| `ADSENSE_CLIENT_PE` y `ADSENSE_SLOT_*_PE` | Tras aprobar AdSense | `ca-pub-…` y los IDs de bloque |
+
+El build de deploy corre con `STRICT_ENV=1`: si falta una variable obligatoria, falla antes de publicar.
+
+### 3. Dominio propio
+1. En Cloudflare: **Add a domain** (ej. `cuantometoca.pe`), plan Free. Cloudflare indica dos *nameservers*.
+2. En el registrador del dominio (para `.pe`, el panel donde se compró): reemplazar los nameservers por los de Cloudflare. La propagación puede tardar de minutos a 24 horas.
+3. En el proyecto de Pages: **Custom domains → Set up a domain** → `cuantometoca.pe`, y otra vez para `www.cuantometoca.pe`.
+4. **Rules → Redirect Rules**: redirigir `www.cuantometoca.pe/*` a `https://cuantometoca.pe/${1}` (301), para tener una sola versión canónica.
+5. Verificar en Google Search Console la propiedad del dominio y enviar `https://<dominio>/sitemap.xml`.
+
+Las direcciones `*.pages.dev` quedan con `X-Robots-Tag: noindex` (`apps/web/public/_headers`): Google solo indexa el dominio propio.
+
+### 4. Publicar
+Abrir un pull request de `develop` a `main` y hacer merge cuando el CI esté en verde. El workflow `deploy` construye cada site habilitado y lo sube a su cuenta de Cloudflare. También se puede lanzar a mano desde **Actions → deploy → Run workflow**.
+
+El deploy muestra como aviso los parámetros legales vigentes con `"verified": false` (`scripts/check_unverified_params.py`); conviene confirmarlos contra la fuente oficial.
+
+### Cambiar de cuenta de Cloudflare o de dominio
+- **Otra cuenta:** crear el proyecto de Pages en la nueva cuenta y reemplazar los secretos `CF_ACCOUNT_ID_*` y `CF_API_TOKEN_*`. El código no cambia.
+- **Otro dominio:** cambiar `domain` en `config/sites/<site>.yaml`. La URL canónica, el sitemap, `robots.txt`, las imágenes para redes y `ads.txt` se generan desde ahí.
 
 ## Agregar un país
 `/nuevo-pais cl` en Claude Code y seguir `docs/03-flujo-de-trabajo.md §6`.
 
-## Servicios locales
+## Servicios locales (Fase 4)
 ```bash
 docker compose up -d bot-pe     # bot de Telegram del site Perú
 docker compose pause worker     # modo juego
