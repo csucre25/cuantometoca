@@ -72,6 +72,7 @@ docker compose logs -f               # ver que ambos arrancaron
 ```
 
 - Actualizar tras un cambio en el repo: `git pull && docker compose up -d --build`.
+- Los contenedores corren como el usuario 1000 (ver `docker-compose.yml`); si tu usuario tiene otro id (`id -u`), cámbialo ahí.
 - Detener la revisión diaria sin apagar nada: `/pausa` en el bot (y `/reanudar`).
 - Probar la revisión a mano: `docker compose run --rm worker python -m pipeline.cli params-check --country pe`.
 - El chat administrador (`TELEGRAM_ADMIN_CHAT_ID_PE`) es el único que el bot atiende.

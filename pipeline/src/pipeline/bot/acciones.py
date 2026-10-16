@@ -50,7 +50,7 @@ def confirmar_propuesta(store: Store, pid: int) -> str:
     store.actualizar_propuesta(pid, "confirmada")
     store.registrar("propuesta_confirmada", propuesta=pid, clave=p.param_key)
     valor = parametros.formatear(p.value, parametros.unidad(p.country, p.param_key)) if not isinstance(p.value, dict) else "tabla"
-    return f"✅ Propuesta #{pid} confirmada: <code>{escape(p.param_key)}</code> = {escape(valor)} desde {_fmt_fecha(p.date_from)}. Queda lista para aplicarse a params.json."
+    return f"✅ Propuesta #{pid} confirmada: <code>{escape(p.param_key)}</code> = {escape(valor)} desde {_fmt_fecha(p.date_from)}."
 
 
 def ignorar_propuesta(store: Store, pid: int) -> str:

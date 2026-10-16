@@ -5,13 +5,18 @@
 x-pipeline: &pipeline
   build: ./pipeline
   env_file: .env
+  # Mismo usuario que el dueño de la carpeta (en WSL/Ubuntu suele ser 1000): así el `git pull`
+  # tras publicar un parámetro y la base SQLite no quedan como archivos de root.
+  user: "1000:1000"
   environment:
     CONFIG_DIR: /app/config
     REPO_DIR: /repo
+    REPO_AUTO_PULL: "1"
+    HOME: /tmp
     TZ: America/Lima
   volumes:
     - ./config:/app/config:ro
-    - ./:/repo            # base SQLite en pipeline/data y, más adelante, commits de lo aprobado
+    - ./:/repo            # base SQLite en pipeline/data; git pull tras publicar un parámetro
   restart: unless-stopped
   logging:
     driver: json-file

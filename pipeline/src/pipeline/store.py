@@ -5,6 +5,7 @@ Tablas (docs/02 §7):
 - param_proposals: cambios de parámetros detectados, pendientes de aprobación por Telegram.
 - drafts: borradores de texto generados con LLM, pendientes de aprobación.
 - events: registro de lo ocurrido (avisos enviados, aprobaciones, deploys).
+- param_prs: PR abierto por cada propuesta confirmada y su estado (CI, publicado, cerrado).
 - ajustes: estado compartido entre el bot y el worker (pausa, última revisión diaria).
 """
 
@@ -24,6 +25,7 @@ from pipeline.paths import repo_dir
 
 EstadoPropuesta = Literal["pendiente", "confirmada", "ignorada", "aplicada"]
 EstadoBorrador = Literal["pendiente", "aprobado", "descartado", "publicado"]
+EstadoPR = Literal["ci", "listo", "falla", "publicado", "cerrado"]
 
 ESQUEMA = """
 CREATE TABLE IF NOT EXISTS seen_items (
@@ -66,6 +68,17 @@ CREATE TABLE IF NOT EXISTS extraction_queue (
   ultimo_error TEXT,
   created TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS param_prs (
+  propuesta_id INTEGER PRIMARY KEY,
+  numero INTEGER NOT NULL,
+  rama TEXT NOT NULL,
+  sha TEXT NOT NULL,
+  url TEXT NOT NULL,
+  estado TEXT NOT NULL DEFAULT 'ci',
+  intentos INTEGER NOT NULL DEFAULT 1,
+  created TEXT NOT NULL,
+  updated TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS ajustes (
   clave TEXT PRIMARY KEY,
   valor TEXT NOT NULL,
@@ -105,6 +118,16 @@ class Borrador(BaseModel):
     title: str
     body: str
     status: EstadoBorrador
+
+
+class PR(BaseModel):
+    propuesta_id: int
+    numero: int
+    rama: str
+    sha: str
+    url: str
+    estado: EstadoPR
+    intentos: int
 
 
 class Store:
@@ -154,10 +177,10 @@ class Store:
     # --- param_proposals ----------------------------------------------------------------------
 
     def proponer_parametro(self, country: str, param_key: str, value: Any, date_from: str, source: str, url: str | None = None) -> int:
-        """Crea una propuesta pendiente. Si ya existe una igual pendiente o confirmada, devuelve su id."""
+        """Crea una propuesta pendiente. Si ya existe una igual (pendiente, confirmada o aplicada), devuelve su id."""
         value_json = json.dumps(value, ensure_ascii=False, sort_keys=True)
         existente = self._consultar(
-            "SELECT id FROM param_proposals WHERE country=? AND param_key=? AND value_json=? AND date_from=? AND status IN ('pendiente','confirmada')",
+            "SELECT id FROM param_proposals WHERE country=? AND param_key=? AND value_json=? AND date_from=? AND status IN ('pendiente','confirmada','aplicada')",
             (country, param_key, value_json, date_from),
         )
         if existente:
@@ -196,6 +219,27 @@ class Store:
             id=f["id"], country=f["country"], param_key=f["param_key"], value=json.loads(f["value_json"]),
             date_from=f["date_from"], source=f["source"], url=f["url"], status=f["status"],
         )
+
+    # --- param_prs ----------------------------------------------------------------------------
+
+    def registrar_pr(self, propuesta_id: int, numero: int, rama: str, sha: str, url: str) -> None:
+        """Registra el PR de una propuesta; si se rehízo (conflicto), reemplaza el anterior."""
+        self._ejecutar(
+            "INSERT INTO param_prs (propuesta_id, numero, rama, sha, url, estado, intentos, created, updated) VALUES (?,?,?,?,?, 'ci', 1, ?, ?) "
+            "ON CONFLICT(propuesta_id) DO UPDATE SET numero=excluded.numero, rama=excluded.rama, sha=excluded.sha, url=excluded.url, "
+            "estado='ci', intentos=intentos+1, updated=excluded.updated",
+            (propuesta_id, numero, rama, sha, url, _ahora(), _ahora()),
+        )
+
+    def pr(self, propuesta_id: int) -> PR | None:
+        filas = self._consultar("SELECT * FROM param_prs WHERE propuesta_id=?", (propuesta_id,))
+        return PR.model_validate(dict(filas[0])) if filas else None
+
+    def prs(self, estado: EstadoPR) -> list[PR]:
+        return [PR.model_validate(dict(f)) for f in self._consultar("SELECT * FROM param_prs WHERE estado=? ORDER BY propuesta_id", (estado,))]
+
+    def actualizar_pr(self, propuesta_id: int, estado: EstadoPR) -> None:
+        self._ejecutar("UPDATE param_prs SET estado=?, updated=? WHERE propuesta_id=?", (estado, _ahora(), propuesta_id))
 
     # --- drafts -------------------------------------------------------------------------------
 

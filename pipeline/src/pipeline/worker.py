@@ -14,7 +14,7 @@ from collections.abc import Callable
 from datetime import UTC, date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from pipeline import notificar, tareas
+from pipeline import notificar, publicacion, tareas
 from pipeline.config import Site, cargar_sites
 from pipeline.store import Store
 from pipeline.watchers import config_watchers
@@ -44,6 +44,7 @@ def tick(site: Site, store: Store, ahora: datetime, revisar: Revisar = _revisar)
         return None
     if (proximo := store.ajuste("revision_proximo")) and ahora.isoformat() < proximo:
         return None
+    publicacion.sincronizar_repo()  # params.json al día antes de comparar
     try:
         revisar(site, local.date())
     except Exception as e:
@@ -71,9 +72,15 @@ def ejecutar(intervalo: int = 60) -> None:
     log.info("Worker en marcha (revisión cada %s s)", intervalo)
     while True:
         for site in cargar_sites(solo_habilitados=True):
+            store = Store.del_site(site.site_id)
             try:
-                if (hecho := tick(site, Store.del_site(site.site_id), datetime.now(UTC))) in ("ok", "error"):
+                if (hecho := tick(site, store, datetime.now(UTC))) in ("ok", "error"):
                     log.info("Revisión de %s: %s", site.site_id, hecho)
             except Exception:
                 log.exception("Error inesperado en el worker (%s)", site.site_id)
+            # Seguimiento del CI de los PR de parámetros (no depende de /pausa).
+            try:
+                publicacion.revisar_prs(site, store)
+            except Exception:
+                log.exception("Error revisando los PR de %s", site.site_id)
         time.sleep(intervalo)

@@ -70,7 +70,7 @@
             "profuturo": { "flujo": "0.0169", "mixta_flujo": "0", "mixta_saldo_anual": "0.0068" }
           },
           "from": "2026-10-01", "to": null,
-          "source": "SBS", "nota": "Tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15); confirmar contra sbs.gob.pe",
+          "source": "SBS",
           "nota": "Confirmado con la tabla oficial SBS, devengue 2026-10; mixta sin componente de flujo desde feb-2023 (usuario, 2026-10-16)", "verified": true
         } ]
     },

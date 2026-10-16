@@ -10,6 +10,7 @@ import asyncio
 import logging
 from collections.abc import Awaitable, Callable
 from datetime import datetime
+from html import escape
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -21,7 +22,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import BotCommand, CallbackQuery, InlineKeyboardMarkup, Message, TelegramObject
 
-from pipeline import github
+from pipeline import github, params_pr, publicacion
 from pipeline.bot import acciones, tarjetas
 from pipeline.config import Site
 from pipeline.store import Store
@@ -86,15 +87,43 @@ def crear_router(site: Site, store: Store) -> Router:
             error = type(e).__name__
         await m.answer(acciones.texto_estado(site, store, deploy, hoy(), error_deploy=error), disable_web_page_preview=True)
 
+    async def abrir_pr(m: Message, pid: int) -> None:
+        p = store.propuesta(pid)
+        try:
+            pr = await asyncio.to_thread(params_pr.abrir_pr, store, p, hoy=hoy())  # type: ignore[arg-type]
+        except (params_pr.AplicarError, github.GitHubError) as e:
+            boton = {"inline_keyboard": [[{"text": "🔀 Reintentar PR", "callback_data": f"r:{pid}"}]]}
+            await m.answer(f"⚠️ No pude abrir el PR: {escape(str(e))}", reply_markup=_teclado(boton))
+            return
+        await m.answer(
+            f'🔀 Abrí el <a href="{escape(pr["url"])}">PR #{pr["numero"]}</a>. Te aviso cuando el CI (casos dorados) termine, unos 5 minutos.',
+            disable_web_page_preview=True,
+        )
+
     @r.message(Command("pendientes"))
     async def pendientes(m: Message) -> None:
         propuestas, borradores = store.propuestas("pendiente"), store.borradores("pendiente")
-        if not propuestas and not borradores:
+        sin_pr = [p for p in store.propuestas("confirmada") if store.pr(p.id) is None]
+        listos, fallidos, en_ci = store.prs("listo"), store.prs("falla"), store.prs("ci")
+        if not (propuestas or borradores or sin_pr or listos or fallidos or en_ci):
             await m.answer("Nada pendiente. ✨")
             return
-        await m.answer(f"📌 {len(propuestas)} propuesta(s) · 📝 {len(borradores)} borrador(es)")
+        resumen = [f"📌 {len(propuestas)} propuesta(s)", f"📝 {len(borradores)} borrador(es)"]
+        if en_ci:
+            resumen.append(f"⏳ {len(en_ci)} PR esperando el CI")
+        await m.answer(" · ".join(resumen))
         for p in propuestas:
             await m.answer(tarjetas.texto_propuesta(p), reply_markup=_teclado(tarjetas.botones_propuesta(p)), disable_web_page_preview=True)
+        for p in sin_pr:
+            boton = {"inline_keyboard": [[{"text": "🔀 Abrir PR", "callback_data": f"r:{p.id}"}]]}
+            await m.answer("Confirmada, sin PR:\n" + tarjetas.texto_propuesta(p), reply_markup=_teclado(boton), disable_web_page_preview=True)
+        for pr in listos:
+            await m.answer(
+                f'✅ <a href="{escape(pr.url)}">PR #{pr.numero}</a> con el CI en verde, listo para publicar.',
+                reply_markup=_teclado(publicacion.botones_publicar(pr.propuesta_id)),
+            )
+        for pr in fallidos:
+            await m.answer(f'❌ <a href="{escape(pr.url)}">PR #{pr.numero}</a> con el CI en rojo.', reply_markup=_teclado(publicacion.botones_descartar(pr.propuesta_id)))
         for b in borradores:
             await m.answer(tarjetas.texto_borrador(b), reply_markup=_teclado(tarjetas.botones_borrador(b)))
 
@@ -160,10 +189,39 @@ def crear_router(site: Site, store: Store) -> Router:
                 f"✏️ Envía el valor correcto, la fecha de vigencia o ambos.\nEj.: <code>1300.00 01/01/2027</code> · <code>1.37%</code> · <code>01/03/2027</code>\n/cancelar para salir."
             )
             return
+        actual = store.propuesta(pid)
+        confirmable = accion == "c" and actual is not None and actual.status == "pendiente"
         texto = acciones.confirmar_propuesta(store, pid) if accion == "c" else acciones.ignorar_propuesta(store, pid)
         await cb.message.edit_reply_markup(reply_markup=None)  # type: ignore[union-attr]
         await cb.answer()
         await cb.message.answer(texto)  # type: ignore[union-attr]
+        if confirmable:
+            await abrir_pr(cb.message, pid)  # type: ignore[arg-type]
+
+    @r.callback_query(F.data.regexp(r"^r:\d+$"))
+    async def reintentar_pr(cb: CallbackQuery) -> None:
+        pid = int(cb.data.split(":")[1])  # type: ignore[union-attr]
+        await cb.message.edit_reply_markup(reply_markup=None)  # type: ignore[union-attr]
+        await cb.answer()
+        p = store.propuesta(pid)
+        if p is None or p.status != "confirmada" or store.pr(pid) is not None:
+            await cb.message.answer(f"La propuesta #{pid} ya no necesita PR.")  # type: ignore[union-attr]
+            return
+        await abrir_pr(cb.message, pid)  # type: ignore[arg-type]
+
+    @r.callback_query(F.data.regexp(r"^[mx]:\d+$"))
+    async def publicar_o_descartar(cb: CallbackQuery) -> None:
+        accion, ident = cb.data.split(":")  # type: ignore[union-attr]
+        await cb.message.edit_reply_markup(reply_markup=None)  # type: ignore[union-attr]
+        await cb.answer("Publicando…" if accion == "m" else "Descartando…")
+        try:
+            if accion == "m":
+                texto = await asyncio.to_thread(publicacion.publicar, store, int(ident), hoy=hoy())
+            else:
+                texto = await asyncio.to_thread(publicacion.descartar, store, int(ident))
+        except (params_pr.AplicarError, github.GitHubError) as e:
+            texto = f"⚠️ {escape(str(e))}"
+        await cb.message.answer(texto, disable_web_page_preview=True)  # type: ignore[union-attr]
 
     @r.callback_query(F.data.regexp(r"^b:[ad]:\d+$"))
     async def borrador_respuesta(cb: CallbackQuery) -> None:

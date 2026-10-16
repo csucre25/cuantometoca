@@ -12,8 +12,8 @@
    Fuente: <enlace>
    [✅ Confirmar]  [✏️ Corregir valor/fecha]  [❌ Ignorar]
    ```
-3. Al confirmar → el pipeline agrega la entrada en `params.json`, hace commit en una rama `params/<fecha>` y abre un PR (o hace push directo a `main` si `AUTO_MERGE_PARAMS=true` y el CI pasa).
-4. CI corre los casos dorados; si pasan → deploy automático. El bot avisa: "🚀 Publicado con RMV S/ 1,300".
+3. Al confirmar → el pipeline agrega la entrada en `params.json` (cerrando la vigencia anterior), hace commit en una rama `params/<clave>-<desde>-p<id>` y abre un PR contra `main`.
+4. El CI corre la validación y los casos dorados. Si pasan, el bot avisa con `[🚀 Publicar] [❌ Descartar]` (con `AUTO_MERGE_PARAMS=true` se publica solo). Publicar fusiona el PR → deploy → "🚀 Publicado el site pe".
 
 ## 2. Flujo de contenido (borradores con LLM)
 1. Disparadores: nueva norma confirmada, inicio de temporada (ver calendario en `docs/05`) o comando `/borrador <tema>` en el bot.
