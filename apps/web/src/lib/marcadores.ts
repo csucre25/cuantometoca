@@ -9,7 +9,9 @@ import { configurarMoneda, porcentaje, soles, solesCorto } from "../components/c
  *   {{param:rmv}}                                           → "S/ 1,230.00"
  *   {{param:bonificacion_extraordinaria_essalud}}           → "9%"
  *   {{param:gratificacion_fechas_pago.julio}}               → "15 de julio"
+ *   {{param:cts_retiro_extraordinario.hasta}}               → "31 de diciembre de 2026"
  *   {{monto:1500}}                                          → "S/ 1,500" (un monto de entrada de un ejemplo)
+ *   {{param:horas_extras_recargos.primeras_2h|pct}}         → "25%" (formato explícito: pct, soles)
  *
  * Los parámetros del cálculo son los mismos campos del formulario (los de la URL compartible).
  * Un marcador desconocido o un cálculo inválido lanza error: el build falla en vez de publicar algo mal.
@@ -50,7 +52,8 @@ function valorCalculo(cuerpo: string, hoy: string, definiciones: (typeof paises)
   return soles(concepto.monto);
 }
 
-function valorParametro(ruta: string, hoy: string, params: (typeof paises)[string]["params"]["params"]): string {
+function valorParametro(marcador: string, hoy: string, params: (typeof paises)[string]["params"]["params"]): string {
+  const [ruta, formato] = marcador.split("|").map((x) => x.trim()) as [string, string | undefined];
   const [clave, ...sub] = ruta.split(".");
   const def = params[clave!];
   if (!def) throw new Error(`parámetro "${clave}" no existe`);
@@ -59,7 +62,11 @@ function valorParametro(ruta: string, hoy: string, params: (typeof paises)[strin
   let valor: unknown = entrada.value;
   for (const k of sub) valor = (valor as Record<string, unknown> | undefined)?.[k];
   if (typeof valor !== "string") throw new Error(`"${ruta}" no es un valor simple`);
+  if (formato === "pct") return porcentaje(valor);
+  if (formato === "soles") return soles(valor);
+  if (formato) throw new Error(`formato "${formato}" desconocido (usa pct o soles)`);
   if (/^\d{2}-\d{2}$/.test(valor)) return `${Number(valor.slice(3))} de ${MESES[Number(valor.slice(0, 2)) - 1]}`;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) return `${Number(valor.slice(8))} de ${MESES[Number(valor.slice(5, 7)) - 1]} de ${valor.slice(0, 4)}`;
   if (def.unit === "PEN") return soles(valor);
   if (def.unit === "ratio") return porcentaje(valor);
   return valor;

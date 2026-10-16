@@ -2,7 +2,7 @@
 titulo: "Gratificación: qué es, cuánto te toca y cuándo te la pagan"
 descripcion: "Guía de la gratificación de julio y diciembre: quién tiene derecho, cómo se calcula, la bonificación extraordinaria y qué hacer si no te pagan."
 calculadora: gratificacion
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 

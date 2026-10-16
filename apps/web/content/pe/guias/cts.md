@@ -2,7 +2,7 @@
 titulo: "CTS: qué es, cuánto te depositan y cuándo"
 descripcion: "Guía de la Compensación por Tiempo de Servicios: quién tiene derecho, cómo se calcula el depósito de mayo y noviembre y qué hacer si no te depositan."
 calculadora: cts
-estado: borrador
+estado: aprobado
 actualizado: 2026-10-16
 ---
 
@@ -33,7 +33,10 @@ Ejemplos en el régimen general, sin asignación familiar, con la gratificación
 
 ## ¿Puedo retirar mi CTS?
 
-Las reglas para retirar la CTS han cambiado varias veces con leyes que autorizan retiros extraordinarios. Antes de decidir, revisa las condiciones vigentes con tu banco o en los canales oficiales del Ministerio de Trabajo.
+- Hasta el {{param:cts_retiro_extraordinario.hasta}}, la Ley 32322 te permite retirar libremente el total de tu CTS y sus intereses, de una vez o por partes, desde la banca por internet, la aplicación o las agencias de tu entidad financiera.
+- Si te diagnosticaron cáncer o una enfermedad terminal, acreditada ante tu empleador, puedes retirar el total en cualquier momento.
+
+Antes de retirarla, recuerda que la CTS es tu respaldo si te quedas sin trabajo.
 
 ## Si dejas de trabajar
 

@@ -59,10 +59,15 @@ test.describe("parámetros vigentes", () => {
   });
 });
 
-test("las guías en borrador no se publican (CLAUDE.md, regla 6)", async ({ page }) => {
+test("las guías aprobadas se publican y los borradores no (CLAUDE.md, regla 6)", async ({ page }) => {
   for (const ruta of ["/gratificacion/", "/cts/"]) {
     await page.goto(ruta);
+    await expect(page.locator(".guia")).toBeVisible();
     await expect(page.getByText("Borrador pendiente de aprobación")).toHaveCount(0);
     await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  }
+  for (const ruta of ["/vacaciones-truncas/", "/liquidacion/", "/utilidades/", "/sueldo-neto/", "/renta-quinta-categoria/", "/horas-extras/"]) {
+    await page.goto(ruta);
+    await expect(page.locator(".guia"), ruta).toHaveCount(0);
   }
 });

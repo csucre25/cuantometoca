@@ -155,6 +155,26 @@
       "unit": "count",
       "history": [ { "value": "3", "from": "1997-03-27", "to": null, "source": "DS 003-97-TR art. 10", "verified": false } ]
     },
+    "cts_retiro_extraordinario": {
+      "description": "Libre disponibilidad temporal del 100% de la CTS e intereses. Sin vigencia después de 'hasta': un texto que lo cite hace fallar el build y obliga a actualizarlo.",
+      "unit": "object",
+      "history": [ { "value": { "hasta": "2026-12-31" }, "from": "2025-05-10", "to": "2026-12-31", "source": "Ley 32322", "nota": "Publicada en El Peruano el 09/05/2025. Retiro del 100% por cáncer o enfermedad terminal sin límite de fecha (modifica art. 42 del TUO de la Ley de CTS). Reglamento: DS 007-2025-TR según el usuario; verificar.", "verified": true } ]
+    },
+    "liquidacion_plazo_pago_horas": {
+      "description": "Plazo para pagar los beneficios sociales tras el cese",
+      "unit": "hours",
+      "history": [ { "value": "48", "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 3", "verified": false } ]
+    },
+    "utilidades_plazo_pago_dias": {
+      "description": "Días naturales para pagar utilidades tras el vencimiento de la declaración jurada anual del impuesto a la renta",
+      "unit": "days",
+      "history": [ { "value": "30", "from": "1996-11-12", "to": null, "source": "DL 892 art. 6", "verified": false } ]
+    },
+    "jornada_maxima_horas": {
+      "description": "Jornada ordinaria máxima",
+      "unit": "object",
+      "history": [ { "value": { "diaria": "8", "semanal": "48" }, "from": "2002-07-04", "to": null, "source": "Constitución art. 25; DS 007-2002-TR art. 1", "verified": false } ]
+    },
     "cts_jornada_minima_horas": {
       "description": "Jornada diaria mínima promedio para tener derecho a CTS",
       "unit": "hours",

@@ -16,6 +16,18 @@ describe("marcadores editoriales", () => {
     expect(r("{{param:bonificacion_extraordinaria_essalud}}")).toBe("9%");
     expect(r("{{param:gratificacion_fechas_pago.diciembre}}")).toBe("15 de diciembre");
     expect(r("{{param:cts_jornada_minima_horas}}")).toBe("4");
+    expect(r("{{param:cts_retiro_extraordinario.hasta}}")).toBe("31 de diciembre de 2026");
+  });
+
+  it("un texto que cita una norma temporal falla cuando esta deja de estar vigente", () => {
+    expect(() => resolverMarcadores("{{param:cts_retiro_extraordinario.hasta}}", { ...op, hoy: "2027-01-01" })).toThrow(/sin vigencia/);
+  });
+
+  it("aplica formatos explícitos a valores de tablas", () => {
+    expect(r("{{param:horas_extras_recargos.primeras_2h|pct}}")).toBe("25%");
+    expect(r("{{param:renta5ta_tramos.0.tasa|pct}}")).toBe("8%");
+    expect(r("{{param:regimenes.pequena.vacaciones_dias}}")).toBe("15");
+    expect(() => r("{{param:rmv|xyz}}")).toThrow(/formato "xyz"/);
   });
 
   it("formatea montos de entrada", () => {
