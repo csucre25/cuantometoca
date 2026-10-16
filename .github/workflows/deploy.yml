@@ -39,13 +39,14 @@ jobs:
     env:
       SITE: ${{ matrix.site }}
       # Nombres genéricos: site-loader.mjs los prioriza sobre los *_<SITE> (docs/02 §7).
+      # Los valores públicos (correo, token de analytics, GA4) se aceptan como secreto o como variable.
       ADSENSE_CLIENT: ${{ secrets[format('ADSENSE_CLIENT_{0}', matrix.site_upper)] }}
       ADSENSE_SLOT_AFTER_RESULT: ${{ secrets[format('ADSENSE_SLOT_AFTER_RESULT_{0}', matrix.site_upper)] }}
       ADSENSE_SLOT_IN_BREAKDOWN: ${{ secrets[format('ADSENSE_SLOT_IN_BREAKDOWN_{0}', matrix.site_upper)] }}
       ADSENSE_SLOT_IN_ARTICLE: ${{ secrets[format('ADSENSE_SLOT_IN_ARTICLE_{0}', matrix.site_upper)] }}
-      CF_BEACON_TOKEN: ${{ secrets[format('CF_BEACON_TOKEN_{0}', matrix.site_upper)] }}
-      CONTACT_EMAIL: ${{ secrets[format('CONTACT_EMAIL_{0}', matrix.site_upper)] }}
-      GA4_ID: ${{ secrets[format('GA4_ID_{0}', matrix.site_upper)] }}
+      CF_BEACON_TOKEN: ${{ secrets[format('CF_BEACON_TOKEN_{0}', matrix.site_upper)] || vars[format('CF_BEACON_TOKEN_{0}', matrix.site_upper)] }}
+      CONTACT_EMAIL: ${{ secrets[format('CONTACT_EMAIL_{0}', matrix.site_upper)] || vars[format('CONTACT_EMAIL_{0}', matrix.site_upper)] }}
+      GA4_ID: ${{ secrets[format('GA4_ID_{0}', matrix.site_upper)] || vars[format('GA4_ID_{0}', matrix.site_upper)] }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
