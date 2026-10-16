@@ -1,5 +1,8 @@
 name: deploy
 
+# Secretos por site (sufijo = site_id en mayúsculas): CF_ACCOUNT_ID_*, CF_API_TOKEN_*, CF_BEACON_TOKEN_*,
+# CONTACT_EMAIL_* y, opcionales, TELEGRAM_* y ADSENSE_*. Detalle en README.md → Publicar un site.
+
 on:
   push:
     branches: [main]
