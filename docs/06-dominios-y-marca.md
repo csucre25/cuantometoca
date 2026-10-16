@@ -39,6 +39,32 @@ El dominio **siempre** se configura en `config/sites/<site>.yaml → domain`. Na
 - Si `cuantometoca.pe` no está disponible: `cuantomepagan.pe` o `calculatugrati.pe`.
 - Los dominios de gancho estacional (tugrati, tucts) pueden comprarse como redirecciones 301 hacia la sección correspondiente del dominio principal, para usarlos en videos. Configurar como "redirect rules" en Cloudflare, no como sitios duplicados.
 
+## Decisión (2026-10-15): `cuantometoca.pe`
+Dominio principal de Perú: **cuantometoca.pe** (registro a cargo del usuario; opcional `cuantometoca.com.pe` como defensa).
+
+### Evidencia (Google Trends, Perú, últimos 5 años)
+Los índices solo son comparables dentro de una misma consulta.
+
+| Consulta | Resultado (interés promedio) |
+|---|---|
+| Forma de preguntar | cuánto me **corresponde** de cts 18 · cuánto me **toca** de cts 9 · me pagan 1 · me deben 0. La brecha se acorta: en el pico de 2026 "toca" ≈ 76 vs "corresponde" ≈ 97. |
+| Término paraguas | beneficios sociales 72 · beneficios laborales 25 · liquidación de beneficios sociales 17 · calculadora laboral 5. "beneficios sociales" baja lentamente desde 2025. |
+| Intención de cálculo | calcular cts 22 · calcular gratificación 14 · calcular liquidación 11 (estable todo el año) · calcular vacaciones 5 · calcular utilidades 3. |
+| Términos sueltos | "cts" domina; "liquidación" segundo; "cuánto me toca" como frase suelta casi no tiene volumen. En aumento: "cuándo depositan la cts", "calculadora cts 2026". |
+
+### Por qué se mantiene
+- El dominio casi no influye en el posicionamiento: el tráfico lo traen las páginas y sus títulos. Por eso las palabras clave ganadoras van en el contenido (ver `docs/05` §3), no en el dominio.
+- Como marca es el mejor candidato: corto (12 caracteres), fácil de dictar, sin guiones y reutilizable en otros países.
+- "Toca" es una frase real y va en aumento.
+
+### Descartados
+- `cuantomecorresponde.pe`: gana en búsquedas, pero es largo (19 caracteres) y fácil de escribir mal en video.
+- `beneficiossociales.pe`: es el término paraguas dominante, pero es genérico, no funciona como marca y no sirve en otros países (allá no se dice así). Opcional: registrarlo como **redirección 301** a la página principal o a `/liquidacion/`.
+- `cuantometoca.com`: ya está registrado por un tercero. No afecta, porque la estrategia usa una extensión por país, pero hay que revisar `.cl`, `.mx` y `.com.co` antes de la fase 7.
+
+### Revisión periódica (manual)
+Repetir las consultas en Trends antes de cada temporada (abril, junio, octubre). Para comparar más de 5 términos, incluir un **término ancla** (`calcular cts`) en cada consulta y normalizar: `valor × (ancla_referencia / ancla_en_consulta)`. La automatización por API (oficial en alfa, pytrends archivado, SerpApi/DataForSEO de pago) queda como evaluación a largo plazo.
+
 ## Identidad
 - Tono: cercano, claro, sin tecnicismos ("te toca", "te deben pagar").
 - Colores y logo: configurables en `brand` del site.

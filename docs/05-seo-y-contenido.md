@@ -26,9 +26,15 @@ Google penaliza las páginas generadas en masa sin valor para el usuario, no el 
 ```
 
 ## 3. Keywords objetivo (Perú)
+Hallazgos de Google Trends (2026-10, Perú, 5 años; detalle en `docs/06` → Decisión):
+- **Prioridad por demanda:** CTS > gratificación > liquidación (pareja todo el año) > vacaciones > utilidades.
+- **Forma de preguntar:** "cuánto me **corresponde**" se busca el doble que "cuánto me toca". En títulos, H1 y FAQ usar "¿Cuánto te corresponde de …?". Mantener "toca" como tono de marca.
+- **Término paraguas:** "beneficios sociales" es el término dominante en Perú; usarlo en el hub y en liquidación ("Liquidación de beneficios sociales").
+- **En aumento:** "cuándo depositan la cts", "cuándo pagan la cts 2026", "calculadora cts 2026". Refuerza la página `/calendario-de-pagos-<año>/` y la mención del año en los títulos.
+
 Intención transaccional (calculadora) — prioridad máxima:
 - calcular gratificación / calculadora de gratificación / gratificación julio 2027 / cuánto me toca de gratificación
-- calcular cts / cts mayo 2027 / cuánto me depositan de cts
+- calcular cts / calculadora cts 2027 / cts mayo 2027 / cuánto me corresponde de cts / cuánto me depositan de cts
 - calcular liquidación / liquidación por renuncia / liquidación por despido arbitrario / beneficios sociales al renunciar
 - calcular utilidades / utilidades minería cuánto me toca / cuándo pagan utilidades 2027
 - vacaciones truncas cálculo
@@ -44,7 +50,7 @@ Variantes de caso (programático):
 - gratificación pequeña empresa / mype / trabajadora del hogar
 
 Informativas (apoyan autoridad y enlazan a la calculadora):
-- cuándo pagan la gratificación 2027 / qué pasa si no me pagan la grati
+- cuándo depositan la cts 2027 / cuándo pagan la gratificación 2027 / qué pasa si no me pagan la grati
 - sueldo mínimo 2027 perú / uit 2027
 - se puede retirar la cts 2027 (actualizar según norma vigente)
 
