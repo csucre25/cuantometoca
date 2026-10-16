@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "astro sync && tsc --noEmit -p tsconfig.json",
     "test:e2e": "playwright test",
     "lighthouse": "lhci autorun --config=lighthouserc.cjs",
     "test": "vitest run src"
