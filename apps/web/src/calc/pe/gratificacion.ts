@@ -55,6 +55,8 @@ export const gratificacion: Definicion = {
     { tipo: "dinero", id: "otros", etiqueta: "Otros ingresos regulares (promedio mensual)", ayuda: "Comisiones, horas extras u otros pagos que recibiste al menos 3 meses del semestre." },
     { tipo: "entero", id: "anio", etiqueta: "Año", min: 2025, max: 2100 },
   ],
+  faltante: (v) =>
+    !v.sueldo ? "Ingresa tu sueldo para ver el resultado." : v.tiempo === "fechas" && !v.ingreso ? "Ingresa tu fecha de ingreso." : null,
   iniciales: (hoy) => {
     const p = proxima(hoy);
     return { periodo: p.periodo, anio: String(p.anio), sueldo: "", tiempo: "meses", meses: "6", asig: "0", regimen: "general", seguro: "essalud", otros: "" };

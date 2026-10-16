@@ -37,7 +37,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: `apps/web/site-loader.mjs` resuelve el site y sus variables (genérica → `*_<SITE>`); `STRICT_ENV=1` en deploy hace fallar el build si falta una requerida. Favicon generado con el color de marca. Preact y Playwright instalados (aprobados por el usuario).
 - [x] 2.2 Componente calculadora + desglose + query string compartible. **CA**: gratificación y CTS funcionales en móvil.
   - Nota: motor de formularios declarativo (`apps/web/src/calc/<pais>/`), isla Preact con resultado en vivo, estado en la URL, desglose y condiciones plegados. 16 e2e (Playwright, móvil y escritorio) en CI. JS de la página ≈ 59 KB gzip.
-- [ ] 2.3 Resto de calculadoras en la UI.
+- [x] 2.3 Resto de calculadoras en la UI.
+  - Nota: 8 calculadoras con formulario; campos comunes en `calc/pe/campos.ts`; mensaje de espera específico (`faltante`). 38 e2e (cada caso dorado de UI en móvil y escritorio). JS por página ≈ 69 KB gzip.
 - [ ] 2.4 `AdSlot` con espacio reservado + `ads.txt` desde config. **CA**: CLS = 0 en Lighthouse con slots vacíos.
 - [ ] 2.5 SEO técnico: sitemap, robots, canonical, schema, OG images estáticas por calculadora. **CA**: Lighthouse SEO ≥ 95, rendimiento móvil ≥ 90.
 - [ ] 2.6 Página "Parámetros vigentes" generada desde params.

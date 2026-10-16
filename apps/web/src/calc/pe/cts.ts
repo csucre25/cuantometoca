@@ -48,6 +48,8 @@ export const cts: Definicion = {
     { tipo: "entero", id: "jornada", etiqueta: "Horas de trabajo al día (promedio)", min: 1, max: 24 },
     { tipo: "entero", id: "anio", etiqueta: "Año del depósito", min: 2025, max: 2100 },
   ],
+  faltante: (v) =>
+    !v.sueldo ? "Ingresa tu sueldo para ver el resultado." : v.tiempo === "fechas" && !v.ingreso ? "Ingresa tu fecha de ingreso." : null,
   iniciales: (hoy) => {
     const p = proximo(hoy);
     return { periodo: p.periodo, anio: String(p.anio), sueldo: "", tiempo: "meses", meses: "6", dias: "0", asig: "0", grati: "", regimen: "general", otros: "", jornada: "8" };

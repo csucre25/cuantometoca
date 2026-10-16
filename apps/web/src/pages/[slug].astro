@@ -16,7 +16,7 @@ const hoyBuild = new Date().toISOString().slice(0, 10);
 ---
 
 <Base title={calc.title} description={`${calc.resumen} Calcula el monto con tu sueldo y mira el desglose paso a paso.`}>
-  <div class="contenedor contenedor--ancho">
+  <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> / {calc.nombre}</nav>
       <h1>{calc.title}</h1>
@@ -39,9 +39,6 @@ const hoyBuild = new Date().toISOString().slice(0, 10);
 </Base>
 
 <style>
-  .contenedor--ancho {
-    max-width: calc(64rem + 2 * var(--gutter));
-  }
   .encabezado {
     padding-block: 1.5rem 1.25rem;
     max-width: 44rem;

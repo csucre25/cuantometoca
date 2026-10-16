@@ -64,17 +64,20 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
   }, [valores, hoy]);
 
   const salida = useMemo(() => {
-    if (!valores.sueldo) return { vacio: true as const };
+    const falta = def.faltante(valores);
+    if (falta) return { mensaje: falta };
     try {
       return { r: def.calcular(valores, hoy) };
     } catch (e) {
       const issues = (e as { issues?: Issue[] }).issues;
+      const mapa = { ...CAMPO_DE_ERROR, ...def.errores };
       const errores: Record<string, string> = {};
       for (const i of issues ?? []) {
-        const campo = CAMPO_DE_ERROR[String(i.path[0])] ?? String(i.path[0]);
+        const campo = mapa[String(i.path[0])] ?? String(i.path[0]);
         errores[campo] ??= i.message;
       }
-      return { errores, mensaje: issues ? undefined : "No pudimos calcular con estos datos." };
+      // El primer error se explica también en el resultado, por si su campo no está a la vista.
+      return { errores, mensaje: issues?.[0]?.message ?? "No pudimos calcular con estos datos." };
     }
   }, [valores, hoy]);
 
@@ -108,11 +111,7 @@ export default function Calculadora({ country, calcId, titulo, hoyBuild, moneda 
           <div class="calc-espera">
             <p class="calc-total-etiqueta">{def.etiquetaTotal}</p>
             <p class="calc-total calc-total--vacio">—</p>
-            <p class="muted">
-              {"vacio" in salida
-                ? "Ingresa tu sueldo para ver el resultado."
-                : ("mensaje" in salida && salida.mensaje) || "Revisa los datos marcados para ver el resultado."}
-            </p>
+            <p class="muted">{"mensaje" in salida ? salida.mensaje : ""}</p>
           </div>
         )}
       </section>

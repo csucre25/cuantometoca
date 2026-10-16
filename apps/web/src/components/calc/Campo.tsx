@@ -70,14 +70,14 @@ export function Campo({ campo, valor, error, onCambio }: Props) {
     );
   } else if (campo.tipo === "entero") {
     control = (
-      <div class="calc-entero">
+      <div class={campo.max > 9999 ? "calc-entero calc-entero--ancho" : "calc-entero"}>
         <input
           id={id}
           type="number"
           inputMode="numeric"
           min={campo.min}
           max={campo.max}
-          step={1}
+          step={campo.paso ?? 1}
           value={valor}
           aria-invalid={error ? "true" : undefined}
           aria-describedby={describedBy}

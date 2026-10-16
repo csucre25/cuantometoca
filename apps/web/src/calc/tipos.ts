@@ -12,7 +12,7 @@ export type Campo =
   | (Base & { tipo: "opciones"; opciones: { valor: string; etiqueta: string }[]; estilo?: "segmentado" | "lista" })
   | (Base & { tipo: "si-no" })
   | (Base & { tipo: "fecha" })
-  | (Base & { tipo: "entero"; min: number; max: number; sufijo?: string });
+  | (Base & { tipo: "entero"; min: number; max: number; sufijo?: string; paso?: number });
 
 export type Definicion = {
   /** Campos esenciales, siempre visibles. */
@@ -23,6 +23,10 @@ export type Definicion = {
   iniciales: (hoy: string) => Valores;
   /** Oculta campos que no aplican con los valores actuales. */
   visible?: (campo: string, v: Valores) => boolean;
+  /** Mensaje si falta un dato imprescindible (se muestra en lugar del resultado), o null. */
+  faltante: (v: Valores) => string | null;
+  /** Campos del motor → campos del formulario, además de los comunes (para ubicar errores). */
+  errores?: Record<string, string>;
   /** Etiqueta del total ("Te corresponde", "Tu sueldo neto"…). */
   etiquetaTotal: string;
   calcular: (v: Valores, hoy: string) => ResultadoCalculo;

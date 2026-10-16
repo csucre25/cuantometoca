@@ -19,6 +19,7 @@ jobs:
       SITE: ${{ matrix.site }}
       LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
       LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_MODEL_EXTRACT: ${{ vars.LLM_MODEL_EXTRACT }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       # GitHub Actions no admite expresiones en nombres de variables: en CI se usan nombres genéricos
       # que el pipeline prioriza sobre los *_env del site (ver docs/02 §7, resolución de secretos).

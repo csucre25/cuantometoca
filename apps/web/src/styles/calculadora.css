@@ -114,6 +114,10 @@
   max-width: 6.5rem;
 }
 
+.calc-entero--ancho input {
+  max-width: none;
+}
+
 .calc-entero span {
   color: var(--text-muted);
 }

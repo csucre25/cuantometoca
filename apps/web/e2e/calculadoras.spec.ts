@@ -68,8 +68,85 @@ test.describe("CTS", () => {
   });
 });
 
+test.describe("resto de calculadoras", () => {
+  test("vacaciones truncas por meses (caso V1)", async ({ page }) => {
+    await abrir(page, "/vacaciones-truncas/?sueldo=3000&tiempo=meses&meses=7&dias=15");
+    await expect(total(page)).toHaveText("S/ 1,875.00");
+  });
+
+  test("vacaciones truncas por fechas pide el ingreso", async ({ page }) => {
+    await abrir(page, "/vacaciones-truncas/?sueldo=3000");
+    await expect(page.locator(".calc-espera")).toContainText("fecha de ingreso");
+    await page.fill("#c-ingreso", "2024-03-10");
+    await page.fill("#c-cese", "2026-08-24");
+    await expect(total(page)).toHaveText("S/ 1,375.00");
+  });
+
+  test("liquidación por despido (caso L2) con nota de redondeo", async ({ page }) => {
+    await abrir(page, "/liquidacion/?sueldo=2500&asig=1&ingreso=2023-03-01&cese=2026-08-20&motivo=despido_arbitrario&diasMes=20");
+    await expect(total(page)).toHaveText("S/ 17,991.47");
+    await expect(page.locator(".calc-conceptos")).toContainText("Indemnización por despido arbitrario");
+    await page.getByText("¿Cómo se calculó?").click();
+    await expect(page.locator(".calc-nota").first()).toContainText("céntimo");
+  });
+
+  test("liquidación: plazo fijo pide la fecha de vencimiento", async ({ page }) => {
+    await abrir(page, "/liquidacion/?sueldo=3000&ingreso=2025-01-01&cese=2026-08-15&motivo=despido_arbitrario");
+    await expect(page.locator("#c-fin")).toHaveCount(0);
+    await page.getByText("A plazo fijo").click();
+    await expect(page.locator(".calc-espera")).toContainText("vencía tu contrato");
+    await page.fill("#c-fin", "2026-12-31");
+    await expect(page.locator(".calc-conceptos")).toContainText("S/ 20,400.00");
+  });
+
+  test("utilidades con el comunicado (caso U1)", async ({ page }) => {
+    await abrir(page, "/utilidades/?modo=exacto&sector=industrial&renta=1000000&diasTotales=7300&diasTrab=365&remTotales=720000&remTrab=36000&anio=2025");
+    await expect(total(page)).toHaveText("S/ 5,000.00");
+  });
+
+  test("utilidades estimadas avisan que es una estimación", async ({ page }) => {
+    await abrir(page, "/utilidades/?sector=minera&renta=5000000&trabajadores=100&anio=2025");
+    await expect(total(page)).toHaveText("S/ 4,000.00");
+    await expect(page.locator(".calc-avisos")).toContainText("estimación");
+  });
+
+  test("sueldo neto con ONP sin renta de quinta", async ({ page }) => {
+    await abrir(page, "/sueldo-neto/?sueldo=3000&sistema=onp&renta=0");
+    await expect(total(page)).toHaveText("S/ 2,610.00");
+  });
+
+  test("sueldo neto con AFP pide elegir la AFP", async ({ page }) => {
+    await abrir(page, "/sueldo-neto/?sueldo=3000");
+    await expect(page.locator(".calc-espera")).toContainText("Elige tu AFP");
+    await page.selectOption("#c-afp", "integra");
+    await expect(page.locator(".calc-conceptos")).toContainText("Prima de seguro");
+  });
+
+  test("renta de quinta (caso R1)", async ({ page }) => {
+    await abrir(page, "/renta-quinta-categoria/?sueldo=5000&anio=2026");
+    await expect(total(page)).toHaveText("S/ 2,886.00");
+  });
+
+  test("horas extras: 2 h al 25% + 1 h al 35% (caso H1)", async ({ page }) => {
+    await abrir(page, "/horas-extras/?sueldo=2400&horas=3");
+    await expect(total(page)).toHaveText("S/ 38.50");
+  });
+});
+
+test("todas las calculadoras del inicio tienen página", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("Próximamente")).toHaveCount(0);
+  const enlaces = await page.locator(".tarjeta").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+  expect(enlaces).toHaveLength(8);
+  for (const href of enlaces) {
+    const r = await page.request.get(href!);
+    expect(r.status(), href!).toBe(200);
+  }
+});
+
 test("sin scroll horizontal en ninguna página", async ({ page }) => {
-  for (const ruta of ["/", "/gratificacion/?sueldo=2500", "/cts/?sueldo=2500", "/privacidad/"]) {
+  const rutas = ["/", "/gratificacion/?sueldo=2500", "/cts/?sueldo=2500", "/liquidacion/?sueldo=2500&ingreso=2024-01-01", "/utilidades/?modo=exacto", "/sueldo-neto/?sueldo=2500&afp=prima", "/privacidad/"];
+  for (const ruta of rutas) {
     await page.goto(ruta);
     const desborde = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(desborde, ruta).toBeLessThanOrEqual(0);
