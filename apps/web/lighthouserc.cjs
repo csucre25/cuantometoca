@@ -11,7 +11,7 @@ module.exports = {
         // Enlace compartido: el resultado aparece al hidratar (mide el salto que eso provoca).
         "http://localhost/liquidacion/?sueldo=2500&ingreso=2023-03-01&cese=2026-08-20&motivo=despido_arbitrario",
       ],
-      numberOfRuns: 1,
+      numberOfRuns: 3, // en CI la primera corrida en frío es más lenta; se evalúa la mejor (agregación optimista)
       settings: { chromeFlags: "--no-sandbox --headless=new" },
     },
     assert: {

@@ -41,7 +41,7 @@ jobs:
           p = pathlib.Path("apps/web/.lighthouseci/assertion-results.json")
           for r in json.loads(p.read_text()) if p.exists() else []:
               if not r.get("passed"):
-                  print(f"::error title=Lighthouse {r['auditId']}::{r['url']} esperado {r.get('operator','')} {r.get('expected')} obtenido {r.get('actual')}")
+                  print(f"::error title=Lighthouse {r['auditId']} {r.get('auditProperty','')}::{r['url']} esperado {r.get('operator','')} {r.get('expected')} obtenido {r.get('actual')}")
           PY
       - name: Sin dominios hardcodeados
         run: python3 scripts/check_no_hardcoded_domains.py
