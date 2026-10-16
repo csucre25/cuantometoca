@@ -52,12 +52,12 @@
     "afp_prima_seguro": {
       "description": "Prima de seguro de invalidez, sobrevivencia y gastos de sepelio. Actualizar desde la SBS (watcher sbs_afp).",
       "unit": "ratio",
-      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS", "nota": "Igual para las 4 AFP; tomado de la tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15)", "verified": false } ]
+      "history": [ { "value": "0.0137", "from": "2026-01-01", "to": null, "source": "SBS — Comisiones y Primas de Seguro del SPP", "nota": "Confirmado con la tabla oficial SBS, devengue 2026-10 (usuario, 2026-10-16)", "verified": true } ]
     },
     "afp_remuneracion_maxima_asegurable": {
       "description": "Tope de remuneración para el cálculo de la prima de seguro. Actualizar trimestralmente desde la SBS.",
       "unit": "PEN",
-      "history": [ { "value": "12732.70", "from": "2026-10-01", "to": null, "source": "SBS", "nota": "Vigente oct–dic 2026 según afpintegra.pe/cliente/comisiones (consultada 2026-10-15); actualizar cada trimestre", "verified": false } ]
+      "history": [ { "value": "12732.70", "from": "2026-10-01", "to": null, "source": "SBS — Comisiones y Primas de Seguro del SPP", "nota": "Confirmado con la tabla oficial SBS, devengue 2026-10 (usuario, 2026-10-16); actualizar cada trimestre", "verified": true } ]
     },
     "afp_comisiones": {
       "description": "Comisión por AFP (flujo y mixta). Estructura: { afp: { flujo: ratio, mixta_flujo: ratio, mixta_saldo_anual: ratio } }. Poblar desde la SBS.",
@@ -71,7 +71,7 @@
           },
           "from": "2026-10-01", "to": null,
           "source": "SBS", "nota": "Tabla comparativa de afpintegra.pe/cliente/comisiones (consultada 2026-10-15); confirmar contra sbs.gob.pe",
-          "verified": false
+          "nota": "Confirmado con la tabla oficial SBS, devengue 2026-10; mixta sin componente de flujo desde feb-2023 (usuario, 2026-10-16)", "verified": true
         } ]
     },
     "renta5ta_deduccion_uit": {
@@ -143,17 +143,17 @@
     "gratificacion_fechas_pago": {
       "description": "Fecha límite de pago de cada gratificación (MM-DD): primera quincena del mes",
       "unit": "object",
-      "history": [ { "value": { "julio": "07-15", "diciembre": "12-15" }, "from": "2002-05-24", "to": null, "source": "Ley 27735 art. 5", "verified": false } ]
+      "history": [ { "value": { "julio": "07-15", "diciembre": "12-15" }, "from": "2002-05-24", "to": null, "source": "Ley 27735 art. 5", "nota": "Confirmado por el usuario (Scotiabank, cálculo de gratificación), 2026-10-16", "verified": true } ]
     },
     "cts_fechas_deposito": {
       "description": "Fecha límite de depósito de la CTS (MM-DD): primeros 15 días naturales del mes",
       "unit": "object",
-      "history": [ { "value": { "mayo": "05-15", "noviembre": "11-15" }, "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 22", "verified": false } ]
+      "history": [ { "value": { "mayo": "05-15", "noviembre": "11-15" }, "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 22", "nota": "Confirmado por el usuario, 2026-10-16", "verified": true } ]
     },
     "periodo_prueba_meses": {
       "description": "Período de prueba general; superado, el despido arbitrario genera indemnización",
       "unit": "count",
-      "history": [ { "value": "3", "from": "1997-03-27", "to": null, "source": "DS 003-97-TR art. 10", "verified": false } ]
+      "history": [ { "value": "3", "from": "1997-03-27", "to": null, "source": "DS 003-97-TR art. 10", "nota": "Confirmado con el texto del TUO DS 003-97-TR, art. 10 (usuario, 2026-10-16)", "verified": true } ]
     },
     "cts_retiro_extraordinario": {
       "description": "Libre disponibilidad temporal del 100% de la CTS e intereses. Sin vigencia después de 'hasta': un texto que lo cite hace fallar el build y obliga a actualizarlo.",
