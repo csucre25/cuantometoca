@@ -101,3 +101,32 @@ describe("CTS: condiciones (desplegable)", () => {
     ]);
   });
 });
+
+describe("CTS: régimen MYPE", () => {
+  it("pequeña empresa sin tope alcanzado: 50% normal y sin pasos de tope", () => {
+    const r = calc({ regimen: "pequena", fechaIngreso: "2023-01-01", gratiSemestre: "1500" });
+    expect(r.total).toBe("812.50");
+    expect(r.steps.some((s) => s.descripcion.startsWith("Tope"))).toBe(false);
+  });
+
+  it("pequeña empresa que completa el tope en el periodo (caso C6) muestra el paso del tope", () => {
+    const r = calc({ regimen: "pequena", fechaIngreso: "2019-11-15", gratiSemestre: "1500" });
+    expect(r.total).toBe("58.68");
+    expect(r.steps.at(-1)).toMatchObject({ descripcion: "Tope de 90 remuneraciones diarias", formula: "3250.00 ÷ 30 × (90 − 89.46 ya acumuladas)" });
+    expect(r.advertencias.join(" ")).toContain("completas el tope");
+  });
+
+  it("sin fecha de ingreso avisa del tope (unos 6 años)", () => {
+    expect(calc({ regimen: "pequena", mesesCompletos: 6, gratiSemestre: "1500" }).advertencias.join(" ")).toContain("unos 6 años");
+  });
+
+  it("contratado antes del DL 1086: advierte que corresponde el régimen general", () => {
+    const r = calc({ regimen: "pequena", fechaIngreso: "2007-03-01", gratiSemestre: "1500" });
+    expect(r.advertencias.join(" ")).toContain("Ingresaste antes del 28/06/2008");
+  });
+
+  it("requisito del REMYPE en condiciones solo para MYPE", () => {
+    expect(calc({ regimen: "pequena", mesesCompletos: 6 }).condiciones.requisitos.join(" ")).toContain("REMYPE");
+    expect(calc({ regimen: "general", mesesCompletos: 6 }).condiciones.requisitos.join(" ")).not.toContain("REMYPE");
+  });
+});

@@ -11,6 +11,7 @@ import {
 } from "@calc/core";
 import {
   NOMBRE_REGIMEN,
+  condicionMype,
   fechaSchema,
   montoSchema,
   regimenSchema,
@@ -173,7 +174,8 @@ export function calcularLiquidacion(entrada: EntradaLiquidacion, ctx: Contexto):
     "Se asume que te pagaron las CTS y gratificaciones de periodos anteriores.",
     ...supuestosExtra,
   ];
-  if (input.diasVacacionesPendientes > 0) {
+  // La microempresa no tiene indemnización por vacaciones no gozadas (DS 013-2013-PRODUCE).
+  if (input.diasVacacionesPendientes > 0 && input.regimen !== "micro") {
     supuestos.push("Si esos días de vacaciones se vencieron sin gozarlos, además te corresponde una indemnización vacacional, que no está incluida en el total.");
   }
 
@@ -191,6 +193,7 @@ export function calcularLiquidacion(entrada: EntradaLiquidacion, ctx: Contexto):
         "Al terminar la relación laboral te corresponden la CTS, la gratificación y las vacaciones truncas por el tiempo aún no pagado.",
         "La indemnización solo corresponde por despido arbitrario, superado el período de prueba.",
         "Las vacaciones y la remuneración pendiente están afectas a AFP u ONP y a renta de quinta categoría; aquí se muestran en bruto.",
+        ...[condicionMype(ctx, input.regimen, input.fechaIngreso, cese).requisito].filter((r): r is string => Boolean(r)),
       ],
       supuestos,
     },

@@ -111,7 +111,7 @@ Se ejecuta con `/publicar <site>` y su resultado se deja en el PR de `develop` �
 | 3 — Aviso de cookies (`consent.mode: simple_banner`) | ❌ Configurado pero no implementado |
 | 3 — CMP para EEE/Reino Unido | ❌ Pendiente (antes de AdSense) |
 | 1 — Parámetros AFP con `verified: false` | ✅ Verificados con la tabla oficial SBS (devengue 2026-10); también período de prueba y fechas de pago |
-| 1 — `regimenes` con `verified: false` | ⚠️ Pendiente aceptado por el usuario en el deploy del 16/10/2026. Falta confirmar: gratificación de pequeña empresa al 50% y trabajador del hogar = régimen general. Hallazgo: tope de CTS de 90 remuneraciones diarias en pequeña empresa no implementado (pendiente de aprobación) |
+| 1 — `regimenes` con `verified: false` | ✅ Verificado el 16/10/2026 (guía MTPE, SUNAT, Ley 31047). Tope de CTS de 90 remuneraciones diarias en pequeña empresa implementado (casos C5 y C6) |
 | 4 — Aviso referencial, sitio independiente, términos | ✅ |
 | 8 — `.env` ignorado por git | ✅ |
 | 7 — Búsqueda de marca en INDECOPI | ❓ Sin verificar |

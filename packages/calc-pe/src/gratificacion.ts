@@ -12,6 +12,7 @@ import {
 } from "@calc/core";
 import {
   NOMBRE_REGIMEN,
+  condicionMype,
   factorRegimen,
   fechaSchema,
   fmtDiaMes,
@@ -121,6 +122,10 @@ export function calcularGratificacion(entrada: EntradaGratificacion, ctx: Contex
     asignacion: input.asignacionFamiliar ? `remuneración mínima al ${fmtFecha(fechaCorte)} (${soles(rmv)})` : null,
     trunca: trunca ? fmtFecha(input.fechaCese!) : null,
   });
+
+  const mype = condicionMype(ctx, input.regimen, input.fechaIngreso, fechaCorte);
+  if (mype.requisito) condiciones.requisitos.push(mype.requisito);
+  if (mype.advertencia) advertencias.push(mype.advertencia);
 
   const vacio = (motivo: string): ResultadoCalculo => ({
     total: "0.00",

@@ -76,3 +76,11 @@ describe("liquidación", () => {
     expect(() => calc({ fechaCese: "2023-12-31" })).toThrow(/cese/);
   });
 });
+
+describe("liquidación: microempresa", () => {
+  it("no menciona indemnización vacacional (no le corresponde) e incluye el requisito del REMYPE", () => {
+    const r = calc({ regimen: "micro", sueldoBasico: "1500", fechaIngreso: "2025-01-01", fechaCese: "2026-03-31", diasVacacionesPendientes: 10 });
+    expect(r.condiciones.supuestos.join(" ")).not.toContain("indemnización vacacional");
+    expect(r.condiciones.requisitos.join(" ")).toContain("REMYPE");
+  });
+});

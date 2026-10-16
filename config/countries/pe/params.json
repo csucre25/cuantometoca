@@ -107,11 +107,11 @@
         {
           "value": {
             "general": { "gratificacion": "1", "cts": "1", "vacaciones_dias": "30", "indemnizacion": { "tipo": "remuneraciones", "por_anio": "1.5", "tope": "12" } },
-            "pequena": { "gratificacion": "0.5", "cts": "0.5", "vacaciones_dias": "15", "indemnizacion": { "tipo": "dias", "por_anio": "20", "tope": "120" } },
+            "pequena": { "gratificacion": "0.5", "cts": "0.5", "cts_tope_dias": "90", "vacaciones_dias": "15", "indemnizacion": { "tipo": "dias", "por_anio": "20", "tope": "120" } },
             "micro":   { "gratificacion": "0", "cts": "0", "vacaciones_dias": "15", "indemnizacion": { "tipo": "dias", "por_anio": "10", "tope": "90" } },
             "hogar":   { "gratificacion": "1", "cts": "1", "vacaciones_dias": "30", "indemnizacion": { "tipo": "remuneraciones", "por_anio": "1.5", "tope": "12" } }
           },
-          "from": "2020-10-01", "to": null, "source": "DS 013-2013-PRODUCE; Ley 31047; DS 003-97-TR", "verified": false
+          "from": "2020-10-01", "to": null, "source": "DS 013-2013-PRODUCE; Ley 31047; DS 003-97-TR", "nota": "MYPE confirmado con la Guía del régimen laboral MYPE del MTPE (13/10/2021) y SUNAT; hogar: Ley 31047 y DS 009-2021-TR (gratificación y 30 días de vacaciones; indemnización por equiparación al régimen general). Verificado por el usuario el 2026-10-16", "verified": true
         }
       ]
     },
@@ -149,6 +149,11 @@
       "description": "Fecha límite de depósito de la CTS (MM-DD): primeros 15 días naturales del mes",
       "unit": "object",
       "history": [ { "value": { "mayo": "05-15", "noviembre": "11-15" }, "from": "1997-03-01", "to": null, "source": "DS 001-97-TR art. 22", "nota": "Confirmado por el usuario, 2026-10-16", "verified": true } ]
+    },
+    "regimen_mype_desde": {
+      "description": "El régimen laboral MYPE solo aplica a trabajadores contratados desde esta fecha (vigencia del DL 1086) y en empresas inscritas en el REMYPE; si no, rige el régimen general",
+      "unit": "date",
+      "history": [ { "value": "2008-06-28", "from": "2008-06-28", "to": null, "source": "DL 1086; DS 013-2013-PRODUCE", "nota": "Guía del régimen laboral MYPE del MTPE (13/10/2021); SUNAFIL sobre empresas no inscritas en el REMYPE", "verified": true } ]
     },
     "periodo_prueba_meses": {
       "description": "Período de prueba general; superado, el despido arbitrario genera indemnización",

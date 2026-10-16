@@ -66,6 +66,27 @@ export function porcentaje(ratio: Decimal): string {
 
 type TablaRegimenes = Record<Regimen, Record<string, unknown>>;
 
+/**
+ * Condiciones del régimen MYPE (DL 1086; DS 013-2013-PRODUCE): solo aplica si la empresa está
+ * inscrita en el REMYPE y el trabajador fue contratado desde la vigencia del DL 1086; si no, rige
+ * el régimen general. Devuelve el requisito para "Condiciones" y, si corresponde, una advertencia.
+ */
+export function condicionMype(
+  ctx: Contexto,
+  regimen: Regimen,
+  fechaIngreso: FechaISO | undefined,
+  fecha: FechaInput,
+): { requisito?: string; advertencia?: string } {
+  if (regimen !== "pequena" && regimen !== "micro") return {};
+  const desde = ctx.params.value<string>("regimen_mype_desde", fecha);
+  const requisito = `El régimen de la micro y pequeña empresa solo aplica si la empresa está inscrita en el REMYPE y te contrataron desde el ${fmtFecha(desde)}. Si no, te corresponden los beneficios del régimen general.`;
+  const advertencia =
+    fechaIngreso && fechaIngreso < desde
+      ? `Ingresaste antes del ${fmtFecha(desde)}: te corresponden los beneficios del régimen general, no los de la ${NOMBRE_REGIMEN[regimen]}.`
+      : undefined;
+  return { requisito, advertencia };
+}
+
 /** Factor del régimen para un concepto (tabla `regimenes` de params.json). */
 export function factorRegimen(
   ctx: Contexto,

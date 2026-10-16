@@ -35,8 +35,8 @@
       "required": ["value", "from", "to", "source"],
       "properties": {
         "value": {
-          "description": "String decimal para valores escalares; objeto o arreglo para tablas",
-          "anyOf": [{ "$ref": "#/definitions/decimal" }, { "type": "object" }, { "type": "array" }]
+          "description": "String decimal para valores escalares, fecha (YYYY-MM-DD) para plazos legales; objeto o arreglo para tablas",
+          "anyOf": [{ "$ref": "#/definitions/decimal" }, { "$ref": "#/definitions/fecha" }, { "type": "object" }, { "type": "array" }]
         },
         "from": { "$ref": "#/definitions/fecha" },
         "to": { "anyOf": [{ "$ref": "#/definitions/fecha" }, { "type": "null" }] },

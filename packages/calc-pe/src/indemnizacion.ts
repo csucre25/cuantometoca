@@ -14,6 +14,7 @@ import {
 } from "@calc/core";
 import {
   NOMBRE_REGIMEN,
+  condicionMype,
   fechaSchema,
   fmtFecha,
   montoSchema,
@@ -143,6 +144,10 @@ export function calcularIndemnizacion(entrada: EntradaIndemnizacion, ctx: Contex
     ],
     supuestos,
   };
+
+  const mype = condicionMype(ctx, input.regimen, input.fechaIngreso, fechaCorte);
+  if (mype.requisito) condiciones.requisitos.push(mype.requisito);
+  if (mype.advertencia) advertencias.push(mype.advertencia);
 
   const vacio = (motivo: string): ResultadoCalculo => ({
     total: "0.00",

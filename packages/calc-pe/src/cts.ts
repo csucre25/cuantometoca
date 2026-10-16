@@ -4,6 +4,7 @@ import {
   compararFechas,
   dec,
   mesesYDiasCompletos,
+  sumarDias,
   monto,
   parametroUsado,
   type Decimal,
@@ -13,6 +14,7 @@ import {
 } from "@calc/core";
 import {
   NOMBRE_REGIMEN,
+  condicionMype,
   factorRegimen,
   fechaSchema,
   fmtDiaMes,
@@ -36,7 +38,9 @@ import { calcularGratificacion } from "./gratificacion";
  * - Arts. 21–22: depósitos semestrales por los periodos noviembre–abril y mayo–octubre, dentro
  *   de los primeros 15 días de mayo y noviembre (params: cts_fechas_deposito); fracciones de
  *   mes por dozavos (meses) y treintavos (días).
- * - DS 013-2013-PRODUCE: pequeña empresa 50% (15 remuneraciones diarias por año), micro sin CTS.
+ * - DS 013-2013-PRODUCE: pequeña empresa 50% (15 remuneraciones diarias por año) con tope de 90
+ *   remuneraciones diarias (params: regimenes.pequena.cts_tope_dias); micro sin CTS. El régimen MYPE
+ *   solo aplica con inscripción en el REMYPE y contrato desde la vigencia del DL 1086.
  * Conteo de tiempo: meses por aniversario + días (docs/decisiones.md).
  */
 
@@ -123,13 +127,19 @@ export function calcularCts(entrada: EntradaCts, ctx: Contexto): ResultadoCalcul
   // Sexto de gratificación: indicado, o estimado con el motor de gratificación.
   const grati = gratificacionDelSemestre(ctx, input);
 
+  const mype = condicionMype(ctx, input.regimen, input.fechaIngreso, fechaCorte);
+  if (mype.advertencia) advertencias.push(mype.advertencia);
+  const metaReg = ctx.params.meta<Record<string, { cts_tope_dias?: string }>>("regimenes", fechaCorte);
+  const topeDias = metaReg.value[input.regimen]?.cts_tope_dias;
+
   const condiciones = {
     requisitos: [
       `Tener una jornada mínima promedio de ${jornadaMinima.toString()} horas diarias.`,
       `Se deposita en tu cuenta CTS hasta el ${fmtDiaMes(per.depositoMMDD)}. Si cesas, la CTS trunca se paga directamente con tu liquidación.`,
       "Se calcula por semestre (noviembre–abril para el depósito de mayo y mayo–octubre para el de noviembre): un dozavo por cada mes completo y un treintavo por cada día.",
       "La base incluye un sexto de la gratificación recibida en el semestre; la bonificación extraordinaria no se considera.",
-      "En la microempresa no corresponde CTS; en la pequeña empresa corresponde la mitad.",
+      `En la microempresa no corresponde CTS; en la pequeña empresa corresponde la mitad (15 remuneraciones diarias por año), con un máximo de ${metaReg.value.pequena?.cts_tope_dias} remuneraciones diarias en total.`,
+      ...(mype.requisito ? [mype.requisito] : []),
     ],
     supuestos: [
       `Periodo: ${per.nombre}.`,
@@ -164,7 +174,39 @@ export function calcularCts(entrada: EntradaCts, ctx: Contexto): ResultadoCalcul
   const base = rc.plus(sexto);
   const porMeses = base.div(12).times(meses);
   const porDias = base.div(360).times(dias);
-  const cts = porMeses.plus(porDias).times(factor);
+  let cts = porMeses.plus(porDias).times(factor);
+  const pasosTope: Paso[] = [];
+
+  // Tope en remuneraciones diarias (pequeña empresa): lo acumulado desde el ingreso hasta el inicio
+  // del periodo limita lo que se puede pagar en este periodo.
+  if (topeDias) {
+    const tope = dec(topeDias);
+    const diasPorMes = factor.times(30).div(12); // 15 rem. diarias por año = 1.25 por mes
+    const diasPorDia = factor.times(30).div(360);
+    if (input.fechaIngreso) {
+      const previo =
+        compararFechas(input.fechaIngreso, per.inicio) < 0 ? mesesYDiasCompletos(input.fechaIngreso, sumarDias(per.inicio, -1)) : { meses: 0, dias: 0 };
+      const acumulado = diasPorMes.times(previo.meses).plus(diasPorDia.times(previo.dias));
+      const restante = tope.minus(acumulado);
+      const periodo = diasPorMes.times(meses).plus(diasPorDia.times(dias));
+      parametrosUsados.push({ clave: `regimenes.${input.regimen}.cts_tope_dias`, valor: topeDias, vigenteDesde: metaReg.from, fuente: metaReg.source });
+      if (!restante.greaterThan(0)) {
+        return vacio(`Ya alcanzaste el tope de ${topeDias} remuneraciones diarias de CTS de la pequeña empresa: no corresponden más depósitos.`);
+      }
+      if (periodo.greaterThan(restante)) {
+        cts = base.div(30).times(restante);
+        pasosTope.push({
+          descripcion: `Tope de ${topeDias} remuneraciones diarias`,
+          formula: `${monto(base)} ÷ 30 × (${topeDias} − ${acumulado.toDecimalPlaces(2).toString()} ya acumuladas)`,
+          valor: monto(cts),
+        });
+        advertencias.push(`Con este periodo completas el tope de ${topeDias} remuneraciones diarias de CTS de la pequeña empresa.`);
+      }
+    } else {
+      const anios = tope.div(factor.times(30)).toString();
+      advertencias.push(`En la pequeña empresa la CTS tiene un tope de ${topeDias} remuneraciones diarias (unos ${anios} años de servicio). Si llevas ese tiempo o más, ingresa tu fecha de ingreso para aplicarlo.`);
+    }
+  }
 
   const { conceptos, total, ajusteRedondeo } = cerrarConceptos([
     { id: "cts", etiqueta: trunca ? "CTS trunca" : "CTS", valor: cts },
@@ -186,7 +228,8 @@ export function calcularCts(entrada: EntradaCts, ctx: Contexto): ResultadoCalcul
       { descripcion: "Sexto de gratificación", formula: `${monto(grati.monto)} ÷ 6`, valor: monto(sexto) },
       { descripcion: "Base de cálculo", formula: `${monto(rc)} + ${monto(sexto)}`, valor: monto(base) },
       pasoTiempo,
-      { descripcion: conceptos[0]!.etiqueta, formula: formulaCts, valor: monto(cts) },
+      { descripcion: conceptos[0]!.etiqueta, formula: formulaCts, valor: monto(porMeses.plus(porDias).times(factor)) },
+      ...pasosTope,
     ],
     parametrosUsados,
     advertencias,

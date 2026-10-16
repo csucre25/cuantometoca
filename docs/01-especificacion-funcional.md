@@ -37,11 +37,13 @@
 | Régimen | Gratificación | CTS | Vacaciones | Indemnización despido |
 |---|---|---|---|---|
 | General | 100% | 100% | 30 días/año | 1.5 RC por año (tope 12 RC) |
-| Pequeña empresa (REMYPE) | 50% | 50% (15 rem. diarias/año) | 15 días/año | 20 rem. diarias/año (tope 120) |
+| Pequeña empresa (REMYPE) | 50% | 50% (15 rem. diarias/año, tope 90) | 15 días/año | 20 rem. diarias/año (tope 120) |
 | Microempresa (REMYPE) | 0% | 0% | 15 días/año | 10 rem. diarias/año (tope 90) |
 | Trabajador del hogar (Ley 31047) | 100% | 100% | 30 días/año | régimen general |
 
-Base legal: DS 013-2013-PRODUCE (TUO Ley MYPE), Ley 31047. **Verificar** antes de implementar.
+Base legal: DS 013-2013-PRODUCE (TUO Ley MYPE), Ley 31047. Verificado el 16/10/2026 con la guía laboral MYPE del MTPE y SUNAT.
+
+Condiciones del régimen MYPE: la empresa debe estar inscrita en el REMYPE y el trabajador haber sido contratado desde el 28/06/2008 (DL 1086, parámetro `regimen_mype_desde`); si no, aplica el régimen general. La calculadora lo muestra en "Condiciones" y advierte si la fecha de ingreso es anterior. Microempresa: sin indemnización vacacional.
 
 ### 2.4 Salida estándar de toda calculadora
 ```ts
