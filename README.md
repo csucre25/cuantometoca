@@ -42,7 +42,7 @@ El build de deploy corre con `STRICT_ENV=1`: si falta una variable obligatoria, 
 1. En Cloudflare: **Add a domain** (ej. `cuantometoca.pe`), plan Free. Cloudflare indica dos *nameservers*.
 2. En el registrador del dominio (para `.pe`, el panel donde se compró): reemplazar los nameservers por los de Cloudflare. La propagación puede tardar de minutos a 24 horas.
 3. En el proyecto de Pages: **Custom domains → Set up a domain** → `cuantometoca.pe`, y otra vez para `www.cuantometoca.pe`.
-4. **Rules → Redirect Rules**: redirigir `www.cuantometoca.pe/*` a `https://cuantometoca.pe/${1}` (301), para tener una sola versión canónica.
+4. **Rules → Redirect Rules** (*Wildcard pattern*): Request URL `https://www.cuantometoca.pe/*` → Target URL `https://cuantometoca.pe/${1}`, **301**, con **Preserve query string** activado (los enlaces compartidos llevan el cálculo en la URL). En **SSL/TLS → Edge Certificates**, activar **Always Use HTTPS**.
 5. Verificar en Google Search Console la propiedad del dominio y enviar `https://<dominio>/sitemap.xml`.
 
 Las direcciones `*.pages.dev` quedan con `X-Robots-Tag: noindex` (`apps/web/public/_headers`): Google solo indexa el dominio propio.
