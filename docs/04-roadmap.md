@@ -46,6 +46,7 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
 - [x] 2.6 Página "Parámetros vigentes" generada desde params.
   - Nota: `/parametros-vigentes/` agrupa los valores por tema con vigencia, fuente y enlace a la calculadora. `params.json` separa `source` (pública) de `nota` (interna, no se publica).
 - [ ] 2.7 Guías editoriales base (una por beneficio), redactadas con LLM y revisadas por el usuario.
+  - Avance: infraestructura lista (colección con loader propio que resuelve marcadores con el motor, vista previa de borradores, e2e que impide publicarlos). Borradores de gratificación y CTS en revisión del usuario; faltan las 6 restantes.
 
 ## Fase 3 — Despliegue configurable (1 sesión)
 - [ ] 3.1 `deploy.yml` con matrix de sites habilitados y secretos por sufijo. **CA**: deploy a la cuenta de Cloudflare del site `pe` usando solo secretos.

@@ -1,0 +1,90 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import { fecha } from "./calc/formato";
+
+interface Props {
+  guia: CollectionEntry<"guias">;
+}
+
+const { guia } = Astro.props;
+const { Content } = await render(guia);
+const borrador = guia.data.estado === "borrador";
+---
+
+<article class="guia">
+  {
+    borrador && (
+      <p class="borrador" role="note">
+        Borrador pendiente de aprobación: no se publica ni se indexa.
+      </p>
+    )
+  }
+  <h2 class="titulo">{guia.data.titulo}</h2>
+  <div class="cuerpo">
+    <Content />
+  </div>
+  <p class="actualizado">Actualizado el {fecha(guia.data.actualizado.toISOString().slice(0, 10))}</p>
+</article>
+
+<style>
+  .guia {
+    max-width: var(--lectura);
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .titulo {
+    font-size: clamp(1.35rem, 1.1rem + 1.2vw, 1.7rem);
+  }
+  .borrador {
+    background: var(--accent-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.9rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .cuerpo :global(h2) {
+    font-size: 1.2rem;
+    margin: 2rem 0 0.6rem;
+  }
+  .cuerpo :global(h3) {
+    font-size: 1.02rem;
+    margin: 1.4rem 0 0.4rem;
+  }
+  .cuerpo :global(ul),
+  .cuerpo :global(ol) {
+    padding-left: 1.25rem;
+  }
+  .cuerpo :global(li + li) {
+    margin-top: 0.35em;
+  }
+  .cuerpo :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    margin: 0.5rem 0 1.25rem;
+  }
+  .cuerpo :global(th),
+  .cuerpo :global(td) {
+    text-align: left;
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cuerpo :global(th) {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .cuerpo :global(td:last-child),
+  .cuerpo :global(th:last-child) {
+    text-align: right;
+    padding-right: 0;
+    font-weight: 600;
+  }
+  .actualizado {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 1.5rem;
+  }
+</style>

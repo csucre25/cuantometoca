@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import AdSlot from "../components/AdSlot.astro";
+import Guia from "../components/Guia.astro";
+import { guiaDeCalculadora } from "../lib/guias";
 import Calculadora from "../components/calc/Calculadora";
 import { definicion } from "../calc";
 import { site, type Calculadora as TCalc } from "../site.config";
@@ -14,6 +16,7 @@ export function getStaticPaths() {
 const { calc } = Astro.props as { calc: TCalc };
 const { entities } = site.glossary;
 const hoyBuild = new Date().toISOString().slice(0, 10);
+const guia = await guiaDeCalculadora(calc.id);
 const url = new URL(`/${calc.slug}/`, site.url).href;
 const descripcion = `${calc.resumen} Calcula el monto con tu sueldo y mira el desglose paso a paso.`;
 
@@ -39,7 +42,13 @@ const jsonLd = [
 ];
 ---
 
-<Base title={calc.title} description={descripcion} ogImage={`/og/${calc.slug}.png`} jsonLd={jsonLd}>
+<Base
+  title={calc.title}
+  description={descripcion}
+  ogImage={`/og/${calc.slug}.png`}
+  jsonLd={jsonLd}
+  noindex={guia?.data.estado === "borrador"}
+>
   <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta"><a href="/">Inicio</a> / {calc.nombre}</nav>
@@ -61,6 +70,8 @@ const jsonLd = [
     <p class="aviso">
       {`Cálculo referencial basado en la normativa vigente a la fecha indicada. No constituye asesoría legal. Ante dudas, consulta a ${entities.fiscalizador} o al ${entities.ministerio}.`}
     </p>
+
+    {guia && <Guia guia={guia} />}
   </div>
 </Base>
 

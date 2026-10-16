@@ -23,6 +23,12 @@
 4. "Pedir cambios" → el usuario responde con instrucciones en texto → el LLM reescribe → nueva vista previa.
 5. Publicar → commit a `apps/web/content/pe/` → deploy agrupado (máximo cada 60 minutos).
 
+### 2.1 Mientras no exista el bot (Fase 4)
+- Los borradores viven en `apps/web/content/<pais>/guias/*.md` con `estado: borrador`; el build normal no los publica.
+- Para revisarlos: `MOSTRAR_BORRADORES=1 pnpm dev` (se ven con una franja "Borrador" y la página queda `noindex`).
+- Aprobar = cambiar a `estado: aprobado` (lo hace Claude Code a pedido del usuario) y hacer commit.
+- Montos, porcentajes y fechas legales van como marcadores, nunca escritos a mano: `{{calc:<id> campo=valor … campo=total|<concepto>}}`, `{{param:<clave>[.<subclave>]}}`, `{{monto:<n>}}`. Un marcador inválido hace fallar el build.
+
 ## 3. Comandos del bot (por site)
 | Comando | Acción |
 |---|---|

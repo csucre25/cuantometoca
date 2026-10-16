@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test:e2e": "playwright test",
-    "lighthouse": "lhci autorun --config=lighthouserc.cjs"
+    "lighthouse": "lhci autorun --config=lighthouserc.cjs",
+    "test": "vitest run src"
   },
   "dependencies": {
     "@astrojs/preact": "6.0.5",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1",
-    "@playwright/test": "1.63.0"
+    "@playwright/test": "1.63.0",
+    "vitest": "5.0.3"
   }
 }

@@ -58,3 +58,11 @@ test.describe("parámetros vigentes", () => {
     await expect(page.locator("footer").getByRole("link", { name: "Parámetros vigentes" })).toHaveAttribute("href", "/parametros-vigentes/");
   });
 });
+
+test("las guías en borrador no se publican (CLAUDE.md, regla 6)", async ({ page }) => {
+  for (const ruta of ["/gratificacion/", "/cts/"]) {
+    await page.goto(ruta);
+    await expect(page.getByText("Borrador pendiente de aprobación")).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  }
+});
