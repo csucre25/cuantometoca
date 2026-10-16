@@ -33,6 +33,16 @@ jobs:
         run: |
           ADS_PREVIEW=1 SITE=pe CI_BUILD=1 pnpm --filter @calc/web build
           pnpm --filter @calc/web lighthouse
+      - name: Detalle de Lighthouse como anotaciones (si falló)
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          p = pathlib.Path("apps/web/.lighthouseci/assertion-results.json")
+          for r in json.loads(p.read_text()) if p.exists() else []:
+              if not r.get("passed"):
+                  print(f"::error title=Lighthouse {r['auditId']}::{r['url']} esperado {r.get('operator','')} {r.get('expected')} obtenido {r.get('actual')}")
+          PY
       - name: Sin dominios hardcodeados
         run: python3 scripts/check_no_hardcoded_domains.py
 
