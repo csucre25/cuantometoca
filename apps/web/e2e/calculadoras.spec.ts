@@ -32,10 +32,10 @@ test.describe("gratificación", () => {
     await abrir(page, "/gratificacion/?sueldo=1500&anio=2026&periodo=julio");
     const pasos = page.locator(".calc-pasos");
     await expect(pasos).toBeHidden();
-    await page.getByText("¿Cómo se calculó?").click();
+    await page.locator("summary", { hasText: "¿Cómo se calculó?" }).click();
     await expect(pasos).toBeVisible();
     await expect(pasos).toContainText("Remuneración computable");
-    await page.getByText("Condiciones", { exact: true }).click();
+    await page.locator("summary", { hasText: "Condiciones" }).click();
     await expect(page.locator(".calc-lista").first()).toContainText("15 de julio");
   });
 
@@ -86,7 +86,7 @@ test.describe("resto de calculadoras", () => {
     await abrir(page, "/liquidacion/?sueldo=2500&asig=1&ingreso=2023-03-01&cese=2026-08-20&motivo=despido_arbitrario&diasMes=20");
     await expect(total(page)).toHaveText("S/ 17,991.47");
     await expect(page.locator(".calc-conceptos")).toContainText("Indemnización por despido arbitrario");
-    await page.getByText("¿Cómo se calculó?").click();
+    await page.locator("summary", { hasText: "¿Cómo se calculó?" }).click();
     await expect(page.locator(".calc-nota").first()).toContainText("céntimo");
   });
 
