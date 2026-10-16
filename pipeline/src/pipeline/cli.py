@@ -53,12 +53,12 @@ def params_check(
     dia: str = typer.Option("", help="Fecha YYYY-MM-DD (por defecto, hoy en la zona horaria del site)"),
     notify: bool = typer.Option(False, help="Enviar los avisos por Telegram a los sites del país"),
 ) -> None:
-    """Revisa El Peruano y avisa las normas que podrían cambiar un parámetro."""
+    """Revisa El Peruano y las comisiones de AFP; avisa lo que podría cambiar un parámetro."""
     from datetime import date, datetime
     from zoneinfo import ZoneInfo
 
     from pipeline import notificar
-    from pipeline.watchers import elperuano
+    from pipeline.watchers import afp, elperuano
 
     sites = [s for s in cargar_sites(solo_habilitados=True) if s.country == country]
     if not sites:
@@ -75,6 +75,15 @@ def params_check(
             if notify:
                 notificar.enviar(site, elperuano.mensaje(a))
                 store.registrar("aviso_enviado", fuente="elperuano", norma=a.norma.id)
+
+        cambios = afp.revisar(country, fecha, store)
+        store.registrar("params_check", fuente="afp", dia=fecha.isoformat(), cambios=len(cambios))
+        typer.echo(f"[{site.site_id}] AFP (comisiones, prima, tope): {len(cambios)} cambio(s)")
+        for c in cambios:
+            typer.echo(f"  - #{c.propuesta_id} {c.param_key}: {c.anterior} -> {c.nuevo} desde {c.desde}")
+            if notify:
+                notificar.enviar(site, afp.mensaje(c))
+                store.registrar("aviso_enviado", fuente="afp", propuesta=c.propuesta_id)
 
 
 if __name__ == "__main__":

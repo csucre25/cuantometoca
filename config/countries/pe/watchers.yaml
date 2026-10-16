@@ -35,3 +35,15 @@ elperuano:
     - id: asignacion_familiar
       terminos: ["asignacion familiar"]
       params: [asignacion_familiar_pct]
+    # Resoluciones y circulares de la SBS sobre el SPP (solo normas de ese sector).
+    - id: sbs_afp
+      sectores: ["superintendencia de banca"]
+      terminos: ["sistema privado de pensiones", "fondos de pensiones", "prima de seguros", "remuneracion maxima asegurable", "comision", "comisiones"]
+      params: [afp_prima_seguro, afp_remuneracion_maxima_asegurable, afp_comisiones]
+
+# Comisiones, prima y tope de las 4 AFP. La SBS bloquea el acceso automatizado; se usa la tabla
+# comparativa de AFP Integra (decisión del usuario). Cualquier cambio requiere confirmación.
+afp:
+  fuente: "SBS (tabla comparativa de AFP Integra)"
+  url: "https://www.afpintegra.pe/cliente/comisiones"
+  fila_sin_nombre: integra   # la fila de la propia Integra lleva su logo, sin texto

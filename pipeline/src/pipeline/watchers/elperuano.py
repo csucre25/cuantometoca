@@ -70,8 +70,11 @@ def parsear(html: str) -> list[Norma]:
 def coincidencias(norma: Norma, reglas: list[dict]) -> Alerta | None:
     """Reglas cuyo término aparece (como palabra completa) en el título o la sumilla."""
     texto = normalizar(f"{norma.titulo} {norma.sumilla}")
+    sector = normalizar(norma.sector)
     ids, params = [], []
     for regla in reglas:
+        if regla.get("sectores") and not any(normalizar(s) in sector for s in regla["sectores"]):
+            continue
         if any(re.search(rf"\b{re.escape(normalizar(t))}\b", texto) for t in regla["terminos"]):
             ids.append(regla["id"])
             params += [p for p in regla.get("params", []) if p not in params]

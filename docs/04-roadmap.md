@@ -62,7 +62,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: secretos genérica → `*_<SITE>` (igual que la web); SQLite `pipeline/data/<site>.db` con `seen_items`, `param_proposals`, `drafts`, `events`; CLI `rutas`, `sitios`, `estado`.
 - [x] 4.2 Watcher El Peruano (con fixtures HTML guardados para tests offline).
   - Nota: usa el POST de `/Normas/Filtro` del portal; términos por país en `config/countries/<pais>/watchers.yaml` (palabra completa, sin tildes). Probado en vivo: 1,655 normas del 20/09 al 15/10/2026 → detectó solo el DS 015-2026-TR (RMV). Fixtures real recortado + sintético. Aviso por Telegram con `params-check --notify`.
-- [ ] 4.3 Watcher SBS (comisiones AFP, prima, tope).
+- [x] 4.3 Watcher SBS (comisiones AFP, prima, tope).
+  - Nota: la SBS bloquea el acceso automatizado (Imperva); no se evade. Fuente: tabla comparativa de AFP Integra (4 AFP + tope trimestral) + regla de El Peruano para resoluciones de la SBS (filtrada por sector). Un cambio crea propuesta pendiente; nada se aplica sin confirmar. En vivo: 0 diferencias con params.json.
 - [ ] 4.4 Cliente LLM compatible OpenAI con fallback + extracción estructurada de normas (pydantic).
 - [ ] 4.5 Bot de Telegram del site: aprobación de parámetros y borradores, comandos de `docs/03`.
 - [ ] 4.6 Commit/PR automático de parámetros confirmados.
