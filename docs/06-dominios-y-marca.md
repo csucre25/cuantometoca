@@ -40,7 +40,7 @@ El dominio **siempre** se configura en `config/sites/<site>.yaml → domain`. Na
 - Los dominios de gancho estacional (tugrati, tucts) pueden comprarse como redirecciones 301 hacia la sección correspondiente del dominio principal, para usarlos en videos. Configurar como "redirect rules" en Cloudflare, no como sitios duplicados.
 
 ## Decisión (2026-10-15): `cuantometoca.pe`
-Dominio principal de Perú: **cuantometoca.pe** (registro a cargo del usuario; opcional `cuantometoca.com.pe` como defensa).
+Dominio principal de Perú: **cuantometoca.pe**, comprado en punto.pe el 2026-10-15 (opcional `cuantometoca.com.pe` como defensa). DNS a gestionar en Cloudflare.
 
 ### Evidencia (Google Trends, Perú, últimos 5 años)
 Los índices solo son comparables dentro de una misma consulta.
