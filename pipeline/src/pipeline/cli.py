@@ -53,48 +53,39 @@ def params_check(
     dia: str = typer.Option("", help="Fecha YYYY-MM-DD (por defecto, hoy en la zona horaria del site)"),
     notify: bool = typer.Option(False, help="Enviar los avisos por Telegram a los sites del país"),
 ) -> None:
-    """Revisa El Peruano y las comisiones de AFP; avisa lo que podría cambiar un parámetro."""
+    """Revisa El Peruano (hoy y ayer) y las comisiones de AFP; avisa lo que podría cambiar un parámetro."""
     from datetime import date, datetime
     from zoneinfo import ZoneInfo
 
-    from pipeline import notificar, revision
-    from pipeline.watchers import afp, elperuano
+    from pipeline import tareas
 
     sites = [s for s in cargar_sites(solo_habilitados=True) if s.country == country]
     if not sites:
         raise typer.BadParameter(f"No hay sites habilitados para el país '{country}'")
     fecha = date.fromisoformat(dia) if dia else datetime.now(ZoneInfo(sites[0].timezone)).date()
-
     for site in sites:
-        store = Store.del_site(site.site_id)
+        tareas.revisar_site(site, fecha, notify=notify, eco=typer.echo)
 
-        # Extracciones que fallaron en corridas anteriores.
-        for titulo, detalle in revision.reintentar_pendientes(country, store):
-            typer.echo(f"[{site.site_id}] Reintento de extracción: {titulo}\n    {detalle}")
-            if notify:
-                notificar.enviar(site, f"🔁 <b>Extracción completada</b>: {titulo}\n{detalle}")
 
-        alertas = elperuano.revisar(country, fecha, store)
-        store.registrar("params_check", fuente="elperuano", dia=fecha.isoformat(), alertas=len(alertas))
-        typer.echo(f"[{site.site_id}] El Peruano {fecha.isoformat()}: {len(alertas)} norma(s) nueva(s) relevante(s)")
-        for a in alertas:
-            typer.echo(f"  - {a.norma.titulo}: {a.norma.sumilla[:100]} [{', '.join(a.reglas)}]")
-            _, detalle = revision.proponer_desde_norma(
-                country, store, norma_id=a.norma.id, titulo=a.norma.titulo, url=a.norma.url, fecha=a.norma.fecha, params=a.params
-            )
-            typer.echo(f"    {detalle}")
-            if notify:
-                notificar.enviar(site, elperuano.mensaje(a) + "\n\n" + detalle)
-                store.registrar("aviso_enviado", fuente="elperuano", norma=a.norma.id)
+@app.command()
+def bot(site: str = typer.Option(..., help="site_id, ej. pe")) -> None:
+    """Bot de Telegram del site (polling). Solo responde al chat administrador."""
+    from pipeline.bot import app as bot_app
 
-        cambios = afp.revisar(country, fecha, store)
-        store.registrar("params_check", fuente="afp", dia=fecha.isoformat(), cambios=len(cambios))
-        typer.echo(f"[{site.site_id}] AFP (comisiones, prima, tope): {len(cambios)} cambio(s)")
-        for c in cambios:
-            typer.echo(f"  - #{c.propuesta_id} {c.param_key}: {c.anterior} -> {c.nuevo} desde {c.desde}")
-            if notify:
-                notificar.enviar(site, afp.mensaje(c))
-                store.registrar("aviso_enviado", fuente="afp", propuesta=c.propuesta_id)
+    try:
+        s = cargar_site(site)
+        s.telegram_token, s.telegram_admin_chat_id  # falla aquí si faltan los secretos
+    except ConfigError as e:
+        raise typer.BadParameter(str(e)) from e
+    bot_app.ejecutar(s)
+
+
+@app.command()
+def worker(intervalo: int = typer.Option(60, help="Segundos entre comprobaciones")) -> None:
+    """Revisión diaria de los sites habilitados a la hora de watchers.yaml (para docker-compose)."""
+    from pipeline import worker as w
+
+    w.ejecutar(intervalo)
 
 
 @app.command()

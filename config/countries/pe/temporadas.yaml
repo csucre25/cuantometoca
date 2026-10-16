@@ -1,0 +1,37 @@
+# Checklist de temporada de Perú (docs/03 §5). Lo muestra el comando /temporada del bot.
+# preparar_desde: MM-DD desde cuándo preparar la temporada (se repite cada año).
+temporadas:
+  - id: utilidades
+    nombre: Utilidades
+    preparar_desde: "02-15"
+    acciones:
+      - Actualizar los casos de utilidades del año
+      - Revisar la guía "cuándo pagan utilidades"
+  - id: cts_mayo
+    nombre: CTS de mayo
+    preparar_desde: "04-15"
+    acciones:
+      - Casos de CTS de mayo del año
+      - Guía de retiro de CTS según la norma vigente
+  - id: grati_julio
+    nombre: Gratificación de julio
+    preparar_desde: "06-15"
+    acciones:
+      - Casos de gratificación de julio
+      - Serie de videos (docs/08)
+  - id: cts_noviembre
+    nombre: CTS de noviembre
+    preparar_desde: "10-15"
+    acciones:
+      - Casos de CTS de noviembre
+  - id: grati_diciembre
+    nombre: Gratificación de diciembre
+    preparar_desde: "11-15"
+    acciones:
+      - Casos de gratificación de diciembre
+      - Nota sobre la RMV si cambió
+  - id: uit
+    nombre: UIT del nuevo año
+    preparar_desde: "12-15"
+    acciones:
+      - Esperar el DS de la UIT y actualizar params.json con vigencia desde el 01/01

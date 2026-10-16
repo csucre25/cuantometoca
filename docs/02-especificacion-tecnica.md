@@ -153,14 +153,14 @@ Cada resultado incluye `parametrosUsados` (para mostrar "RMV S/ 1,230 vigente de
 ## 8. CI/CD
 - `ci.yml` (en cada push/PR): validar config (schemas), tests TS, tests Python, build de cada site habilitado.
 - `deploy.yml` (push a `main` o manual): job `sites` lista los sites habilitados → matrix → build con `SITE=<id>` → `wrangler pages deploy apps/web/dist --project-name=<pages_project> --branch=main` con los secretos de ese site.
-- `watchers.yml` (cron diario 07:15 hora Lima = 12:15 UTC, y manual): corre `params-check` por país y envía alertas a Telegram.
+- Revisión diaria de normas: **no** corre en GitHub Actions sino en el `worker` local (§9), porque la base SQLite (normas vistas, propuestas) debe persistir y ser la que lee el bot. `deploy.yml` avisa por Telegram al terminar cada deploy.
 - Agrupar publicaciones: no más de ~10 deploys por día por site (límite de builds en el plan gratuito).
 
 ## 9. Ejecución local (PC del usuario)
 `docker-compose.yml` con:
-- `bot-pe`: bot de Telegram en polling (siempre activo mientras la PC esté encendida).
-- `worker`: tareas pesadas a demanda (generación masiva de borradores).
-Límites recomendados en `.wslconfig` (memoria 8 GB, 4 CPU). Comandos `/pausa` y `/reanudar` del bot detienen el worker.
+- `bot-pe`: bot de Telegram en polling (siempre activo mientras la máquina esté encendida).
+- `worker`: revisión diaria (`params-check` con avisos) de cada site habilitado a la hora de `watchers.yaml → hora_revision`; si la máquina estuvo apagada, revisa al encender; reintenta cada 30 min y avisa al tercer fallo. Más adelante, tareas pesadas (borradores masivos).
+Ambos comparten `pipeline/data/<site>.db`, así que solo una máquina debe correrlos. Comandos `/pausa` y `/reanudar` del bot detienen la revisión del worker.
 
 ## 10. Seguridad
 - Secretos solo en `.env` (local, en `.gitignore`) y GitHub Secrets.

@@ -5,6 +5,7 @@ Tablas (docs/02 §7):
 - param_proposals: cambios de parámetros detectados, pendientes de aprobación por Telegram.
 - drafts: borradores de texto generados con LLM, pendientes de aprobación.
 - events: registro de lo ocurrido (avisos enviados, aprobaciones, deploys).
+- ajustes: estado compartido entre el bot y el worker (pausa, última revisión diaria).
 """
 
 from __future__ import annotations
@@ -65,6 +66,11 @@ CREATE TABLE IF NOT EXISTS extraction_queue (
   ultimo_error TEXT,
   created TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS ajustes (
+  clave TEXT PRIMARY KEY,
+  valor TEXT NOT NULL,
+  updated TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   type TEXT NOT NULL,
@@ -106,6 +112,8 @@ class Store:
         self.path = path
         path.parent.mkdir(parents=True, exist_ok=True)
         with closing(self._conectar()) as con:
+            # WAL: el bot y el worker usan la misma base desde procesos distintos.
+            con.execute("PRAGMA journal_mode=WAL")
             con.executescript(ESQUEMA)
 
     @classmethod
@@ -139,6 +147,9 @@ class Store:
             (source, item_id, h, title, url, _ahora()),
         )
         return True
+
+    def visto(self, source: str, item_id: str) -> bool:
+        return bool(self._consultar("SELECT 1 FROM seen_items WHERE source=? AND item_id=?", (source, item_id)))
 
     # --- param_proposals ----------------------------------------------------------------------
 
@@ -199,6 +210,10 @@ class Store:
         sql, params = ("SELECT * FROM drafts WHERE status=? ORDER BY id", (status,)) if status else ("SELECT * FROM drafts ORDER BY id", ())
         return [Borrador(id=f["id"], kind=f["kind"], title=f["title"], body=f["body"], status=f["status"]) for f in self._consultar(sql, params)]
 
+    def borrador(self, borrador_id: int) -> Borrador | None:
+        filas = self._consultar("SELECT * FROM drafts WHERE id=?", (borrador_id,))
+        return Borrador(id=filas[0]["id"], kind=filas[0]["kind"], title=filas[0]["title"], body=filas[0]["body"], status=filas[0]["status"]) if filas else None
+
     def actualizar_borrador(self, borrador_id: int, status: EstadoBorrador, *, body: str | None = None) -> None:
         if body is None:
             self._ejecutar("UPDATE drafts SET status=?, updated=? WHERE id=?", (status, _ahora(), borrador_id))
@@ -223,6 +238,18 @@ class Store:
 
     def quitar_extraccion(self, norma_id: str) -> None:
         self._ejecutar("DELETE FROM extraction_queue WHERE norma_id=?", (norma_id,))
+
+    # --- ajustes ------------------------------------------------------------------------------
+
+    def ajuste(self, clave: str, defecto: str | None = None) -> str | None:
+        filas = self._consultar("SELECT valor FROM ajustes WHERE clave=?", (clave,))
+        return filas[0]["valor"] if filas else defecto
+
+    def fijar_ajuste(self, clave: str, valor: str) -> None:
+        self._ejecutar(
+            "INSERT INTO ajustes (clave, valor, updated) VALUES (?,?,?) ON CONFLICT(clave) DO UPDATE SET valor=excluded.valor, updated=excluded.updated",
+            (clave, valor, _ahora()),
+        )
 
     # --- events -------------------------------------------------------------------------------
 

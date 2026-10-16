@@ -86,6 +86,10 @@ jobs:
           TG_CHAT: ${{ secrets[format('TELEGRAM_ADMIN_CHAT_ID_{0}', matrix.site_upper)] }}
         run: |
           [ -z "$TG_TOKEN" ] && exit 0
+          if [ "${{ job.status }}" = "success" ]; then
+            texto="🚀 Publicado el site ${SITE} (commit ${GITHUB_SHA::7})"
+          else
+            texto="❌ Falló el deploy del site ${SITE}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          fi
           curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-            -d chat_id="${TG_CHAT}" \
-            -d text="Deploy ${SITE}: ${{ job.status }} (${GITHUB_SHA::7})" > /dev/null || true
+            --data-urlencode chat_id="${TG_CHAT}" --data-urlencode text="${texto}" > /dev/null || true

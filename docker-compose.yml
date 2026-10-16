@@ -1,34 +1,33 @@
-# Servicios locales en la PC del usuario (Docker Desktop + WSL2).
-# Limitar recursos globales en %UserProfile%\.wslconfig: memory=8GB, processors=4
+# Servicios locales (PC o servidor Ubuntu con Docker). Guía: README.md → Servicios locales.
+# - bot-pe: bot de Telegram del site Perú (polling).
+# - worker: revisión diaria de normas y AFP de los sites habilitados (hora en watchers.yaml).
+# Ambos comparten la base SQLite de pipeline/data: el bot aprueba lo que el worker detecta.
+x-pipeline: &pipeline
+  build: ./pipeline
+  env_file: .env
+  environment:
+    CONFIG_DIR: /app/config
+    REPO_DIR: /repo
+    TZ: America/Lima
+  volumes:
+    - ./config:/app/config:ro
+    - ./:/repo            # base SQLite en pipeline/data y, más adelante, commits de lo aprobado
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options: { max-size: "5m", max-file: "3" }
+
 services:
   bot-pe:
-    build: ./pipeline
+    <<: *pipeline
     command: ["python", "-m", "pipeline.cli", "bot", "--site", "pe"]
-    env_file: .env
-    environment:
-      CONFIG_DIR: /app/config
-      REPO_DIR: /repo
-    volumes:
-      - ./config:/app/config:ro
-      - ./pipeline/data:/app/pipeline/data
-      - ./:/repo            # para commits de contenido aprobado
-    restart: unless-stopped
     deploy:
       resources:
-        limits: { cpus: "0.5", memory: 512M }
+        limits: { cpus: "0.5", memory: 256M }
 
   worker:
-    build: ./pipeline
+    <<: *pipeline
     command: ["python", "-m", "pipeline.cli", "worker"]
-    env_file: .env
-    environment:
-      CONFIG_DIR: /app/config
-      REPO_DIR: /repo
-    volumes:
-      - ./config:/app/config:ro
-      - ./pipeline/data:/app/pipeline/data
-      - ./:/repo
-    restart: unless-stopped
     deploy:
       resources:
-        limits: { cpus: "2", memory: 2G }
+        limits: { cpus: "1", memory: 512M }

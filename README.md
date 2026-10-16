@@ -33,7 +33,7 @@ En **Settings → Secrets and variables → Actions → New repository secret** 
 | `CF_API_TOKEN_PE` | Sí | Token del paso 1.2 |
 | `CONTACT_EMAIL_PE` | Sí | Correo de contacto de las páginas legales |
 | `CF_BEACON_TOKEN_PE` | Sí | Token de Web Analytics del paso 1.4 |
-| `TELEGRAM_BOT_TOKEN_PE`, `TELEGRAM_ADMIN_CHAT_ID_PE` | No (Fase 4) | Bot de avisos de deploy |
+| `TELEGRAM_BOT_TOKEN_PE`, `TELEGRAM_ADMIN_CHAT_ID_PE` | No | Aviso "🚀 Publicado" o "❌ Falló" al terminar cada deploy |
 | `ADSENSE_CLIENT_PE` y `ADSENSE_SLOT_*_PE` | Tras aprobar AdSense | `ca-pub-…` y los IDs de bloque |
 
 El build de deploy corre con `STRICT_ENV=1`: si falta una variable obligatoria, falla antes de publicar.
@@ -59,11 +59,20 @@ El deploy muestra como aviso los parámetros legales vigentes con `"verified": f
 ## Agregar un país
 `/nuevo-pais cl` en Claude Code y seguir `docs/03-flujo-de-trabajo.md §6`.
 
-## Servicios locales (Fase 4)
+## Servicios locales (bot de Telegram y revisión diaria)
+Corren con Docker en una PC o servidor siempre encendido (ej. Ubuntu). La base `pipeline/data/<site>.db` vive ahí: es la que comparten el bot y el worker, así que **solo una máquina** debe correr estos servicios (dos bots con el mismo token chocan).
+
 ```bash
-docker compose up -d bot-pe     # bot de Telegram del site Perú
-docker compose pause worker     # modo juego
+git clone https://github.com/<dueño>/<repo>.git && cd <repo>
+cp .env.example .env && nano .env    # TELEGRAM_*_PE, LLM_*, GITHUB_TOKEN (opcional, para /deploy)
+docker compose up -d --build         # bot-pe + worker
+docker compose logs -f               # ver que ambos arrancaron
 ```
+
+- Actualizar tras un cambio en el repo: `git pull && docker compose up -d --build`.
+- Detener la revisión diaria sin apagar nada: `/pausa` en el bot (y `/reanudar`).
+- Probar la revisión a mano: `docker compose run --rm worker python -m pipeline.cli params-check --country pe`.
+- El chat administrador (`TELEGRAM_ADMIN_CHAT_ID_PE`) es el único que el bot atiende.
 
 ## Documentación
 Ver el mapa en `CLAUDE.md`.

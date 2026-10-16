@@ -2,6 +2,9 @@
 # Términos que, si aparecen en el título o la sumilla de una norma, generan un aviso por Telegram.
 # Se comparan sin tildes ni mayúsculas. `params` = parámetros de params.json que podría afectar.
 
+# Hora (del site) de la revisión diaria del worker local.
+hora_revision: "07:15"
+
 elperuano:
   url_filtro: "https://diariooficial.elperuano.pe/Normas/Filtro"
   reglas:

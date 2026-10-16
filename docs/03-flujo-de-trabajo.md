@@ -1,8 +1,8 @@
 # 03 — Flujo de trabajo
 
 ## 1. Flujo diario automático (sin intervención)
-1. **07:15 (Lima)** — GitHub Actions corre `watchers.yml`:
-   - `params-check --country pe` revisa El Peruano y la SBS.
+1. **07:15 (Lima)** — el `worker` local (docker-compose) corre la revisión diaria:
+   - `params-check --country pe` revisa El Peruano (hoy y ayer) y las comisiones de AFP.
    - Si no hay novedades: nada (opcional: un "✅ sin cambios" semanal).
 2. Si hay una norma candidata → el bot del site envía:
    ```

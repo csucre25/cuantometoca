@@ -18,7 +18,7 @@ import httpx
 from selectolax.lexbor import LexborHTMLParser
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from pipeline.config import params_path
+from pipeline import parametros
 from pipeline.store import Store
 from pipeline.watchers import config_watchers, normalizar
 from pipeline.watchers.elperuano import USER_AGENT
@@ -97,12 +97,8 @@ def descargar(url: str) -> str:
 
 
 def _vigente(country: str, clave: str, dia: date) -> object:
-    data = json.loads(params_path(country).read_text(encoding="utf-8"))
-    hoy = dia.isoformat()
-    for e in data["params"][clave]["history"]:
-        if e["from"] <= hoy and (e["to"] is None or hoy <= e["to"]):
-            return e["value"]
-    return None
+    e = parametros.vigente(country, clave, dia)
+    return e["value"] if e else None
 
 
 def _iguales(a: object, b: object) -> bool:
@@ -153,5 +149,5 @@ def mensaje(cambio: Cambio) -> str:
         f"🏦 <b>Cambio detectado en AFP</b> (propuesta #{cambio.propuesta_id})\n"
         f"Parámetro: <code>{cambio.param_key}</code> desde {cambio.desde}\n"
         f"Antes:\n{fmt(cambio.anterior)}\nAhora:\n{fmt(cambio.nuevo)}\n\n"
-        f"Confírmalo en el bot antes de que se aplique."
+        f"Nada se aplica sin tu confirmación."
     )
