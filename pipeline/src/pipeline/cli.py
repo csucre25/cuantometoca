@@ -72,8 +72,10 @@ def params_check(
         typer.echo(f"[{site.site_id}] El Peruano {fecha.isoformat()}: {len(alertas)} norma(s) nueva(s) relevante(s)")
         for a in alertas:
             typer.echo(f"  - {a.norma.titulo}: {a.norma.sumilla[:100]} [{', '.join(a.reglas)}]")
+            detalle = _proponer_desde_norma(country, a, store)
+            typer.echo(f"    {detalle}")
             if notify:
-                notificar.enviar(site, elperuano.mensaje(a))
+                notificar.enviar(site, elperuano.mensaje(a) + "\n\n" + detalle)
                 store.registrar("aviso_enviado", fuente="elperuano", norma=a.norma.id)
 
         cambios = afp.revisar(country, fecha, store)
@@ -84,6 +86,48 @@ def params_check(
             if notify:
                 notificar.enviar(site, afp.mensaje(c))
                 store.registrar("aviso_enviado", fuente="afp", propuesta=c.propuesta_id)
+
+
+def _proponer_desde_norma(country: str, alerta, store: Store) -> str:
+    """Extrae con LLM los valores de la norma y crea propuestas pendientes. Devuelve el texto para el aviso."""
+    from pipeline.extraccion import extraer_cambios
+    from pipeline.llm.client import LLMError, proveedores
+    from pipeline.watchers import elperuano
+
+    if not proveedores():
+        return "Extracción automática no disponible (sin LLM configurado): revisar la norma a mano."
+    try:
+        texto = elperuano.texto_norma(alerta.norma.url)
+        aceptados, descartes = extraer_cambios(country, texto, alerta.norma.fecha, alerta.params)
+    except (LLMError, ValueError, OSError) as e:
+        return f"No se pudo extraer el valor automáticamente ({e}). Revisar la norma a mano."
+    lineas = []
+    for c in aceptados:
+        pid = store.proponer_parametro(country, c.clave, c.valor, c.vigente_desde.isoformat(), alerta.norma.titulo, alerta.norma.url)
+        lineas.append(f"Valor detectado (LLM): {c.clave} = {c.valor} desde {c.vigente_desde.isoformat()} → propuesta #{pid}")
+    if descartes:
+        lineas.append("Descartado por no estar respaldado en el texto: " + "; ".join(descartes))
+    return "\n".join(lineas) or "La norma no fija un valor nuevo concreto para los parámetros vigilados."
+
+
+@app.command()
+def extraer(
+    url: str = typer.Option(..., help="URL de la norma en busquedas.elperuano.pe"),
+    country: str = typer.Option("pe"),
+    publicacion: str = typer.Option(..., help="Fecha de publicación YYYY-MM-DD"),
+    params: str = typer.Option("", help="Claves posibles separadas por coma (vacío = todas)"),
+) -> None:
+    """Prueba la extracción con LLM sobre una norma, sin crear propuestas."""
+    from pipeline.extraccion import extraer_cambios
+    from pipeline.watchers import elperuano
+
+    aceptados, descartes = extraer_cambios(country, elperuano.texto_norma(url), publicacion, [p for p in params.split(",") if p])
+    for c in aceptados:
+        typer.echo(f"ACEPTADO {c.clave} = {c.valor} desde {c.vigente_desde} | cita: {c.cita[:160]}")
+    for d in descartes:
+        typer.echo(f"DESCARTADO {d}")
+    if not aceptados and not descartes:
+        typer.echo("Sin cambios extraídos.")
 
 
 if __name__ == "__main__":

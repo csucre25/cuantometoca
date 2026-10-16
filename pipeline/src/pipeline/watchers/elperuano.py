@@ -112,6 +112,22 @@ def revisar(country: str, dia: date, store: Store, *, html: str | None = None) -
     return nuevas
 
 
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=2, max=30), reraise=True)
+def texto_norma(url: str) -> str:
+    """Texto completo de la norma desde su página en busquedas.elperuano.pe (bloque .story)."""
+    with httpx.Client(timeout=30, headers={"User-Agent": USER_AGENT}, follow_redirects=True) as c:
+        r = c.get(url)
+        r.raise_for_status()
+    return extraer_texto(r.text)
+
+
+def extraer_texto(html: str) -> str:
+    nodo = HTMLParser(html).css_first(".story")
+    if nodo is None:
+        raise ValueError("La página de la norma no tiene el bloque .story")
+    return " ".join(nodo.text(separator=" ").split())
+
+
 def mensaje(alerta: Alerta) -> str:
     """Texto del aviso para Telegram (HTML simple)."""
     n = alerta.norma

@@ -64,7 +64,8 @@ Marca `[x]` al completar. Cada tarea tiene un criterio de aceptación (CA). No a
   - Nota: usa el POST de `/Normas/Filtro` del portal; términos por país en `config/countries/<pais>/watchers.yaml` (palabra completa, sin tildes). Probado en vivo: 1,655 normas del 20/09 al 15/10/2026 → detectó solo el DS 015-2026-TR (RMV). Fixtures real recortado + sintético. Aviso por Telegram con `params-check --notify`.
 - [x] 4.3 Watcher SBS (comisiones AFP, prima, tope).
   - Nota: la SBS bloquea el acceso automatizado (Imperva); no se evade. Fuente: tabla comparativa de AFP Integra (4 AFP + tope trimestral) + regla de El Peruano para resoluciones de la SBS (filtrada por sector). Un cambio crea propuesta pendiente; nada se aplica sin confirmar. En vivo: 0 diferencias con params.json.
-- [ ] 4.4 Cliente LLM compatible OpenAI con fallback + extracción estructurada de normas (pydantic).
+- [x] 4.4 Cliente LLM compatible OpenAI con fallback + extracción estructurada de normas (pydantic).
+  - Nota: httpx sobre `/chat/completions` (sin SDK de proveedor); reintentos, límite de RPM y respaldo. Salvaguardas: claves de params.json, cita literal verificada contra el texto y número presente en la cita. Probado en vivo: DS 015-2026-TR → `rmv = 1230.00` desde 2026-10-01. `params-check` adjunta el valor detectado y crea la propuesta.
 - [ ] 4.5 Bot de Telegram del site: aprobación de parámetros y borradores, comandos de `docs/03`.
 - [ ] 4.6 Commit/PR automático de parámetros confirmados.
 - [ ] 4.7 `watchers.yml` (cron) y `docker-compose.yml` (bot local).
